@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToddlerChef AI Premium - Unlimited Recipe Generation</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .premium-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 32px;
+            padding: 60px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f97316 0%, #a855f7 50%, #fbbf24 100%);
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: hsl(var(--primary));
+            margin-bottom: 32px;
+        }
+
+        .limit-banner {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            margin-bottom: 32px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 25px -5px rgba(251, 191, 36, 0.4);
+        }
+
+        .premium-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+        }
+
+        .premium-subtitle {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 20px;
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .feature-content h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .feature-content p {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .pricing-section {
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 24px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+
+        .price-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .price-period {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .upgrade-btn {
+            background: white;
+            color: #6366f1;
+            border: none;
+            padding: 18px 48px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 16px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .money-back {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 24px;
+        }
+
+        .comparison-table {
+            background: #f8fafc;
+            padding: 32px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+        }
+
+        .comparison-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .comparison-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-feature {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .comparison-free {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .comparison-premium {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #475569;
+        }
+
+        .testimonials {
+            margin-top: 40px;
+        }
+
+        .testimonial {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #374151;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #10b981;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .premium-card {
+                padding: 40px 24px;
+                margin: 20px;
+            }
+            
+            .premium-title {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-row {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="premium-card">
+            <a href="recipe-template.html" class="back-btn">← Back to Recipe</a>
+            
+            <div class="logo">👶🍳✨ ToddlerChef AI</div>
+            
+            <div class="limit-banner" id="limit-banner">
+                🚫 You've reached your free limit! (3/3 generations used)
+            </div>
+
+            <h1 class="premium-title">Unlock Unlimited Recipe Magic</h1>
+            <p class="premium-subtitle">
+                Join thousands of parents creating perfect toddler meals with our AI-powered recipe generator. 
+                No limits, no waiting, just endless culinary inspiration.
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-content">
+                        <h4>Unlimited Recipes</h4>
+                        <p>Generate as many toddler-approved recipes as you need, whenever you need them.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📄</div>
+                    <div class="feature-content">
+                        <h4>PDF Downloads</h4>
+                        <p>Save, print, and share beautiful recipe cards with friends and family.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">👶</div>
+                    <div class="feature-content">
+                        <h4>Child Profiles</h4>
+                        <p>Personalized recipes based on each child's allergies, preferences, and age.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📅</div>
+                    <div class="feature-content">
+                        <h4>Meal Planning</h4>
+                        <p>Advanced meal planning tools to organize your week and reduce food waste.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🔔</div>
+                    <div class="feature-content">
+                        <h4>Priority Support</h4>
+                        <p>Get help when you need it with our dedicated premium support team.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">✨</div>
+                    <div class="feature-content">
+                        <h4>Early Access</h4>
+                        <p>Be the first to try new features and recipe categories as we release them.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-section">
+                <div class="price-badge">Most Popular</div>
+                <div class="price">$5</div>
+                <div class="price-period">per month, cancel anytime</div>
+                
+                <button class="upgrade-btn" onclick="upgradeToPremium()">
+                    🚀 Start Your Premium Journey
+                </button>
+                <button class="upgrade-btn" style="background:#eef2ff;color:#374151;" onclick="manageBilling()">
+                    🧾 Manage Billing
+                </button>
+                
+                <div class="money-back">
+                    💰 30-day money-back guarantee • Cancel anytime
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <h3 class="comparison-title">Free vs Premium</h3>
+                
+                <div class="comparison-row">
+                    <span class="comparison-feature">Recipe Generations</span>
+                    <span class="comparison-free">3 per month</span>
+                    <span class="comparison-premium">Unlimited</span>
+                </div>
+                
+                <div class="comparison-row">
+                    <span class="comparison-feature">PDF Downloads</span>
+                    <span class="comparison-free">❌ Not included</span>
+                    <span class="comparison-premium">✅ Unlimited</span>
+                </div>
+                
+                <div class="comparison-row">
+                    <span class="comparison-feature">Child Profiles</span>
+                    <span class="comparison-free">❌ Not included</span>
+                    <span class="comparison-premium">✅ Up to 5 children</span>
+                </div>
+                
+                <div class="comparison-row">
+                    <span class="comparison-feature">Meal Planning</span>
+                    <span class="comparison-free">❌ Not included</span>
+                    <span class="comparison-premium">✅ Advanced tools</span>
+                </div>
+                
+                <div class="comparison-row">
+                    <span class="comparison-feature">Support</span>
+                    <span class="comparison-free">Community only</span>
+                    <span class="comparison-premium">✅ Priority support</span>
+                </div>
+            </div>
+
+            <div class="testimonials">
+                <div class="testimonial">
+                    <div class="testimonial-text">
+                        "ToddlerChef AI has been a game-changer for our family! My 2-year-old actually asks for vegetables now. The recipes are perfectly sized and so easy to follow."
+                    </div>
+                    <div class="testimonial-author">— Sarah M., Mother of 2</div>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-text">
+                        "I love how the app considers my daughter's allergies automatically. No more worrying about ingredients - every recipe is safe and delicious!"
+                    </div>
+                    <div class="testimonial-author">— James L., Father of 1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Check user's current usage and subscription status
+        async function checkUserStatus() {
+            try {
+                // Wait for auth to be ready
+                await new Promise(resolve => {
+                    const checkAuth = () => {
+                        if (window.toddlerChefAuth) {
+                            resolve();
+                        } else {
+                            setTimeout(checkAuth, 100);
+                        }
+                    };
+                    checkAuth();
+                });
+
+                const userProfile = toddlerChefAuth.getUserProfile();
+                const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
+                const usageCount = userProfile?.monthlyUsage || 0;
+                const maxFreeUsage = 3;
+
+                // Update the limit banner based on current usage
+                const limitBanner = document.getElementById('limit-banner');
+                if (subscriptionStatus === 'premium' || subscriptionStatus === 'pro') {
+                    // User is already premium, redirect them back
+                    window.location.href = 'recipe-template.html';
+                    return;
+                }
+
+                // Update banner text based on usage
+                if (usageCount >= maxFreeUsage) {
+                    limitBanner.innerHTML = `🚫 You've reached your free limit! (${maxFreeUsage}/${maxFreeUsage} generations used)`;
+                } else {
+                    limitBanner.innerHTML = `⚠️ You've used ${usageCount}/${maxFreeUsage} free generations this month`;
+                    limitBanner.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+                }
+
+            } catch (error) {
+                console.error('Error checking user status:', error);
+            }
+        }
+
+        // Handle premium upgrade
+        async function upgradeToPremium() {
+            try {
+                console.log('🚀 Starting premium upgrade process...');
+                // Ensure auth ready
+                await new Promise(resolve => { (function check(){ if (window.toddlerChefAuth && window.auth) resolve(); else setTimeout(check, 100); })(); });
+
+                const user = window.toddlerChefAuth.getCurrentUser();
+                if (!user) {
+                    alert('Please sign in first to upgrade to premium.');
+                    window.location.href = 'signin.html';
+                    return;
+                }
+
+                const resp = await fetch('/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userEmail: user.email })
+                });
+                if (!resp.ok) throw new Error('Failed to create checkout session');
+                const data = await resp.json();
+                if (data.url) {
+                    window.location.href = data.url;
+                } else {
+                    throw new Error('No checkout URL returned');
+                }
+            } catch (error) {
+                console.error('Error upgrading to premium:', error);
+                alert('There was an error starting checkout. Please try again.');
+            }
+        }
+
+        // Manage billing via Stripe customer portal
+        async function manageBilling() {
+            try {
+                await new Promise(resolve => { (function check(){ if (window.toddlerChefAuth) resolve(); else setTimeout(check, 100); })(); });
+                const profile = window.toddlerChefAuth.getUserProfile();
+                const user = window.toddlerChefAuth.getCurrentUser();
+                if (!user) { window.location.href = 'signin.html'; return; }
+
+                // You may store stripeCustomerId in user profile after checkout
+                const customerId = profile?.stripeCustomerId;
+                if (!customerId) { alert('Billing portal unavailable (no customer on file yet).'); return; }
+
+                const resp = await fetch('/api/create-customer-portal', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customerId })
+                });
+                if (!resp.ok) throw new Error('Failed to open billing portal');
+                const data = await resp.json();
+                if (data.url) window.location.href = data.url;
+            } catch (e) {
+                console.error('Billing portal error', e);
+                alert('Could not open billing portal.');
+            }
+        }
+
+        // Check URL parameters for specific messages
+        const urlParams = new URLSearchParams(window.location.search);
+        const reason = urlParams.get('reason');
+        
+        if (reason === 'limit-reached') {
+            document.getElementById('limit-banner').innerHTML = '🚫 You\'ve reached your free limit! Upgrade to continue generating recipes.';
+        } else if (reason === 'pdf-limit') {
+            document.getElementById('limit-banner').innerHTML = '📄 PDF downloads require a Premium subscription. Upgrade to download unlimited recipe PDFs!';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', checkUserStatus);
+    </script>
+</body>
+</html>

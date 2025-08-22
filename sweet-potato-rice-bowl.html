@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Potato & Rice Bowl - ToddlerChef AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, rgba(255, 213, 79, 0.1), rgba(129, 199, 132, 0.1));
+            min-height: 100vh;
+            color: #5D5D5D;
+            line-height: 1.6;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #81C784;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .menu-btn:hover {
+            background: #66BB6A;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            background: #FFD54F;
+            color: #5D5D5D;
+        }
+
+        .back-btn:hover {
+            background: #FFC107;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 80px auto 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 138, 128, 0.2);
+        }
+
+        .recipe-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid rgba(255, 138, 128, 0.2);
+            padding-bottom: 30px;
+        }
+
+        .recipe-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #FF8A80;
+            margin-bottom: 15px;
+        }
+
+        .recipe-subtitle {
+            color: #5D5D5D;
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .reviews-section {
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .reviews-content {
+            font-size: 0.9rem;
+            color: #5D5D5D;
+            text-align: center;
+        }
+
+        .recipe-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(255, 213, 79, 0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 138, 128, 0.2);
+        }
+
+        .meta-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+        }
+
+        .meta-label {
+            font-size: 0.9rem;
+            color: #5D5D5D;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #FF8A80;
+        }
+
+        .mess-level {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            flex-direction: column;
+        }
+
+        .mess-circles {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .mess-circle {
+            width: 12px;
+            height: 12px;
+            border: 2px solid #FFD54F;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        .mess-circle.filled {
+            background: #FFD54F;
+        }
+
+        .mess-description {
+            font-size: 0.8rem;
+            color: #5D5D5D;
+            text-align: center;
+        }
+
+        .recipe-section {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            border-left: 5px solid #FF8A80;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #FF8A80;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255, 138, 128, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .ingredients-list {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #5D5D5D;
+        }
+
+        .cost-section {
+            background: rgba(255, 213, 79, 0.1);
+            border-left-color: #FFD54F;
+        }
+
+        .cost-items {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .cost-total {
+            font-size: 1.2rem;
+            color: #FF8A80;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border: 2px solid #FFD54F;
+        }
+
+        .warning-section {
+            background: rgba(255, 138, 128, 0.1);
+            border-left-color: #FF8A80;
+            border: 2px solid rgba(255, 138, 128, 0.3);
+        }
+
+        .warning-content {
+            color: #FF8A80;
+            font-weight: 500;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+        }
+
+        .directions-content ol {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .directions-content li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid #81C784;
+            position: relative;
+        }
+
+        .directions-content li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            background: #81C784;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .cooking-methods {
+            display: grid;
+            gap: 15px;
+        }
+
+        .method-item {
+            padding: 15px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(129, 199, 132, 0.3);
+        }
+
+        .nutrition-section {
+            background: rgba(129, 199, 132, 0.1);
+            border-left-color: #81C784;
+        }
+
+        .macros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .macro-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .diet-section {
+            background: rgba(255, 213, 79, 0.1);
+            border-left-color: #FFD54F;
+        }
+
+        .diet-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .diet-tag {
+            background: #FFD54F;
+            color: #5D5D5D;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tips-section {
+            background: rgba(255, 138, 128, 0.1);
+            border-left-color: #FF8A80;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #FF8A80;
+            position: relative;
+        }
+
+        .tips-list li:before {
+            content: "💡";
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .picky-eater-section {
+            background: rgba(129, 199, 132, 0.15);
+            border-left-color: #81C784;
+        }
+
+        .picky-tip {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #81C784;
+        }
+
+        .recipe-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .recipe-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-btn {
+            background: #FFD54F;
+            color: #5D5D5D;
+        }
+
+        .home-btn:hover {
+            transform: translateY(-2px);
+            background: #FFC107;
+        }
+
+        .another-recipe-btn {
+            background: linear-gradient(45deg, #FF8A80, #81C784);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 138, 128, 0.4);
+        }
+
+        .another-recipe-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 138, 128, 0.6);
+        }
+
+        .faq-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 138, 128, 0.2);
+        }
+
+        .faq-title {
+            color: #FF8A80;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #FF8A80;
+        }
+
+        .faq-item h4 {
+            color: #FF8A80;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .faq-item p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 100px 15px 0;
+                padding: 25px;
+            }
+            
+            .recipe-title {
+                font-size: 2.2rem;
+            }
+            
+            .recipe-meta {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .recipe-actions {
+                flex-direction: column;
+            }
+            
+            .macros-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="index.html" class="menu-btn back-btn">← Back to Home</a>
+        <a href="recipe-preferences.html" class="menu-btn">🍽️ New Recipe</a>
+        <a href="signin.html" class="menu-btn" style="background: #FFD54F; color: #5D5D5D;">Sign In</a>
+    </div>
+
+    <div class="container">
+        <div class="recipe-header">
+            <h1 class="recipe-title">🌙 Sweet Potato & Rice Bowl</h1>
+            <p class="recipe-subtitle">Naturally sweet potato meets fluffy rice in satisfying spoonfuls that create the perfect end-of-day comfort meal.</p>
+            
+            <div class="reviews-section">
+                <div class="reviews-content">
+                    "The ultimate comfort food for toddlers - so creamy and delicious!" - Lisa R. ⭐⭐⭐⭐⭐<br>
+                    "My picky eater actually asks for seconds. Game changer!" - Tom H. ⭐⭐⭐⭐⭐
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-meta">
+            <div class="recipe-metrics">
+                <span class="badge badge-metric">
+                    <span class="badge-icon">⏱️</span>
+                    Prep: 8m
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">🔥</span>
+                    Easy
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">💰</span>
+                    £0.95
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">🍽️</span>
+                    110 kcal
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">👶</span>
+                    1 toddler
+                </span>
+            </div>
+            <div class="mess-level" style="margin-top: 16px;">
+                <div class="mess-circles">
+                    <div class="mess-circle filled"></div>
+                    <div class="mess-circle"></div>
+                    <div class="mess-circle"></div>
+                </div>
+                <div class="mess-description">(1/3 - Lovely and clean!)</div>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h3 class="section-title">🥄 Ingredients</h3>
+            <div class="ingredients-content">
+                <div class="ingredients-list">
+                    100g sweet potato, peeled and cubed<br>
+                    40g uncooked brown rice<br>
+                    10g unsalted butter<br>
+                    1/4 tsp ground cinnamon (optional)<br>
+                    120ml water for cooking<br>
+                    Splash of whole milk (optional)
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-section cost-section">
+            <h3 class="section-title">💰 Cost Breakdown</h3>
+            <div class="cost-content">
+                <div class="cost-items">
+                    Sweet potato (from bag): £0.25<br>
+                    Brown rice: £0.12<br>
+                    Unsalted butter: £0.12<br>
+                    Ground cinnamon: £0.02<br>
+                    Whole milk: £0.04
+                </div>
+                <div class="cost-total">
+                    <strong>Total Cost: £0.55</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-section warning-section">
+            <h3 class="section-title">⚠️ Choking Hazard Warnings</h3>
+            <div class="warning-content">
+                <p>Ensure sweet potato is soft enough to mash with a fork before serving. Check rice is well-cooked and soft. Always test temperature before serving and supervise eating closely.</p>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h3 class="section-title">👨‍🍳 Step by Step Method</h3>
+            <div class="directions-content">
+                <ol>
+                    <li>Right then, let's start by giving that lovely sweet potato a good wash and peel. Cut it into small cubes - about the size of your thumbnail is perfect for even cooking!</li>
+                    <li>Pop the rice in a small saucepan with plenty of water and bring it to a gentle boil. We want it lovely and soft for little mouths - about 15-20 minutes should do it!</li>
+                    <li>While the rice is cooking, steam your sweet potato cubes for 12-15 minutes until they're fork-tender. You should be able to mash them easily with no effort at all.</li>
+                    <li>Once everything's beautifully soft, drain the rice well and let it cool slightly. We don't want any burns on little tongues!</li>
+                    <li>Mash the sweet potato with that lovely butter until it's creamy and smooth. Add a tiny pinch of cinnamon if you fancy - it brings out the natural sweetness!</li>
+                    <li>Gently fold the cooked rice into the mashed sweet potato. Add a splash of milk if you want it extra creamy - just enough to get the perfect consistency.</li>
+                    <li>Let everything cool to the perfect temperature for your little one. Give it a gentle stir and taste-test yourself - it should be warm, not hot!</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h3 class="section-title">🍳 Cooking Methods</h3>
+            <div class="cooking-methods">
+                <div class="method-item">
+                    <strong>Stovetop (recommended):</strong> Steam sweet potato, boil rice separately for best texture
+                </div>
+                <div class="method-item">
+                    <strong>Microwave method:</strong> Pierce sweet potato, microwave 4-5 mins, cook rice in microwave rice cooker
+                </div>
+                <div class="method-item">
+                    <strong>Oven method:</strong> Bake whole sweet potato at 200°C for 45 mins, cook rice separately
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-section nutrition-section">
+            <h3 class="section-title">📊 Nutrition Information</h3>
+            <div class="nutrition-content">
+                <div class="nutrition-item">
+                    <strong>Calories:</strong> Approximately 110 calories per toddler serving
+                </div>
+                <div class="macros-grid">
+                    <div class="macro-item">Protein: 2.8g</div>
+                    <div class="macro-item">Carbohydrates: 19.5g</div>
+                    <div class="macro-item">Fat: 2.9g</div>
+                    <div class="macro-item">Fiber: 2.2g</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-section diet-section">
+            <h3 class="section-title">🏷️ Recipe Particulars</h3>
+            <div class="diet-tags">
+                <span class="diet-tag">Vegetarian</span>
+                <span class="diet-tag">Naturally Sweet</span>
+                <span class="diet-tag">Comfort Food</span>
+                <span class="diet-tag">Vitamin A Rich</span>
+                <span class="diet-tag">Dinner</span>
+            </div>
+        </div>
+
+        <div class="recipe-section tips-section">
+            <h3 class="section-title">👨‍🍳 Chef's Top Tips</h3>
+            <div class="tips-content">
+                <ul class="tips-list">
+                    <li>Here's my secret - roast the sweet potato instead of steaming for an even sweeter, more caramelized flavor that toddlers absolutely love!</li>
+                    <li>Cook a big batch and freeze in portions. It reheats beautifully and saves you precious time on busy weeknight dinners!</li>
+                    <li>Try different rice varieties - wild rice adds lovely texture for older toddlers, while jasmine rice keeps it extra soft for younger ones.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="recipe-section picky-eater-section">
+            <h3 class="section-title">💡 Picky Eater Alternatives</h3>
+            <div class="picky-eater-content">
+                <div class="picky-tip">
+                    <strong>For fussy eaters:</strong> If your little one turns their nose up at mixed textures, mash the sweet potato smooth and serve the rice separately for dipping - let them control the mixing!
+                </div>
+                <div class="picky-tip">
+                    <strong>If they don't like sweet potato:</strong> Try substituting with butternut squash or pumpkin puree - similar sweetness and texture but different flavors to explore.
+                </div>
+                <div class="picky-tip">
+                    <strong>To make it more exciting:</strong> Create fun shapes with cookie cutters once cooled, or let them sprinkle a tiny bit of cheese on top for extra appeal.
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-actions">
+            <a href="index.html" class="recipe-btn home-btn">
+                ← Back to Home
+            </a>
+            <a href="recipe-preferences.html" class="recipe-btn another-recipe-btn">
+                ✨ Create New Recipe
+            </a>
+        </div>
+
+        <div class="faq-section">
+            <h3 class="faq-title">Frequently Asked Questions - Sweet Potato & Rice Bowl</h3>
+            <div>
+                <div class="faq-item">
+                    <h4>How do I know when the sweet potato is soft enough?</h4>
+                    <p>Test with a fork - it should pierce easily with no resistance, and you should be able to mash it effortlessly. If there's any firmness, cook for a few more minutes.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Can I use white rice instead of brown rice?</h4>
+                    <p>Absolutely! White rice works perfectly and often cooks faster. However, brown rice provides more fiber and nutrients, so it's worth trying if your toddler will eat it.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How long can I store leftovers?</h4>
+                    <p>Store in the refrigerator for up to 3 days in an airtight container. Reheat gently in the microwave, adding a splash of milk if it seems dry. Freeze portions for up to 3 months.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>My toddler finds this too bland - can I add seasoning?</h4>
+                    <p>Try a tiny pinch of mild spices like cinnamon, nutmeg, or even a small amount of mild curry powder. Avoid salt and strong spices for very young toddlers.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What's the best consistency for different ages?</h4>
+                    <p>For 6-9 months: completely smooth puree. For 9-12 months: slightly lumpy but still very soft. For 12+ months: can be chunkier with soft rice grains visible.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

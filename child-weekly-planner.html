@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Planner - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f97316 0%, #a855f7 50%, #fbbf24 100%);
+            padding: 20px 0;
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.25);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .child-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .child-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .child-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .child-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .child-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: hsl(var(--primary));
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .planner-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            color: #1e293b;
+        }
+
+        .week-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .day-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .day-card:hover {
+            border-color: hsl(var(--primary));
+            transform: translateY(-2px);
+        }
+
+        .day-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .day-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .day-date {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .meal-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .meal-slot {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .meal-slot:hover {
+            border-color: hsl(var(--primary));
+            background: #f8fafc;
+        }
+
+        .meal-slot.empty {
+            border-style: dashed;
+            color: #94a3b8;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .meal-time {
+            font-size: 0.8rem;
+            color: hsl(var(--primary));
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .meal-name {
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 3px;
+        }
+
+        .meal-nutrition {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .add-meal-btn {
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .add-meal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3);
+        }
+
+        .child-preferences {
+            background: #f0f9ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .preferences-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .preferences-title::before {
+            content: "👶";
+            margin-right: 10px;
+        }
+
+        .preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .preference-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 4px solid hsl(var(--primary));
+        }
+
+        .preference-label {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .preference-value {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .shopping-list {
+            background: #fef3c7;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .shopping-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .shopping-title::before {
+            content: "🛒";
+            margin-right: 10px;
+        }
+
+        .shopping-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .shopping-item {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-name {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .item-quantity {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .back-btn {
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #475569;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .week-calendar {
+                grid-template-columns: 1fr;
+            }
+            
+            .child-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .preferences-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav-container">
+            <a href="dashboard.html" class="logo">🍼 ToddlerChef AI</a>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-btn">Dashboard</a>
+                <a href="index.html" class="nav-btn">Home</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <a href="child-insights.html" class="back-btn">← Back to Child Insights</a>
+        
+        <!-- Child Header -->
+        <div class="child-header">
+            <div class="child-avatar">👶</div>
+            <h1 class="child-name" id="child-name">Loading...</h1>
+            <p class="child-subtitle" id="child-subtitle">Loading child info...</p>
+            
+            <div class="child-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-meals">0</div>
+                    <div class="stat-label">Meals Planned</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="avg-calories">0</div>
+                    <div class="stat-label">Avg Calories/Day</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="nutrition-score">0</div>
+                    <div class="stat-label">Nutrition Score</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Child Preferences -->
+        <div class="child-preferences">
+            <div class="preferences-title">Child's Dietary Profile</div>
+            <div class="preferences-grid" id="preferences-grid">
+                <!-- Preferences will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Weekly Meal Planner -->
+        <div class="planner-section">
+            <div class="section-header">
+                <div class="section-icon">📅</div>
+                <h2 class="section-title">Weekly Meal Planner</h2>
+            </div>
+            
+            <div class="week-calendar" id="week-calendar">
+                <!-- Week calendar will be generated here -->
+            </div>
+            
+            <button class="add-meal-btn" onclick="generatePersonalizedMeal()">
+                🍳 Generate Personalized Meal
+            </button>
+        </div>
+
+        <!-- Shopping List -->
+        <div class="shopping-list">
+            <div class="shopping-title">This Week's Shopping List</div>
+            <div class="shopping-items" id="shopping-items">
+                <!-- Shopping items will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let currentChild = null;
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            (function waitForAuth() {
+                if (window.auth && window.toddlerChefAuth) {
+                    initializeChildWeeklyPlanner();
+                } else {
+                    setTimeout(waitForAuth, 100);
+                }
+            })();
+        });
+
+        // Initialize child weekly planner
+        async function initializeChildWeeklyPlanner() {
+            try {
+                console.log('🚀 Initializing child weekly planner...');
+                
+                // Load child data
+                await loadChildData();
+                
+                // Generate week calendar
+                generateWeekCalendar();
+                
+                // Load child preferences
+                loadChildPreferences();
+                
+                // Generate shopping list
+                generateShoppingList();
+                
+                console.log('✅ Child weekly planner initialized successfully');
+                
+            } catch (error) {
+                console.error('❌ Error initializing child weekly planner:', error);
+                alert('Failed to load child data. Please try again.');
+            }
+        }
+
+        // Load child data from localStorage
+        async function loadChildData() {
+            const childId = localStorage.getItem('selectedChildId');
+            const childName = localStorage.getItem('selectedChildName');
+            
+            if (!childId || !childName) {
+                alert('No child selected. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // Get child data from user profile
+            let userProfile = window.toddlerChefAuth.getUserProfile();
+            
+            if (!userProfile) {
+                console.log('User profile not loaded, attempting to load...');
+                const profileResult = await window.toddlerChefAuth.loadUserProfile();
+                if (profileResult.success) {
+                    userProfile = profileResult.profile;
+                }
+            }
+            
+            if (userProfile && userProfile.children) {
+                currentChild = userProfile.children.find(child => child.id === childId);
+                console.log('Found child in profile:', currentChild);
+            }
+
+            if (!currentChild) {
+                console.error('Child not found in profile');
+                alert('Child not found. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // Calculate accurate age
+            const accurateAge = calculateAccurateAge(currentChild.birthDate, currentChild.age);
+
+            // Update child info
+            document.getElementById('child-name').textContent = childName;
+            document.getElementById('child-subtitle').textContent = `${accurateAge} • ${currentChild.birthDate ? new Date(currentChild.birthDate).toLocaleDateString() : 'Birth date not set'}`;
+        }
+
+        // Calculate accurate age from birth date
+        function calculateAccurateAge(birthDate, fallbackAge) {
+            if (!birthDate) {
+                return fallbackAge || 'Age not set';
+            }
+            
+            const birth = new Date(birthDate);
+            const today = new Date();
+            const ageInMs = today - birth;
+            const ageInYears = ageInMs / (1000 * 60 * 60 * 24 * 365.25);
+            
+            if (ageInYears < 1) {
+                const ageInMonths = ageInYears * 12;
+                return Math.floor(ageInMonths) + ' months';
+            } else if (ageInYears < 2) {
+                const months = Math.floor((ageInYears - Math.floor(ageInYears)) * 12);
+                return Math.floor(ageInYears) + ' year' + (Math.floor(ageInYears) > 1 ? 's' : '') + 
+                       (months > 0 ? ' ' + months + ' month' + (months > 1 ? 's' : '') : '');
+            } else {
+                return Math.floor(ageInYears) + ' years';
+            }
+        }
+
+        // Generate week calendar
+        function generateWeekCalendar() {
+            const calendar = document.getElementById('week-calendar');
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const today = new Date();
+            
+            calendar.innerHTML = '';
+            
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                
+                const dayCard = document.createElement('div');
+                dayCard.className = 'day-card';
+                
+                const dayName = days[date.getDay()];
+                const dayDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                
+                dayCard.innerHTML = `
+                    <div class="day-header">
+                        <div class="day-name">${dayName}</div>
+                        <div class="day-date">${dayDate}</div>
+                    </div>
+                    <div class="meal-slots">
+                        <div class="meal-slot empty" onclick="addMealToDay('${dayName}', 'breakfast')">
+                            <div class="meal-time">Breakfast</div>
+                            <div>Click to add meal</div>
+                        </div>
+                        <div class="meal-slot empty" onclick="addMealToDay('${dayName}', 'lunch')">
+                            <div class="meal-time">Lunch</div>
+                            <div>Click to add meal</div>
+                        </div>
+                        <div class="meal-slot empty" onclick="addMealToDay('${dayName}', 'dinner')">
+                            <div class="meal-time">Dinner</div>
+                            <div>Click to add meal</div>
+                        </div>
+                    </div>
+                `;
+                
+                calendar.appendChild(dayCard);
+            }
+        }
+
+        // Load child preferences
+        function loadChildPreferences() {
+            if (!currentChild) return;
+            
+            const preferencesGrid = document.getElementById('preferences-grid');
+            preferencesGrid.innerHTML = '';
+            
+            const preferences = [
+                {
+                    label: 'Age',
+                    value: calculateAccurateAge(currentChild.birthDate, currentChild.age)
+                },
+                {
+                    label: 'Allergies',
+                    value: currentChild.customAllergies || 'None known'
+                },
+                {
+                    label: 'Dietary Preferences',
+                    value: currentChild.dietaryPreferences?.join(', ') || 'None specified'
+                },
+                {
+                    label: 'Likes',
+                    value: currentChild.preferences || 'Not specified'
+                },
+                {
+                    label: 'Dislikes',
+                    value: currentChild.dislikes || 'None specified'
+                }
+            ];
+            
+            preferences.forEach(pref => {
+                const prefItem = document.createElement('div');
+                prefItem.className = 'preference-item';
+                prefItem.innerHTML = `
+                    <div class="preference-label">${pref.label}</div>
+                    <div class="preference-value">${pref.value}</div>
+                `;
+                preferencesGrid.appendChild(prefItem);
+            });
+        }
+
+        // Add meal to specific day
+        function addMealToDay(dayName, mealType) {
+            if (!currentChild) return;
+            
+            // Store child info for recipe generation
+            localStorage.setItem('selectedChildId', currentChild.id);
+            localStorage.setItem('selectedChildName', currentChild.name);
+            localStorage.setItem('selectedDay', dayName);
+            localStorage.setItem('selectedMealType', mealType);
+            
+            // Redirect to recipe preferences with child context
+            window.location.href = 'recipe-preferences.html?child=' + currentChild.id + '&day=' + dayName + '&meal=' + mealType;
+        }
+
+        // Generate personalized meal
+        function generatePersonalizedMeal() {
+            if (!currentChild) return;
+            
+            // Store child info for recipe generation
+            localStorage.setItem('selectedChildId', currentChild.id);
+            localStorage.setItem('selectedChildName', currentChild.name);
+            
+            // Redirect to recipe preferences with child context
+            window.location.href = 'recipe-preferences.html?child=' + currentChild.id;
+        }
+
+        // Generate shopping list based on planned meals
+        function generateShoppingList() {
+            const shoppingItems = document.getElementById('shopping-items');
+            
+            // Sample shopping list based on child preferences
+            const items = [
+                { name: 'Sweet Potatoes', quantity: '2 lbs' },
+                { name: 'Apples', quantity: '6 medium' },
+                { name: 'Chicken Breast', quantity: '1 lb' },
+                { name: 'Brown Rice', quantity: '2 cups' },
+                { name: 'Carrots', quantity: '1 lb' },
+                { name: 'Greek Yogurt', quantity: '32 oz' },
+                { name: 'Oatmeal', quantity: '1 box' },
+                { name: 'Bananas', quantity: '1 bunch' }
+            ];
+            
+            shoppingItems.innerHTML = '';
+            
+            items.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'shopping-item';
+                itemElement.innerHTML = `
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-quantity">${item.quantity}</div>
+                `;
+                shoppingItems.appendChild(itemElement);
+            });
+        }
+    </script>
+</body>
+</html>

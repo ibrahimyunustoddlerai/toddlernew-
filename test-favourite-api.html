@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Favourite Recipe API</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; background: #f0f0f0; }
+        .test-card { background: white; padding: 30px; border-radius: 10px; margin: 20px 0; }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .info { border-left: 4px solid #3b82f6; }
+        .test-btn { 
+            background: #6366f1; color: white; padding: 12px 24px; 
+            border: none; border-radius: 8px; cursor: pointer; margin: 10px 5px;
+        }
+        .test-btn:hover { background: #4f46e5; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Favourite Recipe API</h1>
+    
+    <div class="test-card info">
+        <h2>🔗 Direct API Test</h2>
+        <p>Test the favourite recipe API endpoint directly:</p>
+        <button class="test-btn" onclick="testCarrotApple()">Test Carrot & Apple Purée</button>
+        <button class="test-btn" onclick="testAvocadoBanana()">Test Avocado Banana Mash</button>
+        <button class="test-btn" onclick="testMacCheese()">Test Mac & Cheese</button>
+        
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        async function testCarrotApple() {
+            await testRecipe('carrot-apple-puree', 'Carrot & Apple Purée');
+        }
+        
+        async function testAvocadoBanana() {
+            await testRecipe('avocado-banana-mash', 'Avocado Banana Mash');
+        }
+        
+        async function testMacCheese() {
+            await testRecipe('hidden-veg-mac-cheese', 'Hidden Veg Mac & Cheese');
+        }
+        
+        async function testRecipe(recipeId, recipeName) {
+            showResult(`Testing ${recipeName}...`, 'info');
+            
+            try {
+                console.log('Testing recipe:', recipeId);
+                
+                const response = await fetch('/api/generate-favourite-recipe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipeId: recipeId })
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${responseText}`);
+                }
+                
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    throw new Error(`Failed to parse JSON: ${parseError.message}\\n\\nRaw response: ${responseText}`);
+                }
+                
+                if (result.error) {
+                    throw new Error(`API Error: ${result.error}`);
+                }
+                
+                // Success!
+                let successMsg = `✅ ${recipeName} Generated Successfully!\\n`;
+                successMsg += `Recipe Name: ${result.name || 'No name'}\\n`;
+                successMsg += `Prep Time: ${result.prepTime || 'No time'}\\n`;
+                successMsg += `Cook Time: ${result.cookTime || 'No time'}\\n`;
+                successMsg += `Cost: ${result.costBreakdown?.total || 'No cost'}\\n`;
+                successMsg += `Ingredients Count: ${result.ingredients ? result.ingredients.split('•').length - 1 : 0}\\n`;
+                successMsg += `Directions Count: ${result.directions?.length || 0} steps\\n`;
+                successMsg += `GPT Generated: ${result.gptGenerated ? 'Yes' : 'No'}`;
+                
+                showResult(successMsg, 'success');
+                
+            } catch (error) {
+                console.error('Test failed:', error);
+                
+                let errorMsg = `❌ ${recipeName} Failed\\n`;
+                errorMsg += `Error: ${error.message}\\n`;
+                
+                // Check common issues
+                if (error.message.includes('500')) {
+                    errorMsg += `\\n🔍 Likely Causes:\\n`;
+                    errorMsg += `- OpenAI API key not set in Vercel environment\\n`;
+                    errorMsg += `- API endpoint has a server error\\n`;
+                    errorMsg += `- Recipe ID not found in database`;
+                } else if (error.message.includes('404')) {
+                    errorMsg += `\\n🔍 Likely Cause: API endpoint not deployed`;
+                } else if (error.message.includes('Failed to parse JSON')) {
+                    errorMsg += `\\n🔍 Likely Cause: API returned HTML error page instead of JSON`;
+                }
+                
+                showResult(errorMsg, 'error');
+            }
+        }
+        
+        function showResult(text, type) {
+            const div = document.getElementById('test-results');
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            div.innerHTML = `<div class="test-card ${className}"><pre>${text}</pre></div>`;
+        }
+        
+        // Auto-test on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            showResult('Page loaded. Click a button to test the API.', 'info');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Debug Test</title>
+</head>
+<body>
+    <h1>Form Debug Test</h1>
+    
+    <button onclick="testWithVegetarianData()">Test Vegetarian + Freezer Friendly</button>
+    <button onclick="testSweetFingerFoods()">Test Sweet + Finger Foods</button>
+    <button onclick="testSavouryBatchCook()">Test Savoury + Batch Cook</button>
+    <button onclick="testQuickNoCook()">Test Quick Meals + No Cook</button>
+    <button onclick="testFamilyDinner()">Test Family Dinner</button>
+    <button onclick="testWithCurrentLocalStorage()">Test Current localStorage Data</button>
+    
+    <div id="results" style="background: #f0f0f0; padding: 20px; margin: 20px 0; white-space: pre-wrap;"></div>
+    
+    <script>
+        async function testWithVegetarianData() {
+            const testData = {
+                leftovers: ['pasta'],
+                vegetables: ['tomatoes', 'spinach'],
+                dietary: ['vegetarian'],
+                agerange: ['2+ years'],
+                mealtype: ['dinner'],
+                categories: ['freezer-friendly'],
+                notes: 'My toddler loves pasta dishes'
+            };
+            
+            console.log('🧪 Testing Vegetarian + Freezer Friendly:', testData);
+            await sendTestData(testData);
+        }
+        
+        async function testSweetFingerFoods() {
+            const testData = {
+                leftovers: ['banana'],
+                vegetables: ['carrot'],
+                dietary: [],
+                agerange: ['12+ months'],
+                mealtype: ['snack'],
+                categories: ['sweet', 'finger-foods'],
+                notes: 'Loves sweet treats that can be hand-held'
+            };
+            
+            console.log('🧪 Testing Sweet + Finger Foods:', testData);
+            await sendTestData(testData);
+        }
+        
+        async function testSavouryBatchCook() {
+            const testData = {
+                leftovers: ['chicken'],
+                vegetables: ['broccoli', 'carrot'],
+                dietary: [],
+                agerange: ['18+ months'],
+                mealtype: ['lunch'],
+                categories: ['savoury', 'batch-cook'],
+                notes: 'Need meals for the week'
+            };
+            
+            console.log('🧪 Testing Savoury + Batch Cook:', testData);
+            await sendTestData(testData);
+        }
+        
+        async function testQuickNoCook() {
+            const testData = {
+                leftovers: ['bread'],
+                vegetables: ['cucumber', 'tomato'],
+                dietary: ['vegetarian'],
+                agerange: ['2+ years'],
+                mealtype: ['lunch'],
+                categories: ['quick-meals', 'no-cook'],
+                notes: 'Hot day, no time to cook'
+            };
+            
+            console.log('🧪 Testing Quick + No Cook:', testData);
+            await sendTestData(testData);
+        }
+        
+        async function testFamilyDinner() {
+            const testData = {
+                leftovers: ['rice'],
+                vegetables: ['peppers', 'onion'],
+                dietary: [],
+                agerange: ['3+ years'],
+                mealtype: ['dinner'],
+                categories: ['family-dinner'],
+                notes: 'Need something everyone will enjoy'
+            };
+            
+            console.log('🧪 Testing Family Dinner:', testData);
+            await sendTestData(testData);
+        }
+        
+        async function testWithCurrentLocalStorage() {
+            const preferences = JSON.parse(localStorage.getItem('recipePreferences') || '{}');
+            console.log('🧪 Testing with localStorage data:', preferences);
+            await sendTestData(preferences);
+        }
+        
+        async function sendTestData(data) {
+            try {
+                document.getElementById('results').textContent = 'Testing...';
+                
+                const response = await fetch('/api/test-form-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                document.getElementById('results').textContent = JSON.stringify(result, null, 2);
+                
+                // Also test the main API
+                const mainResponse = await fetch('/api/generate-recipe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const mainResult = await mainResponse.json();
+                console.log('🍴 Main API result:', mainResult);
+                
+                // Show if it worked correctly
+                const isVegetarian = data.dietary && data.dietary.includes('vegetarian');
+                const isFreezerFriendly = data.categories && data.categories.includes('freezer-friendly');
+                const hasChicken = mainResult.ingredients && mainResult.ingredients.toLowerCase().includes('chicken');
+                const hasFreezerInfo = mainResult.chefTips && JSON.stringify(mainResult.chefTips).toLowerCase().includes('freez');
+                
+                document.getElementById('results').textContent += '\n\n=== VALIDATION ===\n';
+                document.getElementById('results').textContent += `Requested Vegetarian: ${isVegetarian}\n`;
+                document.getElementById('results').textContent += `Recipe has chicken: ${hasChicken}\n`;
+                document.getElementById('results').textContent += `Requested Freezer Friendly: ${isFreezerFriendly}\n`;
+                document.getElementById('results').textContent += `Recipe has freezer info: ${hasFreezerInfo}\n`;
+                document.getElementById('results').textContent += `✅ Vegetarian respected: ${!isVegetarian || !hasChicken}\n`;
+                document.getElementById('results').textContent += `✅ Freezer friendly respected: ${!isFreezerFriendly || hasFreezerInfo}\n`;
+                
+            } catch (error) {
+                document.getElementById('results').textContent = 'Error: ' + error.message;
+                console.error('Test failed:', error);
+            }
+        }
+    </script>
+</body>
+</html>

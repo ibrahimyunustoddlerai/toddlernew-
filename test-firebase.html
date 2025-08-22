@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Test - ToddlerChef AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #334155;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            color: #6366f1;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .status {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .status.info {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .test-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            color: #475569;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            margin: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .log {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .user-info {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #bfdbfe;
+            margin-top: 20px;
+        }
+
+        .user-info h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .user-info p {
+            margin: 5px 0;
+            color: #374151;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🧪 Firebase Test Dashboard</h1>
+        
+        <div id="status" class="status info">
+            🔄 Initializing Firebase...
+        </div>
+
+        <div class="test-section">
+            <h3 class="test-title">Authentication Tests</h3>
+            <button class="btn" onclick="testFirebaseConnection()" id="test-connection-btn">Test Firebase Connection</button>
+            <button class="btn" onclick="testAuthState()" id="test-auth-btn">Test Auth State</button>
+            <button class="btn" onclick="testFirestore()" id="test-firestore-btn">Test Firestore</button>
+            <button class="btn" onclick="clearLog()">Clear Log</button>
+        </div>
+
+        <div class="test-section">
+            <h3 class="test-title">User Management</h3>
+            <button class="btn" onclick="createTestUser()" id="create-user-btn">Create Test User</button>
+            <button class="btn" onclick="signOut()" id="signout-btn">Sign Out</button>
+            <button class="btn" onclick="getUserProfile()" id="get-profile-btn">Get User Profile</button>
+        </div>
+
+        <div id="user-info" class="user-info" style="display: none;">
+            <h3>Current User Info</h3>
+            <div id="user-details"></div>
+        </div>
+
+        <div class="test-section">
+            <h3 class="test-title">Test Log</h3>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let isInitialized = false;
+
+        // Initialize Firebase and auth system
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                log('Starting Firebase initialization...');
+                
+                // Wait for Firebase to initialize
+                const success = await initializeFirebase();
+                
+                if (success) {
+                    isInitialized = true;
+                    updateStatus('✅ Firebase initialized successfully!', 'success');
+                    log('Firebase initialized successfully');
+                    
+                    // Enable all buttons
+                    enableButtons();
+                    
+                    // Test initial connection
+                    await testFirebaseConnection();
+                } else {
+                    updateStatus('❌ Firebase initialization failed', 'error');
+                    log('Firebase initialization failed');
+                }
+                
+            } catch (error) {
+                updateStatus('❌ Firebase initialization failed: ' + error.message, 'error');
+                log('Error: ' + error.message);
+            }
+        });
+
+        // Update status display
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        // Add log entry
+        function log(message) {
+            const logEl = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logEl.innerHTML += `[${timestamp}] ${message}\n`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        // Clear log
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // Enable all test buttons
+        function enableButtons() {
+            const buttons = [
+                'test-connection-btn',
+                'test-auth-btn', 
+                'test-firestore-btn',
+                'create-user-btn',
+                'signout-btn',
+                'get-profile-btn'
+            ];
+            
+            buttons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.disabled = false;
+            });
+        }
+
+        // Disable all test buttons
+        function disableButtons() {
+            const buttons = [
+                'test-connection-btn',
+                'test-auth-btn', 
+                'test-firestore-btn',
+                'create-user-btn',
+                'signout-btn',
+                'get-profile-btn'
+            ];
+            
+            buttons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.disabled = true;
+            });
+        }
+
+        // Test Firebase connection
+        async function testFirebaseConnection() {
+            if (!isInitialized) {
+                log('Firebase not initialized yet');
+                return;
+            }
+
+            try {
+                log('Testing Firebase connection...');
+                
+                // Test auth
+                const auth = window.auth;
+                if (!auth) {
+                    throw new Error('Auth service not available');
+                }
+                log('✅ Auth service available');
+                
+                // Test Firestore
+                const db = window.db;
+                if (!db) {
+                    throw new Error('Firestore service not available');
+                }
+                log('✅ Firestore service available');
+                
+                // Test config
+                const config = window.firebase.app().options;
+                log('✅ Firebase config loaded: ' + config.projectId);
+                
+                updateStatus('✅ Firebase connection successful!', 'success');
+                
+            } catch (error) {
+                log('❌ Firebase connection failed: ' + error.message);
+                updateStatus('❌ Firebase connection failed', 'error');
+            }
+        }
+
+        // Test auth state
+        async function testAuthState() {
+            if (!isInitialized) {
+                log('Firebase not initialized yet');
+                return;
+            }
+
+            try {
+                log('Testing auth state...');
+                const user = toddlerChefAuth.getCurrentUser();
+                
+                if (user) {
+                    log('✅ User is signed in: ' + user.email);
+                    updateStatus('✅ User is authenticated', 'success');
+                    showUserInfo(user);
+                } else {
+                    log('ℹ️ No user signed in');
+                    updateStatus('ℹ️ No user signed in', 'info');
+                    hideUserInfo();
+                }
+                
+            } catch (error) {
+                log('❌ Auth state test failed: ' + error.message);
+                updateStatus('❌ Auth state test failed', 'error');
+            }
+        }
+
+        // Test Firestore
+        async function testFirestore() {
+            if (!isInitialized) {
+                log('Firebase not initialized yet');
+                return;
+            }
+
+            try {
+                log('Testing Firestore...');
+                
+                // Try to write a test document
+                const testDoc = {
+                    test: true,
+                    timestamp: new Date(),
+                    message: 'Firestore test successful'
+                };
+                
+                const docRef = await window.db.collection('test').add(testDoc);
+                log('✅ Firestore write successful: ' + docRef.id);
+                
+                // Try to read it back
+                const doc = await docRef.get();
+                log('✅ Firestore read successful: ' + doc.data().message);
+                
+                // Clean up
+                await docRef.delete();
+                log('✅ Firestore cleanup successful');
+                
+                updateStatus('✅ Firestore test successful!', 'success');
+                
+            } catch (error) {
+                log('❌ Firestore test failed: ' + error.message);
+                updateStatus('❌ Firestore test failed', 'error');
+            }
+        }
+
+        // Create test user
+        async function createTestUser() {
+            if (!isInitialized) {
+                log('Firebase not initialized yet');
+                return;
+            }
+
+            try {
+                log('Creating test user...');
+                
+                const testEmail = 'test@toddlerchef.ai';
+                const testPassword = 'testpass123';
+                const testData = {
+                    displayName: 'Test User',
+                    email: testEmail,
+                    children: [
+                        {
+                            name: 'Test Child',
+                            age: '2 years',
+                            allergies: ['nuts'],
+                            dietaryRestrictions: ['vegetarian']
+                        }
+                    ]
+                };
+                
+                const result = await toddlerChefAuth.registerUser(testEmail, testPassword, testData);
+                
+                if (result.success) {
+                    log('✅ Test user created successfully');
+                    updateStatus('✅ Test user created!', 'success');
+                    showUserInfo(result.user);
+                } else {
+                    log('❌ Test user creation failed: ' + result.error);
+                    updateStatus('❌ Test user creation failed', 'error');
+                }
+                
+            } catch (error) {
+                log('❌ Test user creation error: ' + error.message);
+                updateStatus('❌ Test user creation error', 'error');
+            }
+        }
+
+        // Sign out
+        async function signOut() {
+            if (!isInitialized) {
+                log('Firebase not initialized yet');
+                return;
+            }
+
+            try {
+                log('Signing out...');
+                const result = await toddlerChefAuth.signOut();
+                
+                if (result.success) {
+                    log('✅ Sign out successful');
+                    updateStatus('✅ Signed out successfully', 'success');
+                    hideUserInfo();
+                } else {
+                    log('❌ Sign out failed: ' + result.error);
+                    updateStatus('❌ Sign out failed', 'error');
+                }
+                
+            } catch (error) {
+                log('❌ Sign out error: ' + error.message);
+                updateStatus('❌ Sign out error', 'error');
+            }
+        }
+
+        // Get user profile
+        async function getUserProfile() {
+            if (!isInitialized) {
+                log('Firebase not initialized yet');
+                return;
+            }
+
+            try {
+                log('Getting user profile...');
+                const profile = toddlerChefAuth.getUserProfile();
+                
+                if (profile) {
+                    log('✅ User profile loaded');
+                    log('Profile data: ' + JSON.stringify(profile, null, 2));
+                    updateStatus('✅ User profile loaded', 'success');
+                } else {
+                    log('ℹ️ No user profile found');
+                    updateStatus('ℹ️ No user profile found', 'info');
+                }
+                
+            } catch (error) {
+                log('❌ Get user profile failed: ' + error.message);
+                updateStatus('❌ Get user profile failed', 'error');
+            }
+        }
+
+        // Show user info
+        function showUserInfo(user) {
+            const userInfoEl = document.getElementById('user-info');
+            const userDetailsEl = document.getElementById('user-details');
+            
+            userDetailsEl.innerHTML = `
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>UID:</strong> ${user.uid}</p>
+                <p><strong>Email Verified:</strong> ${user.emailVerified ? 'Yes' : 'No'}</p>
+                <p><strong>Provider:</strong> ${user.providerData[0]?.providerId || 'Unknown'}</p>
+            `;
+            
+            userInfoEl.style.display = 'block';
+        }
+
+        // Hide user info
+        function hideUserInfo() {
+            document.getElementById('user-info').style.display = 'none';
+        }
+
+        // Initially disable all buttons
+        document.addEventListener('DOMContentLoaded', () => {
+            disableButtons();
+        });
+    </script>
+</body>
+</html>

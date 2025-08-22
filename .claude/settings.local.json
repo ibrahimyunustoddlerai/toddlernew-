@@ -3,10 +3,14 @@
     "allow": [
       "Bash(cp:*)",
       "Bash(rm:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:toddlerchefai.vercel.app)",
+      "Bash(cmd /c:*)"
     ],
     "additionalDirectories": [
-      "C:\\Users\\Ibrahim\\Desktop\\Toddlerlunch.AI\\Webflow and Cursor Collab\\toddlerchefai"
+      "C:\\Users\\Ibrahim\\Desktop\\Toddlerlunch.AI\\Webflow and Cursor Collab\\toddlerchefai",
+      "C:\\Users\\Ibrahim\\Desktop\\Toddlerlunch.AI\\Webflow and Cursor Collab"
     ]
   }
 }

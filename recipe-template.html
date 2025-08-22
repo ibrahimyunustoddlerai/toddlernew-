@@ -1,0 +1,2497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Template - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.7;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            margin-right: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-btn:hover {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .back-btn {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .back-btn:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 80px auto 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .recipe-header {
+            text-align: center;
+            margin-bottom: 48px;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+            padding-bottom: 36px;
+        }
+
+        .recipe-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+            margin-bottom: 18px;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)), #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .recipe-subtitle {
+            color: #64748b;
+            font-size: 1.25rem;
+            font-style: italic;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .reviews-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .reviews-content {
+            font-size: 0.95rem;
+            color: #64748b;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .recipe-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(226, 232, 240, 0.4));
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .meta-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .meta-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .meta-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #6366f1;
+        }
+
+        .meta-serving-info {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .mess-level {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            flex-direction: column;
+        }
+
+        .mess-circles {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .mess-circle {
+            width: 12px;
+            height: 12px;
+            border: 2px solid #6366f1;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        .mess-circle.filled {
+            background: #6366f1;
+        }
+
+        .mess-description {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .recipe-section {
+            margin-bottom: 40px;
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            border-left: 4px solid #6366f1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: #475569;
+            margin-bottom: 24px;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+            padding-bottom: 12px;
+            letter-spacing: -0.015em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .ingredients-list {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #64748b;
+        }
+
+        .cost-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-left-color: #8b5cf6;
+        }
+
+        .cost-items {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .cost-total {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            color: #6366f1;
+            font-weight: 600;
+            text-align: center;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 2px solid #6366f1;
+        }
+
+        .warning-section {
+            background: rgba(239, 68, 68, 0.05);
+            border-left-color: #ef4444;
+            border: 2px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .warning-content {
+            color: #dc2626;
+            font-weight: 500;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
+
+        .directions-content ol {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .directions-content li {
+            counter-increment: step-counter;
+            margin-bottom: 24px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-radius: 12px;
+            border-left: 4px solid #6366f1;
+            position: relative;
+        }
+
+        .directions-content li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 18px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+        }
+
+        .cooking-methods {
+            display: grid;
+            gap: 15px;
+        }
+
+        .method-item {
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .nutrition-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-left-color: #6366f1;
+        }
+
+        .macros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .macro-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .diet-section {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(168, 85, 247, 0.05));
+            border-left-color: #8b5cf6;
+        }
+
+        .diet-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .diet-tag {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.025em;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, rgba(71, 85, 105, 0.05), rgba(100, 116, 139, 0.05));
+            border-left-color: #64748b;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 18px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border-left: 4px solid #64748b;
+            position: relative;
+        }
+
+        .tips-list li:before {
+            content: "💡";
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .picky-eater-section {
+            background: linear-gradient(135deg, rgba(71, 85, 105, 0.05), rgba(100, 116, 139, 0.05));
+            border-left-color: #64748b;
+        }
+
+        .picky-tip {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #64748b;
+        }
+
+        .recipe-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .recipe-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .previous-btn {
+            background: #FFD54F;
+            color: #5D5D5D;
+            opacity: 0.7;
+        }
+
+        .previous-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .previous-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .another-recipe-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .another-recipe-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 138, 128, 0.6);
+        }
+
+        .pdf-btn {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .pdf-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
+        }
+
+        .pdf-btn:disabled {
+            background: #9ca3af;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+
+        .save-btn.saved {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 100px 15px 0;
+                padding: 25px;
+            }
+            
+            .recipe-title {
+                font-size: 2.2rem;
+            }
+            
+            .recipe-meta {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .recipe-actions {
+                flex-direction: column;
+            }
+            
+            .macros-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="index.html" class="menu-btn back-btn">← Back to Home</a>
+        <a href="recipe-preferences.html" class="menu-btn">🍽️ New Recipe</a>
+        <a href="signin.html" class="menu-btn" style="background: #FFD54F; color: #5D5D5D;">Sign In</a>
+    </div>
+
+    <div class="container">
+        <div class="recipe-header">
+            <h1 class="recipe-title" id="title">Loading Your Recipe...</h1>
+            <p class="recipe-subtitle" id="subtitle">Generating a delicious meal with your ingredients...</p>
+            
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <div class="reviews-content" id="reviews-content">
+                    Preparing your personalized recipe...
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-meta">
+            <div class="meta-item">
+                <div class="meta-label">Prep Time</div>
+                <div class="meta-value" id="prep-time">...</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Cook Time</div>
+                <div class="meta-value" id="cook-time">...</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Kcal</div>
+                <div class="meta-value" id="kcal-value">...</div>
+                <div class="meta-serving-info" id="serving-info">per 1 toddler serving</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Servings</div>
+                <div class="meta-value" id="servings-value">1 toddler</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Mess Level</div>
+                <div class="mess-level" id="mess-level">
+                    <div class="mess-circles">
+                        <div class="mess-circle" id="mess1"></div>
+                        <div class="mess-circle" id="mess2"></div>
+                        <div class="mess-circle" id="mess3"></div>
+                    </div>
+                    <div class="mess-description" id="mess-description">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ingredients Section -->
+        <div class="recipe-section">
+            <h3 class="section-title">
+                <span>🥄 Ingredients</span>
+                <button class="copy-btn" id="copy-ingredients-btn" onclick="copyIngredients()">
+                    📋 Copy Ingredients
+                </button>
+            </h3>
+            <div class="ingredients-content" id="ingredients-content">
+                <div class="ingredients-list">
+                    Loading your ingredients...
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Breakdown Section -->
+        <div class="recipe-section cost-section">
+            <h3 class="section-title">💰 Cost Breakdown</h3>
+            <div class="cost-content" id="cost-content">
+                <div class="cost-items">
+                    Calculating costs...
+                </div>
+                <div class="cost-total">
+                    <strong>Total Cost: ...</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Choking Hazard Warning -->
+        <div class="recipe-section warning-section">
+            <h3 class="section-title">⚠️ Choking Hazard Warnings</h3>
+            <div class="warning-content" id="warning-content">
+                <p>Loading safety information...</p>
+            </div>
+        </div>
+
+        <!-- Step by Step Directions -->
+        <div class="recipe-section">
+            <h3 class="section-title">
+                <span>👨‍🍳 Step by Step Method</span>
+                <button class="copy-btn" id="copy-method-btn" onclick="copyMethod()">
+                    📝 Copy Method
+                </button>
+            </h3>
+            <div class="directions-content" id="directions-content">
+                <ol>
+                    <li>Loading cooking instructions...</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Cooking Methods -->
+        <div class="recipe-section">
+            <h3 class="section-title">🍳 Cooking Methods</h3>
+            <div class="cooking-methods" id="cooking-methods">
+                <div class="method-item">
+                    <strong>Gas Hob:</strong> Medium heat (setting 4-5), cook for 2-3 minutes each side
+                </div>
+                <div class="method-item">
+                    <strong>Electric Hob:</strong> Medium temperature, cook for 2-3 minutes each side
+                </div>
+                <div class="method-item">
+                    <strong>Oven (alternative):</strong> 180°C, bake for 12-15 minutes on lined baking tray
+                </div>
+            </div>
+        </div>
+
+        <!-- Nutritional Information -->
+        <div class="recipe-section nutrition-section">
+            <h3 class="section-title">📊 Nutrition Information</h3>
+            <div class="nutrition-content" id="nutrition-content">
+                <div class="nutrition-item">
+                    <strong>Calories:</strong> <span id="calories-per-serving">Approximately 85 calories per toddler serving</span>
+                </div>
+                <div class="macros-grid">
+                    <div class="macro-item">Protein: <span id="protein">3.2g</span></div>
+                    <div class="macro-item">Carbohydrates: <span id="carbs">12.5g</span></div>
+                    <div class="macro-item">Fat: <span id="fat">2.8g</span></div>
+                    <div class="macro-item">Fiber: <span id="fiber">1.4g</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe Diet Tags -->
+        <div class="recipe-section diet-section">
+            <h3 class="section-title">🏷️ Recipe Particulars</h3>
+            <div class="diet-tags" id="diet-tags">
+                <span class="diet-tag">Vegetarian</span>
+                <span class="diet-tag">Finger Food</span>
+                <span class="diet-tag">Baby-led Weaning</span>
+                <span class="diet-tag">Soft Textures</span>
+            </div>
+        </div>
+
+        <!-- Chef Top Tips -->
+        <div class="recipe-section tips-section">
+            <h3 class="section-title">👨‍🍳 Chef's Top Tips</h3>
+            <div class="tips-content" id="tips-content">
+                <ul class="tips-list">
+                    <li>Here's my top tip - make extra and freeze them in portions! They defrost beautifully and save you time on busy mornings.</li>
+                    <li>Don't worry if your little one gets messy - that's half the fun! Let them explore the textures and get involved with the mashing.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Picky Eater Tips Section -->
+        <div class="recipe-section picky-eater-section">
+            <h3 class="section-title">💡 Picky Eater Alternatives</h3>
+            <div class="picky-eater-content" id="picky-eater-content">
+                <div class="picky-tip">
+                    <strong>If your little one isn't keen on banana:</strong> Try substituting with mashed sweet potato or pumpkin puree for natural sweetness.
+                </div>
+                <div class="picky-tip">
+                    <strong>For fussy eaters:</strong> Make them into fun shapes using cookie cutters after cooking, or let them help with the mashing - involvement often leads to tasting!
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        What ingredients are needed for <span id="faq-recipe-title">this recipe</span> for toddlers?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p id="faq-answer-1">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        How do I safely prepare <span id="faq-recipe-title-2">this recipe</span> for my toddler at home?
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p id="faq-answer-2">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span id="faq-question-3">What age can babies eat this recipe?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p id="faq-answer-3">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span id="faq-question-4">How long does this keep in the fridge?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p id="faq-answer-4">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span id="faq-question-5">What nutritional benefits does this recipe provide?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p id="faq-answer-5">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-actions">
+            <button class="recipe-btn previous-btn" id="previousBtn" disabled>
+                ← Previous Recipe
+            </button>
+            <button class="recipe-btn save-btn" id="saveBtn" onclick="saveRecipeToMealPlan()">
+                ➕ Add to Weekly Planner
+            </button>
+            <button class="recipe-btn pdf-btn" id="pdfBtn" onclick="generatePDF()">
+                📄 Download PDF
+            </button>
+            <button class="recipe-btn another-recipe-btn" id="anotherRecipeBtn">
+                ✨ Another Recipe
+            </button>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        console.log('🚀 FRESH START - Recipe generation script loading...');
+        // Load html2pdf bundle for consistent PDF export
+        (function loadHtml2Pdf(){
+            if (window.html2pdf) return;
+            const s=document.createElement('script');
+            s.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+            s.defer=true; document.head.appendChild(s);
+        })();
+        
+        // Animated loading screen with spinning fruits and motivational messages
+        function showAnimatedLoading() {
+            const container = document.querySelector('.container');
+            
+            // Hide all existing content
+            container.innerHTML = `
+                <div id="loading-screen" style="
+                    min-height: 80vh;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    border-radius: 24px;
+                    padding: 60px 20px;
+                    margin: 40px 0;
+                ">
+                    <!-- Spinning Fruits Circle -->
+                    <div style="
+                        position: relative;
+                        width: 200px;
+                        height: 200px;
+                        margin-bottom: 40px;
+                    ">
+                        <div class="fruit-circle" style="
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            animation: spin 3s linear infinite;
+                        ">
+                            <div class="fruit" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 2.5rem;">🍎</div>
+                            <div class="fruit" style="position: absolute; top: 20%; right: 0; font-size: 2.5rem;">🥕</div>
+                            <div class="fruit" style="position: absolute; bottom: 20%; right: 0; font-size: 2.5rem;">🥦</div>
+                            <div class="fruit" style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 2.5rem;">🍌</div>
+                            <div class="fruit" style="position: absolute; top: 20%; left: 0; font-size: 2.5rem;">🍅</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Motivational Message with inline cursor -->
+                    <div style="
+                        font-family: 'Poppins', sans-serif;
+                        font-size: 1.3rem;
+                        color: #6366f1;
+                        font-weight: 600;
+                        max-width: 500px;
+                        line-height: 1.5;
+                        margin-bottom: 20px;
+                        min-height: 2rem;
+                        text-align: center;
+                    ">
+                        <span id="motivational-message"></span><span id="typing-cursor" style="
+                            font-size: 1.3rem;
+                            color: #6366f1;
+                            animation: blink 1s infinite;
+                        ">|</span>
+                    </div>
+                </div>
+                
+                <style>
+                    @keyframes spin {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                    
+                    @keyframes blink {
+                        0%, 50% { opacity: 1; }
+                        51%, 100% { opacity: 0; }
+                    }
+                </style>
+            `;
+            
+            // Motivational messages for parents (max 80 characters)
+            const messages = [
+                "Keep this up parent! You'll cook up a storm in that kitchen! 👨‍🍳",
+                "Keep at it! They are only little once - Remember you're amazing too! ✨",
+                "You're creating memories one meal at a time. That's pure magic! 🌟",
+                "Every bite is love served on a plate. You're doing incredible! 💖",
+                "Cooking with love makes the best ingredient. You've got this! 🥘",
+                "Small hands, big appetites - you're the hero of mealtime! 🦸‍♀️",
+                "Messy kitchens make the happiest memories. Embrace the chaos! 🎉",
+                "From your heart to their tummy - that's the recipe for love! ❤️",
+                "Building healthy habits one delicious bite at a time! 🌱",
+                "You're not just feeding them, you're nurturing their future! 🌈"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Typewriter effect for the message
+            let messageIndex = 0;
+            const messageElement = document.getElementById('motivational-message');
+            const cursorElement = document.getElementById('typing-cursor');
+            
+            function typeMessage() {
+                if (messageIndex < randomMessage.length) {
+                    messageElement.textContent += randomMessage.charAt(messageIndex);
+                    messageIndex++;
+                    setTimeout(typeMessage, 80); // Typing speed
+                }
+            }
+            
+            // Start typing after a short delay
+            setTimeout(typeMessage, 500);
+        }
+        
+        // Restore page layout and update with recipe
+        function restorePageAndUpdateWithRecipe(recipe) {
+            console.log('🔄 Restoring page layout and updating with recipe...');
+            
+            // First restore the original page structure exactly as it was
+            const container = document.querySelector('.container');
+            container.innerHTML = `
+                <div class="recipe-header">
+                    <h1 class="recipe-title" id="title">Loading Your Recipe...</h1>
+                    <p class="recipe-subtitle" id="subtitle">Generating a delicious meal with your ingredients...</p>
+                    
+                    <!-- Reviews Section -->
+                    <div class="reviews-section">
+                        <div class="reviews-content" id="reviews-content">
+                            Preparing your personalized recipe...
+                        </div>
+                    </div>
+                </div>
+                <div class="recipe-meta">
+                    <div class="recipe-metrics">
+                        <span class="badge badge-metric">
+                            <span class="badge-icon">⏱️</span>
+                            Prep: <span id="prep-time">...</span>
+                        </span>
+                        <span class="badge badge-metric">
+                            <span class="badge-icon">🔥</span>
+                            <span id="difficulty">Easy</span>
+                        </span>
+                        <span class="badge badge-metric">
+                            <span class="badge-icon">💰</span>
+                            £<span id="cost">0.85</span>
+                        </span>
+                        <span class="badge badge-metric">
+                            <span class="badge-icon">🍽️</span>
+                            <span id="kcal-value">...</span> kcal
+                        </span>
+                        <span class="badge badge-metric">
+                            <span class="badge-icon">👶</span>
+                            <span id="servings-value">1 toddler</span>
+                        </span>
+                    </div>
+                    <div class="mess-level" id="mess-level" style="margin-top: 16px;">
+                        <div class="mess-circles">
+                            <div class="mess-circle" id="mess1"></div>
+                            <div class="mess-circle" id="mess2"></div>
+                            <div class="mess-circle" id="mess3"></div>
+                        </div>
+                        <div class="mess-description" id="mess-description">Loading...</div>
+                    </div>
+                </div>
+                <!-- Ingredients Section -->
+                <div class="recipe-section">
+                    <h3 class="section-title">🥄 Ingredients</h3>
+                    <div class="ingredients-content" id="ingredients-content">
+                        <div class="ingredients-list">
+                            Loading your ingredients...
+                        </div>
+                    </div>
+                </div>
+                <!-- Cost Breakdown Section -->
+                <div class="recipe-section cost-section">
+                    <h3 class="section-title">💰 Cost Breakdown</h3>
+                    <div class="cost-content" id="cost-content">
+                        <div class="cost-items">
+                            Calculating costs...
+                        </div>
+                        <div class="cost-total">
+                            <strong>Total Cost: ...</strong>
+                        </div>
+                    </div>
+                </div>
+                <!-- Choking Hazard Warning -->
+                <div class="recipe-section warning-section">
+                    <h3 class="section-title">⚠️ Choking Hazard Warnings</h3>
+                    <div class="warning-content" id="warning-content">
+                        <p>Loading safety information...</p>
+                    </div>
+                </div>
+                <!-- Step by Step Directions -->
+                <div class="recipe-section">
+                    <h3 class="section-title">👨‍🍳 Step by Step Method</h3>
+                    <div class="directions-content" id="directions-content">
+                        <ol>
+                            <li>Loading cooking instructions...</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- Cooking Methods -->
+                <div class="recipe-section">
+                    <h3 class="section-title">🍳 Cooking Methods</h3>
+                    <div class="cooking-methods" id="cooking-methods">
+                        <div class="method-item">
+                            <strong>Gas Hob:</strong> Medium heat (setting 4-5), cook for 2-3 minutes each side
+                        </div>
+                        <div class="method-item">
+                            <strong>Electric Hob:</strong> Medium temperature, cook for 2-3 minutes each side
+                        </div>
+                        <div class="method-item">
+                            <strong>Oven (alternative):</strong> 180°C, bake for 12-15 minutes on lined baking tray
+                        </div>
+                    </div>
+                </div>
+                <!-- Nutritional Information -->
+                <div class="recipe-section nutrition-section">
+                    <h3 class="section-title">📊 Nutrition Information</h3>
+                    <div class="nutrition-content" id="nutrition-content">
+                        <div class="nutrition-item">
+                            <strong>Calories:</strong> <span id="calories-per-serving">Approximately 85 calories per toddler serving</span>
+                        </div>
+                        <div class="macros-grid">
+                            <div class="macro-item">Protein: <span id="protein">3.2g</span></div>
+                            <div class="macro-item">Carbohydrates: <span id="carbs">12.5g</span></div>
+                            <div class="macro-item">Fat: <span id="fat">2.8g</span></div>
+                            <div class="macro-item">Fiber: <span id="fiber">1.4g</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recipe Diet Tags -->
+                <div class="recipe-section diet-section">
+                    <h3 class="section-title">🏷️ Recipe Particulars</h3>
+                    <div class="diet-tags" id="diet-tags">
+                        <span class="diet-tag">Vegetarian</span>
+                        <span class="diet-tag">Finger Food</span>
+                        <span class="diet-tag">Baby-led Weaning</span>
+                        <span class="diet-tag">Soft Textures</span>
+                    </div>
+                </div>
+                <!-- Chef Top Tips -->
+                <div class="recipe-section tips-section">
+                    <h3 class="section-title">👨‍🍳 Chef's Top Tips</h3>
+                    <div class="tips-content" id="tips-content">
+                        <ul class="tips-list">
+                            <li>Here's my top tip - make extra and freeze them in portions! They defrost beautifully and save you time on busy mornings.</li>
+                            <li>Don't worry if your little one gets messy - that's half the fun! Let them explore the textures and get involved with the mashing.</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Picky Eater Tips Section -->
+                <div class="recipe-section picky-eater-section">
+                    <h3 class="section-title">💡 Picky Eater Alternatives</h3>
+                    <div class="picky-eater-content" id="picky-eater-content">
+                        <div class="picky-tip">
+                            <strong>If your little one isn't keen on banana:</strong> Try substituting with mashed sweet potato or pumpkin puree for natural sweetness.
+                        </div>
+                        <div class="picky-tip">
+                            <strong>For fussy eaters:</strong> Make them into fun shapes using cookie cutters after cooking, or let them help with the mashing - involvement often leads to tasting!
+                        </div>
+                    </div>
+                </div>
+                <div class="recipe-actions">
+                    <button class="recipe-btn previous-btn" id="previousBtn" disabled>
+                        ← Previous Recipe
+                    </button>
+                    <button class="recipe-btn another-recipe-btn" id="anotherRecipeBtn">
+                        ✨ Another Recipe
+                    </button>
+                </div>
+            `;
+            
+            // Small delay to ensure DOM is ready, then update with recipe data
+            setTimeout(() => {
+                updatePageWithRecipe(recipe);
+            }, 100);
+        }
+        
+        // GPT-powered recipe generation function
+        async function generateRecipe() {
+            console.log('🤖 Starting GPT recipe generation...');
+            
+            try {
+                // Wait for auth to be ready
+                await new Promise(resolve => {
+                    const checkAuth = () => {
+                        if (window.toddlerChefAuth) {
+                            resolve();
+                        } else {
+                            setTimeout(checkAuth, 100);
+                        }
+                    };
+                    checkAuth();
+                });
+
+                // Check authentication - allow anonymous users for 3 free recipes
+                const user = toddlerChefAuth.getCurrentUser();
+                const isAnonymous = !user;
+
+                // Check usage limits
+                console.log('🔍 Checking usage limits...');
+                const usageCheck = await toddlerChefAuth.checkUsageLimit();
+                
+                if (!usageCheck.canGenerate) {
+                    if (usageCheck.reason === 'limit_reached') {
+                        console.log('🚫 Free usage limit reached - showing upgrade prompt');
+                        
+                        // Show a better user experience instead of alert
+                        const container = document.querySelector('.container');
+                        container.innerHTML = `
+                            <div class="recipe-header" style="text-align: center; padding: 60px 20px;">
+                                <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+                                <h1 class="recipe-title" style="color: #1e293b; margin-bottom: 20px;">
+                                    You've Used Your 3 Free Recipes!
+                                </h1>
+                                <p class="recipe-subtitle" style="color: #64748b; font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                                    Great job exploring our recipe generator! You've tried ${usageCheck.usageCount} free recipes. 
+                                    Ready to unlock unlimited recipes and save your favorites?
+                                </p>
+                                
+                                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                                    <button onclick="window.location.href='signin.html?reason=limit-reached'" 
+                                            style="background: #bae6fd; color: #1e293b; border: none; padding: 16px 32px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(186, 230, 253, 0.3);">
+                                        🚀 Sign Up for Free
+                                    </button>
+                                    <button onclick="window.location.href='premium.html?reason=limit-reached'" 
+                                            style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+                                        ⭐ Go Premium
+                                    </button>
+                                </div>
+                                
+                                <div style="margin-top: 40px; padding: 20px; background: #f8fafc; border-radius: 12px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                                    <h3 style="color: #1e293b; margin-bottom: 15px;">✨ What You Get:</h3>
+                                    <ul style="text-align: left; color: #64748b; line-height: 1.8;">
+                                        <li>✅ Unlimited AI recipe generation</li>
+                                        <li>✅ Save and organize your favorite recipes</li>
+                                        <li>✅ Personalized meal planning</li>
+                                        <li>✅ Child nutrition tracking</li>
+                                        <li>✅ Priority support</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="margin-top: 30px;">
+                                    <a href="index.html" style="color: #64748b; text-decoration: none; font-size: 0.9rem;">
+                                        ← Back to Home
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                        return;
+                    } else {
+                        // Show error message in a better way
+                        const container = document.querySelector('.container');
+                        container.innerHTML = `
+                            <div class="recipe-header" style="text-align: center; padding: 60px 20px;">
+                                <div style="font-size: 4rem; margin-bottom: 20px;">⚠️</div>
+                                <h1 class="recipe-title" style="color: #1e293b; margin-bottom: 20px;">
+                                    Unable to Generate Recipe
+                                </h1>
+                                <p class="recipe-subtitle" style="color: #64748b; font-size: 1.2rem; margin-bottom: 40px;">
+                                    We're experiencing some technical difficulties. Please try again in a moment.
+                                </p>
+                                <button onclick="location.reload()" 
+                                        style="background: #bae6fd; color: #1e293b; border: none; padding: 16px 32px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+                                    🔄 Try Again
+                                </button>
+                            </div>
+                        `;
+                        return;
+                    }
+                }
+
+                console.log('✅ Usage check passed:', usageCheck);
+                
+                // Increment usage count for free users
+                if (!usageCheck.unlimited) {
+                    console.log('📊 Incrementing usage count...');
+                    await toddlerChefAuth.incrementUsage();
+                }
+                
+                // Get user preferences from localStorage
+                const preferences = JSON.parse(localStorage.getItem('recipePreferences') || '{}');
+                console.log('Found preferences:', preferences);
+                
+                // Show animated loading screen
+                showAnimatedLoading();
+                
+                // Try GPT generation first
+                const recipe = await generateWithGPT(preferences);
+                restorePageAndUpdateWithRecipe(recipe);
+                
+            } catch (error) {
+                console.error('🚨 GPT recipe generation failed:', error);
+                console.error('Error details:', error.message, error.stack);
+                
+                // Show error message to user
+                document.getElementById('title').textContent = '⚠️ Recipe Generation Error';
+                document.getElementById('subtitle').textContent = `Error: ${error.message}`;
+                document.getElementById('reviews-content').innerHTML = `
+                    <div style="color: red; font-weight: bold;">
+                        🚨 DEBUG INFO:<br>
+                        - Error: ${error.message}<br>
+                        - Auth System Ready: ${window.toddlerChefAuth ? 'Yes' : 'No'}<br>
+                        - Preferences: ${JSON.stringify(preferences).substring(0, 200)}...<br>
+                        - Falling back to local generation...
+                    </div>
+                `;
+                
+                console.log('🔄 Falling back to local generation...');
+                // Restore page layout first, then generate locally
+                const container = document.querySelector('.container');
+                container.innerHTML = `
+                    <div class="recipe-header">
+                        <h1 class="recipe-title" id="title">⚠️ Recipe Generation Error</h1>
+                        <p class="recipe-subtitle" id="subtitle">${error.message}</p>
+                    </div>
+                `;
+                generateRecipeLocally(preferences);
+            }
+        }
+        
+        // New GPT-powered generation function
+        async function generateWithGPT(preferences) {
+            console.log('📡 Calling Vercel API...');
+            console.log('🔍 Preferences being sent:', JSON.stringify(preferences, null, 2));
+            
+            // Get Firebase auth token
+            let authHeaders = {
+                'Content-Type': 'application/json'
+            };
+            
+            try {
+                // Wait for auth to be ready and get token
+                if (window.toddlerChefAuth) {
+                    const token = await toddlerChefAuth.getIdToken();
+                    if (token) {
+                        authHeaders['Authorization'] = `Bearer ${token}`;
+                        console.log('🔑 Auth token added to request');
+                    } else {
+                        console.warn('⚠️ No auth token available - user may not be authenticated');
+                    }
+                } else {
+                    console.warn('⚠️ Auth system not ready');
+                }
+            } catch (error) {
+                console.error('Failed to get auth token:', error);
+            }
+            
+            const response = await fetch('/api/generate-recipe', {
+                method: 'POST',
+                headers: authHeaders,
+                body: JSON.stringify(preferences)
+            });
+            
+            console.log('📡 Response status:', response.status, response.statusText);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('🚨 API Error Response:', errorText);
+                
+                let errorData;
+                try {
+                    errorData = JSON.parse(errorText);
+                } catch (e) {
+                    errorData = { error: errorText || 'Unknown error' };
+                }
+                
+                // Handle specific error cases
+                if (response.status === 403 && errorData.usageLimit) {
+                    throw new Error('FREE TIER LIMIT REACHED: You\'ve used your 1 free recipe this month. Upgrade to Premium for unlimited recipes!');
+                } else if (response.status === 401) {
+                    throw new Error('AUTHENTICATION ERROR: Please sign in again to generate recipes.');
+                } else {
+                    throw new Error(`API Error ${response.status}: ${errorData.error || errorText || 'Failed to generate recipe'}`);
+                }
+            }
+            
+            const recipe = await response.json();
+            console.log('✅ GPT recipe received:', recipe.name);
+            
+            // Validate the recipe structure
+            if (!recipe.name || !recipe.ingredients || !recipe.directions) {
+                throw new Error('Invalid recipe structure from API');
+            }
+            
+            // Process ingredients to ensure they're in the right format
+            if (Array.isArray(recipe.ingredients)) {
+                recipe.ingredients = recipe.ingredients.join('<br><br>');
+            }
+            
+            return recipe;
+        }
+        
+        // Fallback to local generation if GPT fails
+        function generateRecipeLocally(preferences) {
+            console.log('🔄 Using local recipe generation as fallback...');
+            console.log('🔍 Fallback preferences:', preferences);
+            
+            // Update UI to show we're using fallback
+            document.getElementById('title').textContent = 'Creating Your Recipe...';
+            document.getElementById('subtitle').textContent = 'Using our backup recipe generator';
+            
+            try {
+                // Extract all ingredients
+                let allIngredients = [];
+                if (preferences.leftovers && preferences.leftovers.trim()) {
+                    allIngredients = allIngredients.concat(preferences.leftovers.split(',').map(item => item.trim()));
+                }
+                if (preferences.vegetables && preferences.vegetables.trim()) {
+                    allIngredients = allIngredients.concat(preferences.vegetables.split(',').map(item => item.trim()));
+                }
+                
+                if (allIngredients.length > 0) {
+                    // Create recipe following your Jamie Oliver format
+                    const mainIngredient = allIngredients[0];
+                    const dietaryRestrictions = preferences.dietary || [];
+                    const ageRange = preferences.agerange?.[0] || '12-18 months';
+                    
+                    // Filter ingredients based on dietary restrictions
+                    const filteredIngredients = filterIngredients(allIngredients, dietaryRestrictions);
+                    
+                    // Generate comprehensive recipe
+                    const recipe = {
+                        name: createRecipeName(filteredIngredients[0] || mainIngredient),
+                        oneLiner: createOneLiner(filteredIngredients, ageRange),
+                        review: getRandomReview(),
+                        ingredients: createIngredientsList(filteredIngredients, dietaryRestrictions),
+                        directions: createDirections(filteredIngredients, ageRange),
+                        prepTime: "8 minutes",
+                        cookTime: "15 minutes",
+                        calories: calculateCalories(filteredIngredients),
+                        macros: calculateMacros(filteredIngredients),
+                        costBreakdown: createCostBreakdown(filteredIngredients),
+                        chokingWarnings: createSafetyWarnings(filteredIngredients, ageRange),
+                        messLevel: calculateMessLevel(filteredIngredients),
+                        pickyEaterTips: getPickyEaterTips(),
+                        chefTips: getChefTips(),
+                        dietTags: createDietTags(filteredIngredients, dietaryRestrictions)
+                    };
+                    
+                    // Update the page with the recipe
+                    updatePageWithRecipe(recipe);
+                    
+                } else {
+                    showNoIngredientsMessage();
+                }
+                
+            } catch (error) {
+                console.error('Local recipe generation error:', error);
+                showErrorMessage();
+            }
+        }
+        
+        // Helper functions
+        function filterIngredients(ingredients, dietary) {
+            return ingredients.filter(ingredient => {
+                const lower = ingredient.toLowerCase();
+                
+                if (dietary.includes('egg-free') && lower.includes('egg')) return false;
+                if (dietary.includes('dairy-free') && (lower.includes('milk') || lower.includes('cheese') || lower.includes('butter'))) return false;
+                if (dietary.includes('gluten-free') && (lower.includes('bread') || lower.includes('pasta') || lower.includes('wheat'))) return false;
+                if (dietary.includes('nut-free') && (lower.includes('nut') || lower.includes('peanut'))) return false;
+                if (dietary.includes('vegetarian') && (lower.includes('chicken') || lower.includes('beef') || lower.includes('fish'))) return false;
+                
+                return true;
+            });
+        }
+        
+        function createRecipeName(mainIngredient) {
+            const ingredient = mainIngredient.charAt(0).toUpperCase() + mainIngredient.slice(1);
+            const names = [`${ingredient} Baby Bites`, `Toddler ${ingredient} Delight`, `Little ${ingredient} Bowl`, `Tiny Tot ${ingredient}`];
+            return names[Math.floor(Math.random() * names.length)];
+        }
+        
+        function createOneLiner(ingredients, ageRange) {
+            const main = ingredients[0] || 'healthy ingredients';
+            const texture = ageRange.includes('6-9') ? 'silky smooth' : 'bite-sized';
+            return `Fresh ${main} meets ${texture} perfection in this toddler-approved feast that makes mealtime absolutely magical.`;
+        }
+        
+        function getRandomReview() {
+            const reviews = [
+                "My toddler devoured every bite!",
+                "Perfect texture for little hands!",
+                "Easiest recipe I've ever made!",
+                "Making this again tomorrow definitely!",
+                "Worth every minute of prep!"
+            ];
+            return reviews[Math.floor(Math.random() * reviews.length)];
+        }
+        
+        function createIngredientsList(ingredients, dietary) {
+            const measurements = {
+                // Proteins
+                'chicken': '60g boneless chicken breast (halal), cut into 1cm cubes',
+                'beef': '60g lean beef mince (halal)',
+                'fish': '60g white fish fillet (cod or haddock), cut into 1cm flakes',
+                'salmon': '60g salmon fillet, skin removed, cut into 1cm pieces',
+                'egg': '1 large free-range egg',
+                'tofu': '60g firm tofu, cut into 1cm cubes',
+                
+                // Grains & Starches
+                'rice': '40g basmati rice (uncooked)',
+                'brown rice': '40g brown rice (uncooked)',
+                'quinoa': '30g quinoa (uncooked)',
+                'pasta': '40g wholemeal pasta (small shapes like shells or penne)',
+                'couscous': '30g couscous (uncooked)',
+                'oats': '30g rolled oats',
+                'bread': '1 slice wholemeal bread, crusts removed, cut into 1cm cubes',
+                
+                // Root Vegetables
+                'potato': '100g baby potatoes, peeled and cut into 1cm cubes',
+                'sweet potato': '100g sweet potato, peeled and cubed into 1cm pieces',
+                'carrot': '80g carrots, peeled and diced into 0.5cm cubes',
+                'parsnip': '80g parsnip, peeled and diced into 0.5cm cubes',
+                'beetroot': '60g cooked beetroot, diced into 0.5cm cubes',
+                
+                // Green Vegetables
+                'broccoli': '50g broccoli florets, cut into 1.5cm pieces',
+                'cauliflower': '50g cauliflower florets, cut into 1.5cm pieces',
+                'spinach': '30g fresh spinach leaves, chopped',
+                'kale': '30g kale leaves, stems removed, chopped',
+                'green beans': '50g green beans, trimmed and cut into 1cm pieces',
+                'asparagus': '50g asparagus spears, woody ends removed, cut into 1cm pieces',
+                'peas': '50g frozen peas (defrosted)',
+                'edamame': '50g shelled edamame beans',
+                
+                // Other Vegetables
+                'tomato': '1 medium tomato, deseeded and diced into 0.5cm pieces',
+                'cucumber': '50g cucumber, peeled and diced into 0.5cm pieces',
+                'bell pepper': '50g red bell pepper, deseeded and diced into 0.5cm pieces',
+                'courgette': '80g courgette, diced into 0.5cm cubes',
+                'aubergine': '60g aubergine, peeled and diced into 1cm cubes',
+                'mushrooms': '50g button mushrooms, wiped clean and sliced into 0.5cm pieces',
+                'onion': '30g white onion, finely diced into 0.3cm pieces',
+                
+                // Fruits
+                'banana': '1 small ripe banana, mashed',
+                'apple': '1 medium apple, peeled and diced into 0.5cm pieces',
+                'pear': '1 medium pear, peeled and diced into 0.5cm pieces',
+                'strawberries': '50g strawberries, hulled and quartered',
+                'blueberries': '40g fresh blueberries (halved for under 12 months)',
+                'mango': '50g mango flesh, diced into 0.5cm pieces',
+                'avocado': '50g ripe avocado, diced into 0.5cm pieces',
+                'peach': '1 medium peach, peeled and diced into 0.5cm pieces',
+                
+                // Dairy & Alternatives
+                'cheese': '30g mild cheddar cheese, grated',
+                'cream cheese': '20g full-fat cream cheese',
+                'yogurt': '2 tbsp plain full-fat Greek yogurt',
+                'milk': '60ml whole milk',
+                'coconut milk': '60ml canned coconut milk',
+                'almond milk': '60ml unsweetened almond milk',
+                
+                // Legumes
+                'lentils': '30g red lentils (uncooked)',
+                'chickpeas': '50g cooked chickpeas, mashed',
+                'black beans': '50g cooked black beans, mashed',
+                
+                // Herbs & Seasonings
+                'basil': '5 fresh basil leaves, finely chopped',
+                'parsley': '1 tbsp fresh parsley, finely chopped',
+                'coriander': '1 tbsp fresh coriander, finely chopped',
+                'oregano': 'Pinch of dried oregano',
+                'thyme': 'Pinch of fresh thyme leaves'
+            };
+            
+            let list = ingredients.map(ingredient => {
+                const clean = ingredient.toLowerCase().trim();
+                return measurements[clean] || `50g ${ingredient.trim()}, cut into toddler-appropriate pieces`;
+            });
+            
+            // Add cooking oil with alternatives
+            const hasOliveOil = Math.random() > 0.7; // 30% chance to offer alternatives
+            if (hasOliveOil) {
+                list.push('1 tsp extra virgin olive oil');
+            } else {
+                list.push('1 tsp rapeseed oil (or sunflower oil as alternative)');
+            }
+            
+            list.push('Pinch of mild herbs like oregano or basil (optional)');
+            list.push('Small pinch of black pepper (optional, for 18+ months)');
+            
+            return list.map(item => '• ' + item).join('<br><br>');
+        }
+        
+        function createDirections(ingredients, ageRange) {
+            let directions = [
+                "Right then, let's get started! Wash your hands thoroughly and rinse all fresh ingredients under cold running water. Pat dry with clean kitchen towel."
+            ];
+            
+            // Step 1: Start grains/starches that take longest to cook
+            if (ingredients.includes('rice')) {
+                directions.push("In a medium saucepan, bring 120ml water to the boil. Add the 40g basmati rice, reduce heat to low, cover and simmer for 10-12 minutes until tender and water is absorbed.");
+            }
+            
+            if (ingredients.includes('brown rice')) {
+                directions.push("In a medium saucepan, bring 150ml water to the boil. Add the 40g brown rice, reduce heat to low, cover and simmer for 25-30 minutes until tender and water is absorbed.");
+            }
+            
+            if (ingredients.includes('quinoa')) {
+                directions.push("In a small saucepan, bring 90ml water to the boil. Add the 30g quinoa, reduce heat to low, cover and simmer for 12-15 minutes until fluffy and water is absorbed.");
+            }
+            
+            if (ingredients.includes('lentils')) {
+                directions.push("In a small saucepan, bring 150ml water to the boil. Add the 30g red lentils, reduce heat and simmer uncovered for 8-10 minutes until completely soft and mushy.");
+            }
+            
+            if (ingredients.includes('pasta')) {
+                directions.push("In a medium saucepan, bring plenty of water to the boil. Add the 40g wholemeal pasta and cook for 10-12 minutes until very soft and tender for toddlers (longer than adult pasta).");
+            }
+            
+            // Step 2: Cook root vegetables that need longest cooking time
+            const rootVegetables = ingredients.filter(ing => ['potato', 'sweet potato', 'carrot', 'parsnip'].includes(ing.toLowerCase()));
+            
+            if (rootVegetables.length > 0) {
+                directions.push("Meanwhile, bring a large saucepan of water to the boil.");
+                
+                rootVegetables.forEach(veg => {
+                    const clean = veg.toLowerCase();
+                    if (clean.includes('potato') && !clean.includes('sweet')) {
+                        directions.push("Add the 100g diced baby potatoes to the boiling water and cook for 12-15 minutes until you can easily pierce them with a fork.");
+                    } else if (clean.includes('sweet potato')) {
+                        directions.push("Add the 100g cubed sweet potato to the boiling water and cook for 10-12 minutes until very tender and starting to break apart.");
+                    } else if (clean.includes('carrot')) {
+                        directions.push("Add the 80g diced carrots to the boiling water and cook for 8-10 minutes until you can pierce them easily with a fork.");
+                    } else if (clean.includes('parsnip')) {
+                        directions.push("Add the 80g diced parsnip to the boiling water and cook for 8-10 minutes until very tender.");
+                    }
+                });
+            }
+            
+            // Step 3: Cook proteins (if oil is needed)
+            const proteins = ingredients.filter(ing => ['chicken', 'beef', 'fish', 'salmon', 'tofu'].includes(ing.toLowerCase()));
+            
+            if (proteins.length > 0) {
+                directions.push("Heat 1 tsp oil in a non-stick frying pan over medium heat (setting 4-5 on gas hob). You'll know it's ready when the oil shimmers slightly.");
+                
+                proteins.forEach(protein => {
+                    const clean = protein.toLowerCase();
+                    if (clean.includes('chicken')) {
+                        directions.push("Add the 60g diced chicken breast pieces to the hot pan. Cook for 8-10 minutes, stirring every 2 minutes with a wooden spoon until golden brown all over and cooked through (no pink remaining when you cut the largest piece).");
+                    } else if (clean.includes('beef')) {
+                        directions.push("Add the 60g beef mince to the hot pan. Cook for 6-8 minutes, breaking it up with a wooden spoon until browned all over and no red meat remains.");
+                    } else if (clean.includes('salmon')) {
+                        directions.push("Add the 60g salmon pieces to the hot pan. Cook for 4-5 minutes, gently turning once, until fish flakes easily and is cooked through.");
+                    } else if (clean.includes('fish')) {
+                        directions.push("Add the 60g white fish pieces to the hot pan. Cook for 3-4 minutes, gently turning once, until fish flakes easily and is opaque throughout.");
+                    } else if (clean.includes('tofu')) {
+                        directions.push("Add the 60g tofu cubes to the hot pan. Cook for 5-6 minutes, turning gently, until golden on all sides.");
+                    }
+                });
+            }
+            
+            if (ingredients.includes('egg')) {
+                directions.push("Crack the 1 large egg into a small bowl, whisk with a fork until smooth, then pour into the hot pan. Scramble gently for 2-3 minutes until fully cooked and fluffy.");
+            }
+            
+            // Step 4: Add quick-cooking green vegetables
+            const greenVegetables = ingredients.filter(ing => ['broccoli', 'cauliflower', 'green beans', 'asparagus', 'spinach', 'kale'].includes(ing.toLowerCase()));
+            
+            if (greenVegetables.length > 0) {
+                greenVegetables.forEach(veg => {
+                    const clean = veg.toLowerCase();
+                    if (clean.includes('broccoli')) {
+                        directions.push("Steam the 50g broccoli florets in a steamer basket over boiling water for 4-5 minutes until tender enough to mash with a fork.");
+                    } else if (clean.includes('cauliflower')) {
+                        directions.push("Steam the 50g cauliflower florets in a steamer basket over boiling water for 5-6 minutes until very tender.");
+                    } else if (clean.includes('green beans')) {
+                        directions.push("Steam the 50g green bean pieces in a steamer basket over boiling water for 6-7 minutes until very soft.");
+                    } else if (clean.includes('asparagus')) {
+                        directions.push("Steam the 50g asparagus pieces in a steamer basket over boiling water for 4-5 minutes until tender.");
+                    } else if (clean.includes('spinach')) {
+                        directions.push("Heat a dry pan over medium heat. Add the 30g chopped spinach leaves and cook for 1-2 minutes until wilted and excess water has evaporated.");
+                    } else if (clean.includes('kale')) {
+                        directions.push("Steam the 30g chopped kale leaves in a steamer basket over boiling water for 3-4 minutes until tender.");
+                    }
+                });
+            }
+            
+            if (ingredients.includes('peas')) {
+                directions.push("Add the 50g defrosted peas to boiling water and cook for 2-3 minutes until heated through and tender.");
+            }
+            
+            // Step 5: Handle fruits and dairy
+            const fruits = ingredients.filter(ing => ['apple', 'pear', 'banana', 'strawberries', 'blueberries', 'mango', 'avocado', 'peach'].includes(ing.toLowerCase()));
+            
+            if (fruits.length > 0) {
+                fruits.forEach(fruit => {
+                    const clean = fruit.toLowerCase();
+                    if (clean.includes('apple')) {
+                        directions.push("Steam the 1 diced apple in a steamer basket for 3-4 minutes until just tender but not mushy.");
+                    } else if (clean.includes('pear')) {
+                        directions.push("Steam the 1 diced pear in a steamer basket for 2-3 minutes until just tender.");
+                    } else if (clean.includes('banana')) {
+                        directions.push("In a small bowl, mash the 1 small banana with a fork until smooth and lump-free.");
+                    } else if (clean.includes('strawberries')) {
+                        directions.push("The 50g quartered strawberries can be served fresh - no cooking needed.");
+                    } else if (clean.includes('blueberries')) {
+                        directions.push("The 40g fresh blueberries can be served fresh (ensure they're halved for under 12 months).");
+                    } else if (clean.includes('mango')) {
+                        directions.push("The 50g diced mango can be served fresh - no cooking needed.");
+                    } else if (clean.includes('avocado')) {
+                        directions.push("In a small bowl, mash the 50g avocado pieces with a fork until smooth.");
+                    } else if (clean.includes('peach')) {
+                        directions.push("The 1 diced peach can be served fresh or steamed for 2 minutes if preferred softer.");
+                    }
+                });
+            }
+            
+            // Step 6: Add dairy and final assembly
+            if (ingredients.includes('cheese')) {
+                directions.push("Stir in the 30g grated cheddar cheese while ingredients are still warm, allowing it to melt slightly.");
+            }
+            
+            if (ingredients.includes('yogurt')) {
+                directions.push("Allow all cooked ingredients to cool to room temperature, then gently fold in the 2 tbsp Greek yogurt.");
+            }
+            
+            // Step 7: Combine and texture
+            if (ageRange.includes('6-9')) {
+                directions.push("Using a potato masher or fork, mash all ingredients together until completely smooth with no lumps - the texture should be like thick porridge.");
+            } else {
+                directions.push("Gently combine all ingredients, ensuring all pieces remain no larger than 1cm and are soft enough to squish between your thumb and forefinger.");
+            }
+            
+            // Step 8: Season and serve
+            directions.push("Taste the mixture yourself first - it should be mild and pleasant. Add a tiny pinch of herbs if desired (no salt needed for under 12 months).");
+            directions.push("Allow to cool for 3-5 minutes until just warm to touch. Test temperature on the inside of your wrist - it should feel comfortable, not hot.");
+            directions.push("Serve immediately on a clean highchair tray or baby plate. Stay close to supervise and enjoy watching your little one explore their meal!");
+            
+            return directions;
+        }
+        
+        function calculateCalories(ingredients) {
+            const base = 100;
+            const additional = ingredients.length * 25;
+            return `Approximately ${base + additional} calories per toddler serving`;
+        }
+        
+        function calculateMacros(ingredients) {
+            return {
+                protein: `${(3 + ingredients.length * 0.8).toFixed(1)}g`,
+                carbs: `${(15 + ingredients.length * 2).toFixed(1)}g`,
+                fat: `${(2.5 + ingredients.length * 0.5).toFixed(1)}g`,
+                fiber: `${(1.8 + ingredients.length * 0.3).toFixed(1)}g`
+            };
+        }
+        
+        function createCostBreakdown(ingredients) {
+            const costs = {
+                'chicken': 0.85, 'beef': 0.75, 'rice': 0.15, 'broccoli': 0.45,
+                'carrot': 0.25, 'potato': 0.20, 'peas': 0.35, 'banana': 0.30,
+                'apple': 0.40, 'pasta': 0.25, 'cheese': 0.60
+            };
+            
+            let total = 0;
+            const items = ingredients.map(ingredient => {
+                const cost = costs[ingredient.toLowerCase()] || 0.35;
+                total += cost;
+                return `• ${ingredient.charAt(0).toUpperCase() + ingredient.slice(1)}: £${cost.toFixed(2)}`;
+            });
+            
+            items.push('• Olive oil/herbs: £0.05');
+            total += 0.05;
+            
+            return {
+                items: items.join('<br>'),
+                total: `£${total.toFixed(2)}`
+            };
+        }
+        
+        function createSafetyWarnings(ingredients, ageRange) {
+            let warnings = [];
+            
+            if (ingredients.some(ing => ing.toLowerCase().includes('chicken'))) {
+                warnings.push('Ensure chicken is cooked thoroughly and shredded into very small pieces.');
+            }
+            
+            if (ageRange.includes('6-9') || ageRange.includes('9-12')) {
+                warnings.push('Always supervise feeding and ensure all food is mashed to appropriate consistency.');
+            } else {
+                warnings.push('Cut all food into pieces smaller than your little one\'s mouth and always supervise eating.');
+            }
+            
+            warnings.push('Test temperature before serving - food should be lukewarm, not hot.');
+            
+            return warnings.join(' ');
+        }
+        
+        function calculateMessLevel(ingredients) {
+            let level = 1;
+            if (ingredients.some(ing => ['banana', 'avocado'].includes(ing.toLowerCase()))) level++;
+            if (ingredients.length > 3) level++;
+            level = Math.min(level, 3);
+            
+            const descriptions = {
+                1: "(1/3 - Lovely and clean, easy peasy!)",
+                2: "(2/3 - A little messy but manageable!)",
+                3: "(3/3 - Full-on messy fun ahead!)"
+            };
+            
+            return { level, description: descriptions[level] };
+        }
+        
+        function getPickyEaterTips() {
+            return [
+                {
+                    condition: "If your little one refuses the mixed meal:",
+                    solution: "Serve tiny portions (pea-sized) alongside their favourite foods. It can take 10+ exposures before they try new foods."
+                },
+                {
+                    condition: "For texture-sensitive toddlers:",
+                    solution: "Blend half the portion smooth and leave the other half chunky, so they can choose their preferred texture during the meal."
+                },
+                {
+                    condition: "If they only eat one ingredient:",
+                    solution: "That's perfectly fine! Gradually mix tiny amounts of other ingredients into their favourite component over several meals."
+                }
+            ];
+        }
+        
+        function getChefTips() {
+            return [
+                "Here's my top tip - make extra portions and freeze in ice cube trays! Perfect for quick future meals.",
+                "Don't worry about the mess - exploration is learning! Use a splash mat and let them discover."
+            ];
+        }
+        
+        function createDietTags(ingredients, dietaryRestrictions) {
+            let tags = [];
+            
+            // Check if recipe is vegetarian/vegan based on ingredients
+            const hasAnimalProtein = ingredients.some(ing => 
+                ['chicken', 'beef', 'fish', 'salmon', 'tuna'].includes(ing.toLowerCase())
+            );
+            const hasDairy = ingredients.some(ing => 
+                ['milk', 'cheese', 'butter', 'yogurt'].includes(ing.toLowerCase())
+            );
+            const hasEggs = ingredients.some(ing => 
+                ['egg'].includes(ing.toLowerCase())
+            );
+            
+            if (!hasAnimalProtein && !hasDairy && !hasEggs) {
+                tags.push('Vegan');
+            } else if (!hasAnimalProtein) {
+                tags.push('Vegetarian');
+            }
+            
+            // Add dietary restriction tags
+            if (dietaryRestrictions.includes('gluten-free')) tags.push('Gluten-Free');
+            if (dietaryRestrictions.includes('dairy-free')) tags.push('Dairy-Free');
+            if (dietaryRestrictions.includes('egg-free')) tags.push('Egg-Free');
+            if (dietaryRestrictions.includes('nut-free')) tags.push('Nut-Free');
+            if (dietaryRestrictions.includes('halal')) tags.push('Halal');
+            
+            // Add age-appropriate tags
+            tags.push('Finger Food');
+            tags.push('Baby-led Weaning');
+            tags.push('Toddler-Friendly');
+            
+            // Add texture tags
+            tags.push('Soft Textures');
+            
+            return tags;
+        }
+        
+        function updatePageWithRecipe(recipe) {
+            console.log('📄 Updating page with recipe:', recipe.name);
+            
+            // Update main content
+            document.getElementById('title').textContent = recipe.name;
+            document.getElementById('subtitle').textContent = recipe.oneLiner;
+            document.getElementById('reviews-content').textContent = 'Parent-Approved Review: ' + recipe.review;
+            // Update prep time and difficulty
+            document.getElementById('prep-time').textContent = recipe.prepTime;
+            
+            // Set difficulty based on recipe complexity
+            let difficulty = 'Easy';
+            if (recipe.name && (recipe.name.toLowerCase().includes('complex') || recipe.name.toLowerCase().includes('advanced'))) {
+                difficulty = 'Hard';
+            } else if (recipe.prepTime && recipe.prepTime.includes('15') || recipe.prepTime.includes('20')) {
+                difficulty = 'Medium';
+            }
+            document.getElementById('difficulty').textContent = difficulty;
+            
+            // Extract calories number
+            const caloriesText = recipe.calories;
+            const caloriesNumber = caloriesText.match(/\d+/)?.[0] || '95';
+            document.getElementById('kcal-value').textContent = caloriesNumber;
+            
+            // Extract cost from cost breakdown
+            const costMatch = recipe.costBreakdown?.total?.match(/£(\d+\.?\d*)/);
+            const cost = costMatch ? costMatch[1] : '0.85';
+            document.getElementById('cost').textContent = cost;
+            
+            // Update servings based on categories and recipe type
+            const categories = JSON.parse(localStorage.getItem('recipePreferences') || '{}').categories || [];
+            let servingsText = '1 toddler serving';
+            
+            if (categories.includes('family-dinner')) {
+                servingsText = 'serves family of 4-5';
+            } else if (categories.includes('batch-cook')) {
+                servingsText = '4-6 toddler portions';
+            } else if (recipe.name && recipe.name.toLowerCase().includes('family')) {
+                servingsText = 'serves family of 4-5';
+            } else if (recipe.chefTips && JSON.stringify(recipe.chefTips).toLowerCase().includes('portion')) {
+                // Try to extract portion info from chef tips
+                const portionMatch = JSON.stringify(recipe.chefTips).match(/(\d+).*portion/i);
+                if (portionMatch) {
+                    servingsText = `${portionMatch[1]} toddler portions`;
+                }
+            }
+            
+            document.getElementById('servings-value').textContent = servingsText;
+            
+            // Update ingredients
+            const ingredientsContainer = document.querySelector('#ingredients-content .ingredients-list');
+            if (ingredientsContainer) {
+                ingredientsContainer.innerHTML = recipe.ingredients;
+            }
+            
+            // Update directions
+            const directionsList = document.querySelector('#directions-content ol');
+            if (directionsList) {
+                directionsList.innerHTML = recipe.directions.map(dir => `<li>${dir}</li>`).join('');
+            }
+            
+            // Update cost breakdown
+            const costItems = document.querySelector('.cost-items');
+            const costTotal = document.querySelector('.cost-total');
+            if (costItems) costItems.innerHTML = recipe.costBreakdown.items;
+            if (costTotal) costTotal.innerHTML = `<strong>Total Cost: ${recipe.costBreakdown.total}</strong>`;
+            
+            // Update warnings
+            document.getElementById('warning-content').innerHTML = `<p>${recipe.chokingWarnings}</p>`;
+            
+            // Update mess level
+            const messCircles = document.querySelectorAll('.mess-circle');
+            messCircles.forEach((circle, index) => {
+                circle.classList.remove('filled');
+                if (index < recipe.messLevel.level) {
+                    circle.classList.add('filled');
+                }
+            });
+            document.getElementById('mess-description').textContent = recipe.messLevel.description;
+            
+            // Update nutrition
+            document.getElementById('calories-per-serving').textContent = recipe.calories;
+            document.getElementById('protein').textContent = recipe.macros.protein;
+            document.getElementById('carbs').textContent = recipe.macros.carbs;
+            document.getElementById('fat').textContent = recipe.macros.fat;
+            document.getElementById('fiber').textContent = recipe.macros.fiber;
+            
+            // Update picky eater tips
+            const pickyContent = document.getElementById('picky-eater-content');
+            if (pickyContent) {
+                pickyContent.innerHTML = recipe.pickyEaterTips.map(tip => 
+                    `<div class="picky-tip"><strong>${tip.condition}</strong> ${tip.solution}</div>`
+                ).join('');
+            }
+            
+            // Update chef tips
+            const tipsContent = document.querySelector('#tips-content .tips-list');
+            if (tipsContent) {
+                tipsContent.innerHTML = recipe.chefTips.map(tip => `<li>${tip}</li>`).join('');
+            }
+            
+            // Update diet tags
+            const dietTagsContainer = document.getElementById('diet-tags');
+            if (dietTagsContainer) {
+                dietTagsContainer.innerHTML = recipe.dietTags.map(tag => 
+                    `<span class="diet-tag">${tag}</span>`
+                ).join('');
+            }
+            
+            console.log('✅ Recipe page updated successfully!');
+        }
+        
+        function showNoIngredientsMessage() {
+            document.getElementById('title').textContent = 'Please Add Your Ingredients';
+            document.getElementById('subtitle').textContent = 'Go back to the preferences form to add your available ingredients';
+            document.getElementById('reviews-content').textContent = 'Waiting for your ingredients!';
+        }
+        
+        function showErrorMessage() {
+            document.getElementById('title').textContent = 'Recipe Generation Error';
+            document.getElementById('subtitle').textContent = 'Please check console or try refreshing the page';
+        }
+        
+        // Run recipe generation when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 DOM ready - starting recipe generation');
+            setTimeout(generateRecipe, 200); // Small delay to ensure DOM is fully ready
+        });
+        
+        // Also run on page visibility change (when coming from preferences page)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                console.log('🔄 Page became visible - regenerating recipe');
+                generateRecipe();
+            }
+        });
+        
+        // Copy ingredients function
+        function copyIngredients() {
+            const ingredientsList = document.querySelector('#ingredients-content .ingredients-list');
+            const copyBtn = document.getElementById('copy-ingredients-btn');
+            
+            if (!ingredientsList) {
+                console.log('❌ No ingredients found to copy');
+                return;
+            }
+            
+            // Get the ingredients text and clean it up
+            let ingredientsText = ingredientsList.innerHTML;
+            
+            // Remove HTML tags and convert to plain text
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = ingredientsText;
+            const plainText = tempDiv.textContent || tempDiv.innerText || '';
+            
+            // Clean up the text - remove extra whitespace and format nicely
+            const cleanText = plainText
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0)
+                .join('\n');
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(cleanText).then(function() {
+                console.log('✅ Ingredients copied to clipboard');
+                
+                // Update button to show success
+                copyBtn.innerHTML = '✅ Copied!';
+                copyBtn.classList.add('copied');
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    copyBtn.innerHTML = '📋 Copy Ingredients';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+                
+            }).catch(function(err) {
+                console.error('❌ Failed to copy ingredients:', err);
+                
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = cleanText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    console.log('✅ Ingredients copied using fallback method');
+                    
+                    // Update button to show success
+                    copyBtn.innerHTML = '✅ Copied!';
+                    copyBtn.classList.add('copied');
+                    
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '📋 Copy Ingredients';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                    
+                } catch (fallbackErr) {
+                    console.error('❌ Fallback copy also failed:', fallbackErr);
+                    copyBtn.innerHTML = '❌ Copy Failed';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '📋 Copy Ingredients';
+                    }, 2000);
+                }
+                
+                document.body.removeChild(textArea);
+            });
+        }
+
+        // Copy method function
+        function copyMethod() {
+            const methodList = document.querySelector('#directions-content ol');
+            const copyBtn = document.getElementById('copy-method-btn');
+            
+            if (!methodList) {
+                console.log('❌ No method found to copy');
+                return;
+            }
+            
+            // Get the method text and clean it up
+            let methodText = methodList.innerHTML;
+            
+            // Remove HTML tags and convert to plain text
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = methodText;
+            const plainText = tempDiv.textContent || tempDiv.innerText || '';
+            
+            // Clean up the text and format as numbered steps
+            const cleanText = plainText
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0)
+                .map((step, index) => `${index + 1}. ${step}`)
+                .join('\n\n');
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(cleanText).then(function() {
+                console.log('✅ Method copied to clipboard');
+                
+                // Update button to show success
+                copyBtn.innerHTML = '✅ Copied!';
+                copyBtn.classList.add('copied');
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    copyBtn.innerHTML = '📝 Copy Method';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+                
+            }).catch(function(err) {
+                console.error('❌ Failed to copy method:', err);
+                
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = cleanText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    console.log('✅ Method copied using fallback method');
+                    
+                    // Update button to show success
+                    copyBtn.innerHTML = '✅ Copied!';
+                    copyBtn.classList.add('copied');
+                    
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '📝 Copy Method';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                    
+                } catch (fallbackErr) {
+                    console.error('❌ Fallback copy also failed:', fallbackErr);
+                    copyBtn.innerHTML = '❌ Copy Failed';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '📝 Copy Method';
+                    }, 2000);
+                }
+                
+                document.body.removeChild(textArea);
+            });
+        }
+
+        // PDF generation function (unified with favourites)
+        async function generatePDF() {
+            const pdfBtn = document.getElementById('pdfBtn');
+
+            try {
+                // Wait for auth
+                await new Promise(resolve => { (function check(){ if (window.toddlerChefAuth) resolve(); else setTimeout(check, 100); })(); });
+
+                const profile = window.toddlerChefAuth.getUserProfile();
+                const isPremium = profile && (profile.subscriptionStatus === 'premium' || profile.subscriptionStatus === 'pro' || profile.premiumUser === true);
+                if (!isPremium) {
+                    window.location.href = 'premium.html?reason=pdf-limit';
+                    return;
+                }
+
+                if (pdfBtn) { pdfBtn.innerHTML = '⏳ Generating PDF...'; pdfBtn.disabled = true; }
+
+                // Use the entire recipe container for export
+                const el = document.querySelector('.container');
+                if (!el || !window.html2pdf) { throw new Error('PDF engine not ready'); }
+
+                const filename = (document.querySelector('.recipe-title')?.textContent || 'toddlerchef-recipe') + '.pdf';
+                const opt = { margin: 10, filename, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+                await window.html2pdf().from(el).set(opt).save();
+
+                if (pdfBtn) { pdfBtn.innerHTML = '✅ PDF Ready!'; }
+                setTimeout(() => { if (pdfBtn) { pdfBtn.innerHTML = '📄 Download PDF'; pdfBtn.disabled = false; } }, 3000);
+            } catch (error) {
+                console.error('❌ PDF generation failed:', error);
+                if (pdfBtn) { pdfBtn.innerHTML = '❌ PDF Failed'; }
+                setTimeout(() => { if (pdfBtn) { pdfBtn.innerHTML = '📄 Download PDF'; pdfBtn.disabled = false; } }, 3000);
+                alert('Failed to generate PDF. Please try again.');
+            }
+        }
+
+        // Create PDF content as HTML
+        function createPDFContent(recipe) {
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${recipe.name}</title>
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700&display=swap');
+                        
+                        body {
+                            font-family: 'Inter', sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            max-width: 800px;
+                            margin: 0 auto;
+                            padding: 40px;
+                            background: white;
+                        }
+                        
+                        .header {
+                            text-align: center;
+                            margin-bottom: 40px;
+                            border-bottom: 3px solid #6366f1;
+                            padding-bottom: 20px;
+                        }
+                        
+                        .logo {
+                            font-family: 'Poppins', sans-serif;
+                            font-size: 1.5rem;
+                            color: #6366f1;
+                            margin-bottom: 10px;
+                            font-weight: 700;
+                        }
+                        
+                        .recipe-title {
+                            font-family: 'Poppins', sans-serif;
+                            font-size: 2rem;
+                            color: #1e293b;
+                            margin-bottom: 10px;
+                            font-weight: 700;
+                        }
+                        
+                        .recipe-meta {
+                            color: #64748b;
+                            font-size: 1rem;
+                        }
+                        
+                        .section {
+                            margin-bottom: 30px;
+                        }
+                        
+                        .section-title {
+                            font-family: 'Poppins', sans-serif;
+                            font-size: 1.3rem;
+                            color: #475569;
+                            margin-bottom: 15px;
+                            font-weight: 600;
+                            border-left: 4px solid #6366f1;
+                            padding-left: 15px;
+                        }
+                        
+                        .ingredients {
+                            background: #f8fafc;
+                            padding: 20px;
+                            border-radius: 8px;
+                            border: 1px solid #e2e8f0;
+                        }
+                        
+                        .directions ol {
+                            padding-left: 20px;
+                        }
+                        
+                        .directions li {
+                            margin-bottom: 12px;
+                            line-height: 1.7;
+                        }
+                        
+                        .footer {
+                            margin-top: 40px;
+                            text-align: center;
+                            color: #64748b;
+                            font-size: 0.9rem;
+                            border-top: 1px solid #e2e8f0;
+                            padding-top: 20px;
+                        }
+                        
+                        @media print {
+                            body { margin: 0; padding: 20px; }
+                            .header { margin-bottom: 30px; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="logo">👶🍳✨ ToddlerChef AI</div>
+                        <h1 class="recipe-title">${recipe.name}</h1>
+                        <div class="recipe-meta">
+                            ${recipe.prepTime && recipe.cookTime ? `Prep: ${recipe.prepTime} • Cook: ${recipe.cookTime}` : 'Perfect for toddlers'}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">🥄 Ingredients</h2>
+                        <div class="ingredients">
+                            ${recipe.ingredients}
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h2 class="section-title">👨‍🍳 Method</h2>
+                        <div class="directions">
+                            <ol>${recipe.directions}</ol>
+                        </div>
+                    </div>
+                    
+                    <div class="footer">
+                        <p>Generated with ❤️ by ToddlerChef AI</p>
+                        <p>Visit us at toddlerchef.ai for more amazing recipes!</p>
+                        <p>Generated on ${new Date().toLocaleDateString()}</p>
+                    </div>
+                </body>
+                </html>
+            `;
+        }
+
+        // Button handlers
+        document.getElementById('anotherRecipeBtn').addEventListener('click', function() {
+            console.log('🔄 Another recipe requested');
+            generateRecipe(); // Generate new recipe with same ingredients
+        });
+
+        // Save recipe to meal plan function
+        async function saveRecipeToMealPlan() {
+            const saveBtn = document.getElementById('saveBtn');
+            
+            try {
+                // Check if user is authenticated and premium
+                if (!window.toddlerChefAuth) {
+                    alert('Please sign in to save recipes to your meal plan.');
+                    window.location.href = 'signin.html';
+                    return;
+                }
+
+                const user = toddlerChefAuth.getCurrentUser();
+                if (!user) {
+                    alert('Please sign in to save recipes to your meal plan.');
+                    window.location.href = 'signin.html';
+                    return;
+                }
+
+                const userProfile = toddlerChefAuth.getUserProfile();
+                const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
+
+                if (subscriptionStatus === 'free') {
+                    alert('Premium subscription required to save recipes to meal plan.');
+                    window.location.href = 'premium.html?reason=meal-plan-save';
+                    return;
+                }
+
+                // Update button to show saving
+                saveBtn.innerHTML = '⏳ Saving...';
+                saveBtn.disabled = true;
+
+                // Get current recipe data
+                const recipeData = {
+                    name: document.getElementById('title').textContent,
+                    description: document.getElementById('subtitle').textContent,
+                    prepTime: document.getElementById('prep-time').textContent,
+                    cookTime: document.getElementById('cook-time').textContent,
+                    ingredients: document.querySelector('#ingredients-content .ingredients-list').innerHTML,
+                    directions: document.querySelector('#directions-content ol').innerHTML,
+                    calories: document.getElementById('kcal-value').textContent,
+                    type: 'custom-generated',
+                    savedAt: new Date().toISOString()
+                };
+
+                // Save to user's saved recipes
+                const result = await toddlerChefAuth.saveFavoriteRecipe(recipeData);
+                
+                if (result.success) {
+                    // Update button to show saved
+                    saveBtn.innerHTML = '✅ Saved!';
+                    saveBtn.classList.add('saved');
+                    saveBtn.disabled = true;
+                    
+                    // Reset button after 3 seconds
+                    setTimeout(() => {
+                        saveBtn.innerHTML = '➕ Add to Weekly Planner';
+                        saveBtn.classList.remove('saved');
+                        saveBtn.disabled = false;
+                    }, 3000);
+                    
+                    console.log('✅ Recipe saved to meal plan successfully');
+                } else {
+                    throw new Error(result.error || 'Failed to save recipe');
+                }
+
+            } catch (error) {
+                console.error('❌ Save recipe error:', error);
+                
+                // Reset button on error
+                saveBtn.innerHTML = '❌ Save Failed';
+                setTimeout(() => {
+                    saveBtn.innerHTML = '➕ Add to Weekly Planner';
+                    saveBtn.disabled = false;
+                }, 3000);
+
+                alert('Failed to save recipe. Please try again.');
+            }
+        }
+
+        // Show save button for premium users
+        function checkAndShowSaveButton() {
+            const saveBtn = document.getElementById('saveBtn');
+            
+            if (window.toddlerChefAuth) {
+                const user = toddlerChefAuth.getCurrentUser();
+                if (user) {
+                    const userProfile = toddlerChefAuth.getUserProfile();
+                    const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
+                    
+                    if (subscriptionStatus === 'premium' || subscriptionStatus === 'pro') {
+                        saveBtn.style.display = 'inline-flex';
+                        console.log('✅ Save button shown for premium user');
+                    }
+                }
+            }
+        }
+
+
+        
+        // Generate FAQ content based on recipe
+        function generateFAQContent(recipe) {
+            const recipeTitle = recipe.name || 'this recipe';
+            
+            // Update recipe title in FAQ questions
+            document.querySelectorAll('#faq-recipe-title, #faq-recipe-title-2').forEach(el => {
+                el.textContent = recipeTitle;
+            });
+            
+            // FAQ 1: Ingredients
+            const ingredients = recipe.ingredients || '';
+            const ingredientList = ingredients.replace(/<[^>]*>/g, '').split(/[•\n\r]/).filter(item => item.trim()).slice(0, 5);
+            const faqAnswer1 = `You'll need: ${ingredientList.join(', ')}. Always check for allergens and ensure ingredients are age-appropriate for your toddler.`;
+            document.getElementById('faq-answer-1').textContent = faqAnswer1;
+            
+            // FAQ 2: Safe preparation
+            const prepTime = recipe.prepTime || '10-15 minutes';
+            const faqAnswer2 = `To safely prepare ${recipeTitle} for your toddler, ensure all ingredients are properly cooked, cut into small pieces, and cooled to room temperature. Supervise your child during mealtime.`;
+            document.getElementById('faq-answer-2').textContent = faqAnswer2;
+            
+            // FAQ 3: Age appropriateness
+            const ageQuestion = recipe.name && recipe.name.toLowerCase().includes('finger food') ? 
+                'What age can babies start eating finger foods?' : 
+                'What age is this recipe suitable for?';
+            const ageAnswer = recipe.name && recipe.name.toLowerCase().includes('finger food') ?
+                'Most babies can start finger foods around 8-10 months when they can sit up and grasp objects. Always supervise and ensure food is soft enough to mash with gums.' :
+                'This recipe is suitable for toddlers 12+ months. For younger babies, puree or mash the ingredients to a smooth consistency.';
+            document.getElementById('faq-question-3').textContent = ageQuestion;
+            document.getElementById('faq-answer-3').textContent = ageAnswer;
+            
+            // FAQ 4: Storage/meal prep
+            const storageQuestion = recipe.name && recipe.name.toLowerCase().includes('batch') ?
+                'How long can I store this batch-cooked recipe?' :
+                'Can I prepare this recipe in advance?';
+            const storageAnswer = recipe.name && recipe.name.toLowerCase().includes('batch') ?
+                'Store in an airtight container in the fridge for up to 3 days, or freeze for up to 2 months. Reheat thoroughly before serving.' :
+                'Yes, you can prepare this recipe up to 24 hours in advance. Store in the fridge and reheat gently before serving to your toddler.';
+            document.getElementById('faq-question-4').textContent = storageQuestion;
+            document.getElementById('faq-answer-4').textContent = storageAnswer;
+            
+            // FAQ 5: Nutritional benefits
+            const nutritionQuestion = recipe.macros && recipe.macros.protein && recipe.macros.protein.includes('g') && parseInt(recipe.macros.protein) > 10 ?
+                'Is this recipe high in protein for my toddler?' :
+                'What nutritional benefits does this recipe provide?';
+            const nutritionAnswer = recipe.macros && recipe.macros.protein && recipe.macros.protein.includes('g') && parseInt(recipe.macros.protein) > 10 ?
+                'Yes, this recipe provides excellent protein for your toddler\'s growth and development. Protein helps build muscles and supports healthy brain development.' :
+                'This recipe provides essential nutrients including vitamins, minerals, and healthy fats that support your toddler\'s growth, brain development, and immune system.';
+            document.getElementById('faq-question-5').textContent = nutritionQuestion;
+            document.getElementById('faq-answer-5').textContent = nutritionAnswer;
+        }
+    </script>
+    
+    <!-- FAQ Styles -->
+    <style>
+    .faq-section {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin: 3rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e5e5;
+    }
+
+    .faq-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .faq-item {
+        border: 1px solid #e5e5e5;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+        border-color: #64748b;
+        box-shadow: 0 2px 8px rgba(100, 116, 139, 0.1);
+    }
+
+    .faq-question {
+        background: #f8fafc;
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+        font-weight: 500;
+        color: #64748b;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        border: none;
+        width: 100%;
+        text-align: left;
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+    }
+
+    .faq-question:hover {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .faq-question.active {
+        background: #64748b;
+        color: white;
+    }
+
+    .faq-icon {
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+        margin-left: 1rem;
+    }
+
+    .faq-question.active .faq-icon {
+        transform: rotate(180deg);
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        background: white;
+    }
+
+    .faq-answer.active {
+        max-height: 200px;
+    }
+
+    .faq-answer-content {
+        padding: 1rem 1.5rem;
+        color: #475569;
+        line-height: 1.6;
+        font-size: 0.95rem;
+    }
+
+    .faq-answer-content p {
+        margin: 0 0 0.5rem 0;
+    }
+
+    .faq-answer-content p:last-child {
+        margin-bottom: 0;
+    }
+    </style>
+    
+    <!-- FAQ JavaScript -->
+    <script>
+    function toggleFAQ(element) {
+        const faqItem = element.closest('.faq-item');
+        const answer = faqItem.querySelector('.faq-answer');
+        const question = faqItem.querySelector('.faq-question');
+        const icon = faqItem.querySelector('.faq-icon');
+        
+        // Close other open FAQs
+        document.querySelectorAll('.faq-answer.active').forEach(openAnswer => {
+            if (openAnswer !== answer) {
+                openAnswer.classList.remove('active');
+                openAnswer.previousElementSibling.classList.remove('active');
+            }
+        });
+        
+        // Toggle current FAQ
+        answer.classList.toggle('active');
+        question.classList.toggle('active');
+        
+        // Update icon
+        if (answer.classList.contains('active')) {
+            icon.textContent = '−';
+        } else {
+            icon.textContent = '+';
+        }
+    }
+
+    // Initialize FAQ functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add click handlers to all FAQ questions
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                toggleFAQ(this);
+            });
+        });
+        
+        // Add keyboard support
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleFAQ(this);
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

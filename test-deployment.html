@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deployment Test - ToddlerChef AI</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; background: #f0f0f0; }
+        .test-card { background: white; padding: 30px; border-radius: 10px; margin: 20px 0; }
+        .success { border-left: 4px solid #10b981; }
+        .info { border-left: 4px solid #3b82f6; }
+        .test-btn { 
+            background: #6366f1; color: white; padding: 12px 24px; 
+            border: none; border-radius: 8px; cursor: pointer; margin: 10px 5px;
+        }
+        .test-btn:hover { background: #4f46e5; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔧 ToddlerChef AI - Deployment Test</h1>
+    
+    <div class="test-card success">
+        <h2>✅ Static Files Test</h2>
+        <p>If you can see this page, static file deployment is working!</p>
+        <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+    </div>
+
+    <div class="test-card info">
+        <h2>🔗 Navigation Test</h2>
+        <p>Test all navigation links:</p>
+        <a href="index.html" class="test-btn">🏠 Homepage</a>
+        <a href="toddler-favourites.html" class="test-btn">🍼 Toddler Favourites</a>
+        <a href="recipe-preferences.html" class="test-btn">🎯 Recipe Form</a>
+        <a href="recipe-template.html" class="test-btn">🍽️ Recipe Template</a>
+    </div>
+
+    <div class="test-card info">
+        <h2>🧪 API Test</h2>
+        <p>Test if the enhanced API is working:</p>
+        <button class="test-btn" onclick="testFormData()">Test Form Data API</button>
+        <button class="test-btn" onclick="testMainAPI()">Test Recipe Generation</button>
+        <button class="test-btn" onclick="testFavouriteAPI()">Test Favourite Recipe API</button>
+        
+        <div id="test-results"></div>
+    </div>
+
+    <script>
+        // Show current timestamp
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        
+        async function testFormData() {
+            showResult('Testing form data endpoint...', 'info');
+            
+            try {
+                const testData = {
+                    leftovers: ['pasta'],
+                    vegetables: ['tomatoes'],
+                    dietary: ['vegetarian'],
+                    agerange: ['2+ years'],
+                    mealtype: ['dinner'],
+                    categories: ['freezer-friendly'],
+                    notes: 'Test data'
+                };
+                
+                const response = await fetch('/api/test-form-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                
+                const result = await response.json();
+                showResult('✅ Form Data API Working!\n' + JSON.stringify(result, null, 2), 'success');
+                
+            } catch (error) {
+                showResult('❌ Form Data API Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function testMainAPI() {
+            showResult('Testing main recipe API...', 'info');
+            
+            try {
+                const testData = {
+                    leftovers: ['pasta'],
+                    vegetables: ['tomatoes'],
+                    dietary: ['vegetarian'],
+                    agerange: ['2+ years'],
+                    mealtype: ['dinner'],
+                    categories: ['freezer-friendly']
+                };
+                
+                const response = await fetch('/api/generate-recipe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(testData)
+                });
+                
+                const result = await response.json();
+                
+                // Check if it properly followed vegetarian restriction
+                const hasChicken = JSON.stringify(result).toLowerCase().includes('chicken');
+                const hasFreezerInfo = JSON.stringify(result).toLowerCase().includes('freez');
+                
+                let status = '✅ Main Recipe API Working!\n';
+                status += `Vegetarian respected: ${!hasChicken ? '✅' : '❌'}\n`;
+                status += `Freezer friendly included: ${hasFreezerInfo ? '✅' : '❌'}\n`;
+                status += `Recipe name: ${result.name || 'No name'}\n`;
+                
+                showResult(status, hasChicken ? 'error' : 'success');
+                
+            } catch (error) {
+                showResult('❌ Main Recipe API Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function testFavouriteAPI() {
+            showResult('Testing favourite recipe API...', 'info');
+            
+            try {
+                const response = await fetch('/api/generate-favourite-recipe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ recipeId: 'carrot-apple-puree' })
+                });
+                
+                const result = await response.json();
+                showResult('✅ Favourite Recipe API Working!\nRecipe: ' + (result.name || 'Generated successfully'), 'success');
+                
+            } catch (error) {
+                showResult('❌ Favourite Recipe API Error: ' + error.message, 'error');
+            }
+        }
+        
+        function showResult(text, type) {
+            const div = document.getElementById('test-results');
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            div.innerHTML = `<div class="test-card ${className}"><pre>${text}</pre></div>`;
+        }
+    </script>
+</body>
+</html>

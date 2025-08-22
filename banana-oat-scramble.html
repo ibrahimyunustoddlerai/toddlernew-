@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banana Oat Scramble - ToddlerChef AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, rgba(255, 213, 79, 0.1), rgba(129, 199, 132, 0.1));
+            min-height: 100vh;
+            color: #5D5D5D;
+            line-height: 1.6;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #81C784;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .menu-btn:hover {
+            background: #66BB6A;
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            background: #FFD54F;
+            color: #5D5D5D;
+        }
+
+        .back-btn:hover {
+            background: #FFC107;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 80px auto 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 138, 128, 0.2);
+        }
+
+        .recipe-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid rgba(255, 138, 128, 0.2);
+            padding-bottom: 30px;
+        }
+
+        .recipe-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #FF8A80;
+            margin-bottom: 15px;
+        }
+
+        .recipe-subtitle {
+            color: #5D5D5D;
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .reviews-section {
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .reviews-content {
+            font-size: 0.9rem;
+            color: #5D5D5D;
+            text-align: center;
+        }
+
+        .recipe-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 25px;
+            background: rgba(255, 213, 79, 0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 138, 128, 0.2);
+        }
+
+        .meta-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+        }
+
+        .meta-label {
+            font-size: 0.9rem;
+            color: #5D5D5D;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #FF8A80;
+        }
+
+        .mess-level {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            flex-direction: column;
+        }
+
+        .mess-circles {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .mess-circle {
+            width: 12px;
+            height: 12px;
+            border: 2px solid #FFD54F;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        .mess-circle.filled {
+            background: #FFD54F;
+        }
+
+        .mess-description {
+            font-size: 0.8rem;
+            color: #5D5D5D;
+            text-align: center;
+        }
+
+        .recipe-section {
+            margin-bottom: 35px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            border-left: 5px solid #FF8A80;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #FF8A80;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255, 138, 128, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .ingredients-list {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #5D5D5D;
+        }
+
+        .cost-section {
+            background: rgba(255, 213, 79, 0.1);
+            border-left-color: #FFD54F;
+        }
+
+        .cost-items {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .cost-total {
+            font-size: 1.2rem;
+            color: #FF8A80;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border: 2px solid #FFD54F;
+        }
+
+        .warning-section {
+            background: rgba(255, 138, 128, 0.1);
+            border-left-color: #FF8A80;
+            border: 2px solid rgba(255, 138, 128, 0.3);
+        }
+
+        .warning-content {
+            color: #FF8A80;
+            font-weight: 500;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+        }
+
+        .directions-content ol {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .directions-content li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid #81C784;
+            position: relative;
+        }
+
+        .directions-content li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            background: #81C784;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .cooking-methods {
+            display: grid;
+            gap: 15px;
+        }
+
+        .method-item {
+            padding: 15px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(129, 199, 132, 0.3);
+        }
+
+        .nutrition-section {
+            background: rgba(129, 199, 132, 0.1);
+            border-left-color: #81C784;
+        }
+
+        .macros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .macro-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .diet-section {
+            background: rgba(255, 213, 79, 0.1);
+            border-left-color: #FFD54F;
+        }
+
+        .diet-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .diet-tag {
+            background: #FFD54F;
+            color: #5D5D5D;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tips-section {
+            background: rgba(255, 138, 128, 0.1);
+            border-left-color: #FF8A80;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #FF8A80;
+            position: relative;
+        }
+
+        .tips-list li:before {
+            content: "💡";
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .picky-eater-section {
+            background: rgba(129, 199, 132, 0.15);
+            border-left-color: #81C784;
+        }
+
+        .picky-tip {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #81C784;
+        }
+
+        .recipe-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .recipe-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-btn {
+            background: #FFD54F;
+            color: #5D5D5D;
+        }
+
+        .home-btn:hover {
+            transform: translateY(-2px);
+            background: #FFC107;
+        }
+
+        .another-recipe-btn {
+            background: linear-gradient(45deg, #FF8A80, #81C784);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 138, 128, 0.4);
+        }
+
+        .another-recipe-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 138, 128, 0.6);
+        }
+
+        .faq-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 138, 128, 0.2);
+        }
+
+        .faq-title {
+            color: #FF8A80;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #FF8A80;
+        }
+
+        .faq-item h4 {
+            color: #FF8A80;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .faq-item p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 100px 15px 0;
+                padding: 25px;
+            }
+            
+            .recipe-title {
+                font-size: 2.2rem;
+            }
+            
+            .recipe-meta {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .recipe-actions {
+                flex-direction: column;
+            }
+            
+            .macros-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="index.html" class="menu-btn back-btn">← Back to Home</a>
+        <a href="recipe-preferences.html" class="menu-btn">🍽️ New Recipe</a>
+        <a href="signin.html" class="menu-btn" style="background: #FFD54F; color: #5D5D5D;">Sign In</a>
+    </div>
+
+    <div class="container">
+        <div class="recipe-header">
+            <h1 class="recipe-title">🌅 Banana Oat Scramble</h1>
+            <p class="recipe-subtitle">Creamy mashed banana meets soft oats in perfectly textured bites that make morning meals a breeze.</p>
+            
+            <div class="reviews-section">
+                <div class="reviews-content">
+                    "My toddler absolutely loves this! So easy and nutritious." - Sarah M. ⭐⭐⭐⭐⭐<br>
+                    "Perfect texture for little hands. Makes breakfast stress-free!" - Mike D. ⭐⭐⭐⭐⭐
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-meta">
+            <div class="recipe-metrics">
+                <span class="badge badge-metric">
+                    <span class="badge-icon">⏱️</span>
+                    Prep: 5m
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">🔥</span>
+                    Easy
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">💰</span>
+                    £0.80
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">🍽️</span>
+                    95 kcal
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">👶</span>
+                    1 toddler
+                </span>
+            </div>
+            <div class="mess-level" style="margin-top: 16px;">
+                <div class="mess-circles">
+                    <div class="mess-circle filled"></div>
+                    <div class="mess-circle"></div>
+                    <div class="mess-circle"></div>
+                </div>
+                <div class="mess-description">(1/3 - Lovely and clean!)</div>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h3 class="section-title">🥄 Ingredients</h3>
+            <div class="ingredients-content">
+                <div class="ingredients-list">
+                    1 small ripe banana<br>
+                    40g rolled oats<br>
+                    30ml whole milk<br>
+                    1 large free-range egg (optional for 12m+)<br>
+                    1 tsp coconut oil for cooking
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-section cost-section">
+            <h3 class="section-title">💰 Cost Breakdown</h3>
+            <div class="cost-content">
+                <div class="cost-items">
+                    Banana (from bunch): £0.24<br>
+                    Rolled oats: £0.15<br>
+                    Whole milk: £0.06<br>
+                    Free-range egg: £0.25<br>
+                    Coconut oil: £0.10
+                </div>
+                <div class="cost-total">
+                    <strong>Total Cost: £0.80</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-section warning-section">
+            <h3 class="section-title">⚠️ Choking Hazard Warnings</h3>
+            <div class="warning-content">
+                <p>Always supervise eating and ensure appropriate texture for your child's age. For babies under 12 months, omit the whole egg and ensure oats are well-mashed. Test temperature before serving.</p>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h3 class="section-title">👨‍🍳 Step by Step Method</h3>
+            <div class="directions-content">
+                <ol>
+                    <li>Right then, let's start with that lovely ripe banana! Mash it up in a bowl until it's lovely and smooth - this is perfect for little helpers to get involved with!</li>
+                    <li>Add your oats to the mashed banana and give it a good stir. The oats will start to soften beautifully as they absorb all those natural banana juices.</li>
+                    <li>Pour in the milk gradually, stirring as you go. You want a creamy, porridge-like consistency that's perfect for tiny mouths.</li>
+                    <li>If using egg (for toddlers 12m+), crack it in and whisk everything together until well combined. This adds lovely protein and makes it extra creamy!</li>
+                    <li>Heat your coconut oil in a non-stick pan over low-medium heat. We're cooking gently here - no rushing!</li>
+                    <li>Spoon the mixture into the pan and cook for 3-4 minutes, stirring gently to create soft, scrambled textures.</li>
+                    <li>Once it's warmed through and slightly set, remove from heat and let it cool to the perfect temperature for your little one.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="recipe-section">
+            <h3 class="section-title">🍳 Cooking Methods</h3>
+            <div class="cooking-methods">
+                <div class="method-item">
+                    <strong>Stovetop:</strong> Low-medium heat, cook for 3-4 mins stirring gently
+                </div>
+                <div class="method-item">
+                    <strong>Microwave (quick option):</strong> 30-second intervals, stirring between
+                </div>
+                <div class="method-item">
+                    <strong>No-cook method:</strong> Let oats soften in banana/milk mix for 10 mins
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-section nutrition-section">
+            <h3 class="section-title">📊 Nutrition Information</h3>
+            <div class="nutrition-content">
+                <div class="nutrition-item">
+                    <strong>Calories:</strong> Approximately 95 calories per toddler serving
+                </div>
+                <div class="macros-grid">
+                    <div class="macro-item">Protein: 4.2g</div>
+                    <div class="macro-item">Carbohydrates: 15.8g</div>
+                    <div class="macro-item">Fat: 2.5g</div>
+                    <div class="macro-item">Fiber: 2.1g</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-section diet-section">
+            <h3 class="section-title">🏷️ Recipe Particulars</h3>
+            <div class="diet-tags">
+                <span class="diet-tag">Vegetarian</span>
+                <span class="diet-tag">Baby-led Weaning</span>
+                <span class="diet-tag">Soft Textures</span>
+                <span class="diet-tag">Quick & Easy</span>
+                <span class="diet-tag">Breakfast</span>
+            </div>
+        </div>
+
+        <div class="recipe-section tips-section">
+            <h3 class="section-title">👨‍🍳 Chef's Top Tips</h3>
+            <div class="tips-content">
+                <ul class="tips-list">
+                    <li>Here's my top tip - use really ripe bananas with brown spots! They're naturally sweeter and mash more easily, perfect for little taste buds.</li>
+                    <li>Make extra and store in the fridge for up to 2 days. Just warm gently before serving - it's brilliant for busy mornings!</li>
+                    <li>Let your little one help with the mashing - it's great for motor skills and they're more likely to eat what they've helped make!</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="recipe-section picky-eater-section">
+            <h3 class="section-title">💡 Picky Eater Alternatives</h3>
+            <div class="picky-eater-content">
+                <div class="picky-tip">
+                    <strong>If your little one isn't keen on the oats:</strong> Try serving the mashed banana separately and let them dip their finger foods into it, or mix in some finely ground oats for a smoother texture.
+                </div>
+                <div class="picky-tip">
+                    <strong>For texture-sensitive eaters:</strong> Blend everything until completely smooth, or start with just banana and milk, gradually introducing oats as they get used to the flavors.
+                </div>
+                <div class="picky-tip">
+                    <strong>To make it more appealing:</strong> Serve in fun bowls, let them use special spoons, or create face shapes with berries on top for visual interest.
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-actions">
+            <a href="index.html" class="recipe-btn home-btn">
+                ← Back to Home
+            </a>
+            <a href="recipe-preferences.html" class="recipe-btn another-recipe-btn">
+                ✨ Create New Recipe
+            </a>
+        </div>
+
+        <div class="faq-section">
+            <h3 class="faq-title">Frequently Asked Questions - Banana Oat Scramble</h3>
+            <div>
+                <div class="faq-item">
+                    <h4>Can I make this without eggs for younger babies?</h4>
+                    <p>Absolutely! For babies under 12 months, simply omit the egg. The banana and oats create a lovely creamy texture on their own, and it's still packed with nutrition.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What if my banana isn't ripe enough?</h4>
+                    <p>If your banana is a bit firm, try mashing it with a fork and adding a tiny splash of warm milk to help soften it. Alternatively, microwave the banana for 10-15 seconds to soften it naturally.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How can I make this recipe more interesting for my toddler?</h4>
+                    <p>Try adding a pinch of cinnamon, mashing in some berries, or serving with small pieces of soft fruit on the side. You can also let them help with the mashing - involvement often leads to eating!</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Can I prepare this the night before?</h4>
+                    <p>Yes! Prepare the mixture (without cooking) and store in the fridge overnight. The oats will soften beautifully. Just warm gently in the morning or serve cold as overnight oats.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Is this suitable for baby-led weaning?</h4>
+                    <p>Perfect for BLW! The soft, mashable texture is ideal for self-feeding. You can also form it into small patties and lightly cook them for easier finger-food handling.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

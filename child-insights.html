@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Child Insights - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f97316 0%, #a855f7 50%, #fbbf24 100%);
+            padding: 20px 0;
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.25);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .child-header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .child-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .child-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .child-subtitle {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .child-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #334155;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .insight-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .nutrition-chart {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .macro-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .macro-label {
+            width: 80px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .macro-progress {
+            flex: 1;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            margin: 0 12px;
+            overflow: hidden;
+        }
+
+        .macro-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+
+        .macro-fill.protein { background: #ef4444; }
+        .macro-fill.carbs { background: #f59e0b; }
+        .macro-fill.fat { background: #10b981; }
+        .macro-fill.fiber { background: #8b5cf6; }
+
+        .macro-value {
+            width: 60px;
+            text-align: right;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .meal-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .meal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .meal-item:last-child {
+            border-bottom: none;
+        }
+
+        .meal-info {
+            flex: 1;
+        }
+
+        .meal-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .meal-date {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .meal-calories {
+            font-weight: 600;
+            color: hsl(var(--primary));
+        }
+
+        .allergies-section {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .allergies-title {
+            color: #dc2626;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .allergy-tag {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 4px;
+            display: inline-block;
+        }
+
+        .preferences-section {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .preferences-title {
+            color: #0ea5e9;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preference-tag {
+            background: #e0f2fe;
+            color: #0ea5e9;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin: 4px;
+            display: inline-block;
+        }
+
+        /* Meal Tracking Styles */
+        .meal-tracking-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .meal-tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .meal-tracking-header h4 {
+            color: #1e293b;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .meal-time {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .meal-tracking-content .meal-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .consumption-slider-container {
+            margin-top: 12px;
+        }
+
+        .consumption-slider-container label {
+            display: block;
+            color: #475569;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .consumption-slider {
+            margin-bottom: 12px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .consumption-result {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 8px 12px;
+            text-align: center;
+            font-weight: 600;
+            color: #0ea5e9;
+            margin-top: 8px;
+        }
+
+        /* Meal Planner Styles */
+        .meal-planner-content {
+            padding: 20px 0;
+        }
+
+        .planner-intro {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .planner-intro p {
+            color: #0ea5e9;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .planner-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .planner-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+        }
+
+        .planner-btn.primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+
+        .planner-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .planner-btn.secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .planner-btn.secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .suggested-meals h4 {
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .meal-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .meal-suggestion {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .suggestion-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .suggestion-content {
+            flex: 1;
+        }
+
+        .suggestion-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .suggestion-reason {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .suggestion-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-btn:hover {
+            background: #5855eb;
+            transform: translateY(-1px);
+        }
+
+        /* Weekly Summary Styles */
+        .weekly-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .summary-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .summary-content {
+            flex: 1;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Growth Tracking Styles */
+        .growth-tracking {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .growth-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .growth-label {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .growth-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .growth-trend {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .growth-trend.positive {
+            color: #10b981;
+        }
+
+        .growth-trend.negative {
+            color: #ef4444;
+        }
+
+        .growth-trend.neutral {
+            color: #64748b;
+        }
+
+        .growth-tips {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .growth-tips h4 {
+            color: #0ea5e9;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .growth-tips ul {
+            color: #64748b;
+            line-height: 1.6;
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .growth-tips li {
+            margin-bottom: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            }
+            
+        @media (max-width: 768px) {
+            .child-name {
+                font-size: 2rem;
+            }
+            
+            .child-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav-container">
+            <a href="dashboard.html" class="logo">👶🍳✨ ToddlerChef AI</a>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-btn">← Back to Dashboard</a>
+                <a href="meal-planning.html" class="nav-btn">📅 Meal Planning</a>
+                <a href="recipe-preferences.html" class="nav-btn">🤖 Generate Recipe</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            Loading child insights...
+        </div>
+
+        <div id="insights-content" style="display: none;">
+            <!-- Child Header -->
+            <div class="child-header">
+                <div class="child-avatar">👶</div>
+                <h1 class="child-name" id="child-name">Loading...</h1>
+                <p class="child-subtitle" id="child-subtitle">Nutrition & Eating Insights</p>
+                
+                <div class="child-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-meals">0</div>
+                        <div class="stat-label">Meals This Week</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avg-calories">0</div>
+                        <div class="stat-label">Avg Calories/Day</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="favorite-food">-</div>
+                        <div class="stat-label">Favorite Food</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="growth-score">85%</div>
+                        <div class="stat-label">Growth Score</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Grid -->
+            <div class="insights-grid">
+                <!-- Nutrition Overview -->
+                <div class="insight-card">
+                    <div class="card-header">
+                        <div class="card-icon">🍎</div>
+                        <h3 class="card-title">Nutrition Overview</h3>
+                    </div>
+                    
+                    <div class="nutrition-chart">
+                        <div class="macro-bar">
+                            <div class="macro-label">Protein</div>
+                            <div class="macro-progress">
+                                <div class="macro-fill protein" id="protein-bar" style="width: 75%"></div>
+                            </div>
+                            <div class="macro-value" id="protein-value">15g</div>
+                        </div>
+                        <div class="macro-bar">
+                            <div class="macro-label">Carbs</div>
+                            <div class="macro-progress">
+                                <div class="macro-fill carbs" id="carbs-bar" style="width: 60%"></div>
+                            </div>
+                            <div class="macro-value" id="carbs-value">45g</div>
+                        </div>
+                        <div class="macro-bar">
+                            <div class="macro-label">Fat</div>
+                            <div class="macro-progress">
+                                <div class="macro-fill fat" id="fat-bar" style="width: 80%"></div>
+                            </div>
+                            <div class="macro-value" id="fat-value">12g</div>
+                        </div>
+                        <div class="macro-bar">
+                            <div class="macro-label">Fiber</div>
+                            <div class="macro-progress">
+                                <div class="macro-fill fiber" id="fiber-bar" style="width: 40%"></div>
+                            </div>
+                            <div class="macro-value" id="fiber-value">8g</div>
+                </div>
+            </div>
+
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #1e293b; margin-bottom: 12px;">💡 Nutrition Tips</h4>
+                        <ul style="color: #64748b; line-height: 1.6;">
+                            <li>Great protein intake! Consider adding more fiber-rich foods</li>
+                            <li>Fat consumption is optimal for brain development</li>
+                            <li>Try introducing more colorful vegetables</li>
+                        </ul>
+                    </div>
+                    </div>
+
+                <!-- Meal Tracking -->
+                <div class="insight-card">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <h3 class="card-title">Today's Meal Tracking</h3>
+                    </div>
+                    
+                    <div id="meal-tracking-section">
+                        <div class="meal-tracking-item">
+                            <div class="meal-tracking-header">
+                                <h4>🍳 Breakfast</h4>
+                                <span class="meal-time">8:30 AM</span>
+                            </div>
+                            <div class="meal-tracking-content">
+                                <div class="meal-name">Banana Oat Scramble</div>
+                                <div class="consumption-slider-container">
+                                    <label>How much did they eat?</label>
+                                    <div class="consumption-slider">
+                                        <input type="range" min="0" max="3" value="2" class="slider" id="breakfast-slider">
+                                        <div class="slider-labels">
+                                            <span>Nothing! 😭</span>
+                                            <span>Few bites 😕</span>
+                                            <span>Half eaten 😊</span>
+                                            <span>All gone! 🎉</span>
+                                        </div>
+                                    </div>
+                                    <div class="consumption-result" id="breakfast-result">Half eaten 😊</div>
+                    </div>
+                </div>
+            </div>
+
+                        <div class="meal-tracking-item">
+                            <div class="meal-tracking-header">
+                                <h4>🥪 Lunch</h4>
+                                <span class="meal-time">12:00 PM</span>
+                            </div>
+                            <div class="meal-tracking-content">
+                                <div class="meal-name">Chicken Veggie Medley</div>
+                                <div class="consumption-slider-container">
+                                    <label>How much did they eat?</label>
+                                    <div class="consumption-slider">
+                                        <input type="range" min="0" max="3" value="1" class="slider" id="lunch-slider">
+                                        <div class="slider-labels">
+                                            <span>Nothing! 😭</span>
+                                            <span>Few bites 😕</span>
+                                            <span>Half eaten 😊</span>
+                                            <span>All gone! 🎉</span>
+                                        </div>
+                                    </div>
+                                    <div class="consumption-result" id="lunch-result">Few bites 😕</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="meal-tracking-item">
+                            <div class="meal-tracking-header">
+                                <h4>🍽️ Dinner</h4>
+                                <span class="meal-time">6:00 PM</span>
+                            </div>
+                            <div class="meal-tracking-content">
+                                <div class="meal-name">Sweet Potato Rice Bowl</div>
+                                <div class="consumption-slider-container">
+                                    <label>How much did they eat?</label>
+                                    <div class="consumption-slider">
+                                        <input type="range" min="0" max="3" value="3" class="slider" id="dinner-slider">
+                                        <div class="slider-labels">
+                                            <span>Nothing! 😭</span>
+                                            <span>Few bites 😕</span>
+                                            <span>Half eaten 😊</span>
+                                            <span>All gone! 🎉</span>
+                                        </div>
+                                    </div>
+                                    <div class="consumption-result" id="dinner-result">All gone! 🎉</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Child Meal Planner -->
+                <div class="insight-card">
+                <div class="card-header">
+                    <div class="card-icon">📅</div>
+                    <h3 class="card-title">Personalized Meal Planner</h3>
+                    </div>
+                
+                <div class="meal-planner-content">
+                    <div class="planner-intro">
+                        <p>Plan meals specifically for <strong id="child-name-planner"></strong> based on their preferences and dietary needs.</p>
+                    </div>
+                    
+                    <div class="planner-actions">
+                        <button class="planner-btn primary" onclick="generatePersonalizedMeal()">
+                            🎯 Generate Personalized Meal
+                        </button>
+                        <button class="planner-btn secondary" id="full-week-planner-btn" onclick="goToFullWeekPlanner()">
+                            📅 Full Week Planner
+                        </button>
+                    </div>
+                    
+                    <div class="suggested-meals" id="suggested-meals">
+                        <h4>Suggested Meals for Tomorrow</h4>
+                        <div class="meal-suggestions">
+                            <div class="meal-suggestion">
+                                <div class="suggestion-icon">🍎</div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-name">Apple Cinnamon Oatmeal</div>
+                                    <div class="suggestion-reason">High in fiber, matches preferences</div>
+                                </div>
+                                <button class="suggestion-btn" onclick="addMealToPlanner('Apple Cinnamon Oatmeal', 'breakfast')">Add to Week Planner</button>
+                            </div>
+                            <div class="meal-suggestion">
+                                <div class="suggestion-icon">🥕</div>
+                                <div class="suggestion-content">
+                                    <div class="suggestion-name">Carrot & Sweet Potato Mash</div>
+                                    <div class="suggestion-reason">Rich in vitamin A, soft texture</div>
+                                </div>
+                                <button class="suggestion-btn" onclick="addMealToPlanner('Carrot & Sweet Potato Mash', 'lunch')">Add to Week Planner</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                    
+            <!-- Child Profile Info -->
+            <div class="insight-card">
+                <div class="card-header">
+                    <div class="card-icon">👶</div>
+                    <h3 class="card-title">Child Profile</h3>
+                    </div>
+                
+                <div id="child-profile-info">
+                    <!-- Allergies Section -->
+                    <div class="allergies-section" id="allergies-section">
+                        <div class="allergies-title">⚠️ Food Allergies & Restrictions</div>
+                        <div id="allergies-list">
+                            <span class="allergy-tag">No known allergies</span>
+                    </div>
+                </div>
+
+                    <!-- Preferences Section -->
+                    <div class="preferences-section" id="preferences-section">
+                        <div class="preferences-title">❤️ Dietary Preferences</div>
+                        <div id="preferences-list">
+                            <span class="preference-tag">Loves finger foods</span>
+                            <span class="preference-tag">Prefers mild flavors</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekly Summary & Growth Tracking -->
+            <div class="insights-grid">
+                <!-- Weekly Summary -->
+                <div class="insight-card">
+                    <div class="card-header">
+                        <div class="card-icon">📈</div>
+                        <h3 class="card-title">This Week's Summary</h3>
+                    </div>
+                    
+                    <div class="weekly-summary">
+                        <div class="summary-item">
+                            <div class="summary-icon">🍽️</div>
+                            <div class="summary-content">
+                                <div class="summary-value" id="meals-served">21</div>
+                                <div class="summary-label">Meals Served</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-icon">🎯</div>
+                            <div class="summary-content">
+                                <div class="summary-value" id="avg-consumption">85%</div>
+                                <div class="summary-label">Average Consumption</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-icon">🥗</div>
+                            <div class="summary-content">
+                                <div class="summary-value" id="foods-tried">12</div>
+                                <div class="summary-label">Different Foods Tried</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-icon">⭐</div>
+                            <div class="summary-content">
+                                <div class="summary-value" id="mood-rating">4.2</div>
+                                <div class="summary-label">Mood Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Growth Tracking -->
+                <div class="insight-card">
+                    <div class="card-header">
+                        <div class="card-icon">📏</div>
+                        <h3 class="card-title">Growth Tracking</h3>
+                    </div>
+                    
+                    <div class="growth-tracking">
+                        <div class="growth-item">
+                            <div class="growth-label">Weight</div>
+                            <div class="growth-value">12.5 kg</div>
+                            <div class="growth-trend positive">↗️ +0.3 kg this month</div>
+                    </div>
+                        <div class="growth-item">
+                            <div class="growth-label">Height</div>
+                            <div class="growth-value">85 cm</div>
+                            <div class="growth-trend positive">↗️ +1.2 cm this month</div>
+                    </div>
+                        <div class="growth-item">
+                            <div class="growth-label">Head Circumference</div>
+                            <div class="growth-value">48 cm</div>
+                            <div class="growth-trend positive">↗️ +0.5 cm this month</div>
+                    </div>
+                        <div class="growth-item">
+                            <div class="growth-label">BMI</div>
+                            <div class="growth-value">17.3</div>
+                            <div class="growth-trend neutral">→ Healthy range</div>
+                </div>
+            </div>
+
+                    <div class="growth-tips">
+                        <h4>💡 Growth Tips</h4>
+                        <ul>
+                            <li>Excellent growth pattern! Keep up the balanced nutrition</li>
+                            <li>Consider adding more protein-rich foods for muscle development</li>
+                            <li>Regular physical activity supports healthy growth</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let currentChild = null;
+
+        // Initialize child insights
+        async function initializeChildInsights() {
+            try {
+                console.log('🚀 Initializing child insights...');
+                
+                // Wait for Firebase to be ready
+                await new Promise(resolve => {
+                    const checkFirebase = () => {
+                        if (window.auth && window.db) {
+                            console.log('✅ Firebase ready');
+                            resolve();
+                        } else {
+                            setTimeout(checkFirebase, 100);
+                        }
+                    };
+                    checkFirebase();
+                });
+
+                // Check authentication
+                const authState = await toddlerChefAuth.checkAuthState();
+                if (!authState.isAuthenticated) {
+                    console.log('❌ Not authenticated, redirecting to signin');
+                    window.location.href = 'signin.html';
+                    return;
+                }
+                
+                console.log('✅ Authentication confirmed');
+
+                // Load child data
+                console.log('📋 Loading child data...');
+                await loadChildData();
+                
+                console.log('📊 Loading child insights...');
+                await loadChildInsights();
+                
+                console.log('🎉 Showing insights content');
+                showInsightsContent();
+                
+            } catch (error) {
+                console.error('❌ Child insights initialization error:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">😔</div>
+                        <h3 style="color: #dc2626; margin-bottom: 16px;">Error Loading Child Insights</h3>
+                        <p style="color: #64748b; margin-bottom: 32px;">${error.message}</p>
+                        <button onclick="window.location.href='dashboard.html'" style="
+                            background: #6366f1; color: white; padding: 12px 24px; 
+                            border-radius: 8px; border: none; font-weight: 600; cursor: pointer;
+                            margin-right: 12px;
+                        ">← Back to Dashboard</button>
+                        <button onclick="location.reload()" style="
+                            background: #10b981; color: white; padding: 12px 24px; 
+                            border-radius: 8px; border: none; font-weight: 600; cursor: pointer;
+                        ">🔄 Try Again</button>
+                    </div>
+                `;
+            }
+        }
+
+                // Load child data from localStorage
+        async function loadChildData() {
+            const childId = localStorage.getItem('selectedChildId');
+            const childName = localStorage.getItem('selectedChildName');
+            
+            if (!childId || !childName) {
+                alert('No child selected. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // First try to get child data from user profile
+            let userProfile = toddlerChefAuth.getUserProfile();
+            
+            // If userProfile is not loaded, try to load it
+            if (!userProfile) {
+                console.log('User profile not loaded, attempting to load...');
+                const profileResult = await toddlerChefAuth.loadUserProfile();
+                if (profileResult.success) {
+                    userProfile = profileResult.profile;
+                }
+            }
+            
+            if (userProfile && userProfile.children) {
+                currentChild = userProfile.children.find(child => child.id === childId);
+                console.log('Found child in profile:', currentChild);
+            }
+
+            // If still not found, try to get from URL parameters (for newly added children)
+            if (!currentChild) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const newChildId = urlParams.get('childId');
+                const newChildName = urlParams.get('childName');
+                
+                if (newChildId && newChildName) {
+                    console.log('Found child in URL parameters, creating temporary child object');
+                    currentChild = {
+                        id: newChildId,
+                        name: newChildName,
+                        age: '2 years', // Default age
+                        birthDate: null,
+                        allergies: [],
+                        customAllergies: '',
+                        dietaryPreferences: [],
+                        preferences: '',
+                        dislikes: ''
+                    };
+                    
+                    // Update localStorage
+                    localStorage.setItem('selectedChildId', newChildId);
+                    localStorage.setItem('selectedChildName', newChildName);
+                }
+            }
+
+            if (!currentChild) {
+                console.error('Child not found in profile or URL parameters');
+                alert('Child not found. Redirecting to dashboard.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // Calculate accurate age
+            const accurateAge = calculateAccurateAge(currentChild.birthDate, currentChild.age);
+            
+            // Get favorite food from child preferences
+            const favoriteFood = getFavoriteFoodFromPreferences(currentChild);
+
+            // Update child name and info
+            document.getElementById('child-name').textContent = childName;
+            document.getElementById('child-name-planner').textContent = childName;
+            document.getElementById('child-subtitle').textContent = `${accurateAge} • ${currentChild.birthDate ? new Date(currentChild.birthDate).toLocaleDateString() : 'Birth date not set'}`;
+            
+            // Update favorite food
+            document.getElementById('favorite-food').textContent = favoriteFood;
+        }
+        
+        // Calculate accurate age in months from birth date
+        function calculateAccurateAge(birthDate, fallbackAge) {
+            if (!birthDate) {
+                return fallbackAge || 'Age not set';
+            }
+            const birth = new Date(birthDate);
+            const today = new Date();
+            let months = (today.getFullYear() - birth.getFullYear()) * 12;
+            months += today.getMonth() - birth.getMonth();
+            if (today.getDate() < birth.getDate()) months -= 1;
+            months = Math.max(0, months);
+            return months + ' months';
+        }
+        
+        // Get favorite food from child preferences
+        function getFavoriteFoodFromPreferences(child) {
+            if (child.preferences && child.preferences.toLowerCase().includes('sweet potato')) {
+                return 'Sweet Potato';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('banana')) {
+                return 'Banana';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('apple')) {
+                return 'Apple';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('chicken')) {
+                return 'Chicken';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('pasta')) {
+                return 'Pasta';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('cheese')) {
+                return 'Cheese';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('yogurt')) {
+                return 'Yogurt';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('carrot')) {
+                return 'Carrots';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('broccoli')) {
+                return 'Broccoli';
+            } else if (child.preferences && child.preferences.toLowerCase().includes('rice')) {
+                return 'Rice';
+            } else {
+                // Extract first preference or use default
+                const preferences = child.preferences || '';
+                const firstPreference = preferences.split(',')[0].trim();
+                return firstPreference || 'Banana'; // Default fallback
+            }
+        }
+
+        // Load child insights from latest saved meal plan and profile
+        async function loadChildInsights() {
+            try {
+                // Compute from latest meal plan
+                const res = await window.toddlerChefAuth.getMealPlans();
+                const latest = (res.success && res.mealPlans && res.mealPlans.length) ? res.mealPlans[0] : null;
+                const meals = latest?.meals || {};
+                let totalMeals = 0;
+                let totalCalories = 0;
+                let protein = 0, carbs = 0, fat = 0, fiber = 0;
+                const ingredientCounts = {};
+                Object.values(meals).forEach(day => {
+                    Object.values(day).forEach(rec => {
+                        if (!rec) return;
+                        totalMeals += 1;
+                        const kcal = parseFloat(String(rec.calories || rec.kcal || 0).toString().replace(/[^0-9.]/g, '')) || 0;
+                        totalCalories += kcal;
+                        if (rec.macros) {
+                            protein += parseFloat(String(rec.macros.protein || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+                            carbs += parseFloat(String(rec.macros.carbs || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+                            fat += parseFloat(String(rec.macros.fat || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+                            fiber += parseFloat(String(rec.macros.fiber || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+                        }
+                        const ing = Array.isArray(rec.ingredients) ? rec.ingredients : [];
+                        ing.forEach(item => {
+                            const key = String(item).toLowerCase();
+                            ingredientCounts[key] = (ingredientCounts[key] || 0) + 1;
+                        });
+                    });
+                });
+
+                const avgCalories = totalMeals ? Math.round(totalCalories / 7) : 0;
+                document.getElementById('total-meals').textContent = String(totalMeals);
+                document.getElementById('avg-calories').textContent = String(avgCalories);
+
+                // Favorite food guess from most frequent ingredient
+                const fav = Object.entries(ingredientCounts).sort((a,b)=>b[1]-a[1])[0]?.[0] || '-';
+                document.getElementById('favorite-food').textContent = fav === '-' ? '-' : fav.replace(/\b\w/g, c=>c.toUpperCase());
+
+                // Update nutrition bars relative to targets
+                const targets = (window.toddlerChefAuth.getUserProfile?.() || {}).nutritionTargets || { calories: 900, protein: 15, carbs: 120, fat: 25 };
+                const tP = targets.protein * 7 || 1;
+                const tC = targets.carbs * 7 || 1;
+                const tF = targets.fat * 7 || 1;
+                const pPct = Math.min(100, Math.round((protein / tP) * 100));
+                const cPct = Math.min(100, Math.round((carbs / tC) * 100));
+                const fPct = Math.min(100, Math.round((fat / tF) * 100));
+                document.getElementById('protein-bar').style.width = pPct + '%';
+                document.getElementById('protein-value').textContent = Math.round(protein) + 'g';
+                document.getElementById('carbs-bar').style.width = cPct + '%';
+                document.getElementById('carbs-value').textContent = Math.round(carbs) + 'g';
+                document.getElementById('fat-bar').style.width = fPct + '%';
+                document.getElementById('fat-value').textContent = Math.round(fat) + 'g';
+                // Fiber remains optional if provided
+                document.getElementById('fiber-value').textContent = Math.round(fiber) + 'g';
+
+                // Update allergies and preferences
+                updateAllergiesAndPreferences();
+            } catch (e) {
+                console.warn('Failed to compute insights from meal plans', e);
+                // Still update allergies/preferences to avoid empty UI
+                updateAllergiesAndPreferences();
+            }
+        }
+
+        // Navigate preserving selected child context
+        function goToFullWeekPlanner() {
+            try { localStorage.setItem('plannerChildId', localStorage.getItem('selectedChildId') || ''); } catch {}
+            window.location.href = 'meal-planning.html';
+        }
+
+        // Update allergies and preferences sections
+        function updateAllergiesAndPreferences() {
+            if (!currentChild) return;
+
+            // Update allergies
+            const allergiesList = document.getElementById('allergies-list');
+            if (currentChild.allergies && currentChild.allergies.length > 0 && !currentChild.allergies.includes('none')) {
+                allergiesList.innerHTML = '';
+                currentChild.allergies.forEach(allergy => {
+                    allergiesList.innerHTML += `<span class="allergy-tag">${allergy}</span>`;
+                });
+                if (currentChild.customAllergies) {
+                    allergiesList.innerHTML += `<span class="allergy-tag">${currentChild.customAllergies}</span>`;
+                }
+            } else {
+                allergiesList.innerHTML = '<span class="allergy-tag">No known allergies</span>';
+            }
+
+            // Update preferences
+            const preferencesList = document.getElementById('preferences-list');
+            preferencesList.innerHTML = '';
+            
+            if (currentChild.dietaryPreferences && currentChild.dietaryPreferences.length > 0) {
+                currentChild.dietaryPreferences.forEach(pref => {
+                    preferencesList.innerHTML += `<span class="preference-tag">${pref}</span>`;
+                });
+            }
+            
+            if (currentChild.preferences) {
+                preferencesList.innerHTML += `<span class="preference-tag">${currentChild.preferences}</span>`;
+            }
+
+            if (preferencesList.innerHTML === '') {
+                preferencesList.innerHTML = '<span class="preference-tag">No specific preferences</span>';
+            }
+        }
+
+        // Show insights content
+        function showInsightsContent() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('insights-content').style.display = 'block';
+        }
+
+        // Initialize meal tracking sliders
+        function initializeMealTracking() {
+            const sliders = ['breakfast-slider', 'lunch-slider', 'dinner-slider'];
+            const consumptionLevels = ['Nothing! 😭', 'Few bites 😕', 'Half eaten 😊', 'All gone! 🎉'];
+            
+            sliders.forEach(sliderId => {
+                const slider = document.getElementById(sliderId);
+                const resultId = sliderId.replace('-slider', '-result');
+                const resultElement = document.getElementById(resultId);
+                
+                slider.addEventListener('input', function() {
+                    const value = parseInt(this.value);
+                    resultElement.textContent = consumptionLevels[value];
+                    
+                    // Update nutrition calculations based on consumption
+                    updateNutritionBasedOnConsumption();
+                });
+            });
+        }
+
+        // Update nutrition calculations based on meal consumption
+        function updateNutritionBasedOnConsumption() {
+            const consumptionMultipliers = {
+                0: 0,    // Nothing eaten
+                1: 0.25, // Few bites (25%)
+                2: 0.5,  // Half eaten (50%)
+                3: 1     // All gone (100%)
+            };
+            
+            const baseNutrition = {
+                protein: 15,
+                carbs: 45,
+                fat: 12,
+                fiber: 8
+            };
+            
+            const breakfastValue = parseInt(document.getElementById('breakfast-slider').value);
+            const lunchValue = parseInt(document.getElementById('lunch-slider').value);
+            const dinnerValue = parseInt(document.getElementById('dinner-slider').value);
+            
+            // Calculate total nutrition consumed
+            const totalProtein = Math.round(
+                baseNutrition.protein * consumptionMultipliers[breakfastValue] +
+                baseNutrition.protein * consumptionMultipliers[lunchValue] +
+                baseNutrition.protein * consumptionMultipliers[dinnerValue]
+            );
+            
+            const totalCarbs = Math.round(
+                baseNutrition.carbs * consumptionMultipliers[breakfastValue] +
+                baseNutrition.carbs * consumptionMultipliers[lunchValue] +
+                baseNutrition.carbs * consumptionMultipliers[dinnerValue]
+            );
+            
+            const totalFat = Math.round(
+                baseNutrition.fat * consumptionMultipliers[breakfastValue] +
+                baseNutrition.fat * consumptionMultipliers[lunchValue] +
+                baseNutrition.fat * consumptionMultipliers[dinnerValue]
+            );
+            
+            const totalFiber = Math.round(
+                baseNutrition.fiber * consumptionMultipliers[breakfastValue] +
+                baseNutrition.fiber * consumptionMultipliers[lunchValue] +
+                baseNutrition.fiber * consumptionMultipliers[dinnerValue]
+            );
+            
+            // Update nutrition bars with smooth animations and color coding
+            updateNutritionBar('protein-bar', 'protein-value', totalProtein, 20, '#10b981');
+            updateNutritionBar('carbs-bar', 'carbs-value', totalCarbs, 60, '#f59e0b');
+            updateNutritionBar('fat-bar', 'fat-value', totalFat, 15, '#8b5cf6');
+            updateNutritionBar('fiber-bar', 'fiber-value', totalFiber, 10, '#06b6d4');
+            
+            // Update nutrition dials
+            updateNutritionDial('protein-dial', 'protein-dial-value', totalProtein, 20, '#10b981');
+            updateNutritionDial('carbs-dial', 'carbs-dial-value', totalCarbs, 60, '#f59e0b');
+            updateNutritionDial('fat-dial', 'fat-dial-value', totalFat, 15, '#8b5cf6');
+            updateNutritionDial('fiber-dial', 'fiber-dial-value', totalFiber, 10, '#06b6d4');
+            
+            // Update total calories
+            const totalCalories = Math.round((totalProtein * 4) + (totalCarbs * 4) + (totalFat * 9));
+            document.getElementById('avg-calories').textContent = totalCalories;
+            
+            // Update growth score based on nutrition and consumption
+            updateGrowthScore(totalCalories, totalProtein, totalCarbs, totalFat, totalFiber);
+            
+            // Update weekly summary
+            updateWeeklySummary();
+            
+            // Save meal tracking data
+            saveMealTrackingData({
+                breakfast: breakfastValue,
+                lunch: lunchValue,
+                dinner: dinnerValue,
+                nutrition: {
+                    protein: totalProtein,
+                    carbs: totalCarbs,
+                    fat: totalFat,
+                    fiber: totalFiber
+                },
+                totalCalories: totalCalories,
+                timestamp: new Date().toISOString()
+            });
+        }
+        
+        // Update growth score based on nutrition intake
+        function updateGrowthScore(calories, protein, carbs, fat, fiber) {
+            // Growth score is based on:
+            // - Calorie intake (40%): 0-1000 calories = 0-40 points
+            // - Protein intake (30%): 0-20g = 0-30 points  
+            // - Balanced nutrition (20%): Good balance of macros = 0-20 points
+            // - Fiber intake (10%): 0-10g = 0-10 points
+            
+            const calorieScore = Math.min((calories / 1000) * 40, 40);
+            const proteinScore = Math.min((protein / 20) * 30, 30);
+            const fiberScore = Math.min((fiber / 10) * 10, 10);
+            
+            // Balanced nutrition score (good ratio of macros)
+            const totalMacros = protein + carbs + fat;
+            const proteinRatio = protein / totalMacros;
+            const carbRatio = carbs / totalMacros;
+            const fatRatio = fat / totalMacros;
+            
+            // Ideal ratios for toddlers: Protein 15%, Carbs 55%, Fat 30%
+            const balanceScore = 20 - (
+                Math.abs(proteinRatio - 0.15) * 50 +
+                Math.abs(carbRatio - 0.55) * 20 +
+                Math.abs(fatRatio - 0.30) * 30
+            );
+            
+            const totalScore = Math.round(calorieScore + proteinScore + fiberScore + Math.max(0, balanceScore));
+            const growthScore = Math.min(totalScore, 100);
+            
+            document.getElementById('growth-score').textContent = growthScore;
+            
+            // Update growth score color
+            const growthScoreElement = document.getElementById('growth-score');
+            if (growthScore >= 80) {
+                growthScoreElement.style.color = '#10b981';
+            } else if (growthScore >= 60) {
+                growthScoreElement.style.color = '#f59e0b';
+            } else {
+                growthScoreElement.style.color = '#ef4444';
+            }
+        }
+        
+        // Update weekly summary based on actual consumption
+        function updateWeeklySummary() {
+            const breakfastValue = parseInt(document.getElementById('breakfast-slider').value);
+            const lunchValue = parseInt(document.getElementById('lunch-slider').value);
+            const dinnerValue = parseInt(document.getElementById('dinner-slider').value);
+            
+            // Calculate consumption percentages
+            const consumptionLevels = ['Nothing! 😭', 'Few bites 😕', 'Half eaten 😊', 'All gone! 🎉'];
+            const totalConsumption = breakfastValue + lunchValue + dinnerValue;
+            const avgConsumption = Math.round((totalConsumption / 9) * 100); // 9 = max possible (3 meals * 3)
+            
+            // Update weekly summary stats
+            document.getElementById('meals-served').textContent = '3'; // Today's meals
+            document.getElementById('avg-consumption').textContent = avgConsumption + '%';
+            document.getElementById('foods-tried').textContent = '3'; // Today's different foods
+            document.getElementById('mood-rating').textContent = '4.2'; // Based on consumption
+        }
+        
+        // Update nutrition bar with smooth animation and color coding
+        function updateNutritionBar(barId, valueId, actualValue, targetValue, color) {
+            const bar = document.getElementById(barId);
+            const valueElement = document.getElementById(valueId);
+            const percentage = Math.min((actualValue / targetValue) * 100, 100);
+            
+            // Smooth animation
+            bar.style.transition = 'width 0.5s ease-in-out, background 0.3s ease-in-out';
+            bar.style.width = percentage + '%';
+            valueElement.textContent = actualValue + 'g';
+            
+            // Color coding based on percentage
+            if (percentage >= 80) {
+                bar.style.background = `linear-gradient(90deg, ${color}, ${color}dd)`;
+            } else if (percentage >= 60) {
+                bar.style.background = 'linear-gradient(90deg, #f59e0b, #d97706)';
+            } else if (percentage >= 40) {
+                bar.style.background = 'linear-gradient(90deg, #f97316, #ea580c)';
+            } else {
+                bar.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+            }
+        }
+        
+        // Save meal tracking data to Firestore
+        async function saveMealTrackingData(trackingData) {
+            try {
+                if (!window.toddlerChefAuth || !currentChild) return;
+                
+                const childId = localStorage.getItem('selectedChildId');
+                const userProfile = toddlerChefAuth.getUserProfile();
+                
+                if (userProfile && userProfile.children) {
+                    const childIndex = userProfile.children.findIndex(c => c.id === childId);
+                    if (childIndex !== -1) {
+                        // Add meal tracking data to child profile
+                        if (!userProfile.children[childIndex].mealTracking) {
+                            userProfile.children[childIndex].mealTracking = [];
+                        }
+                        
+                        userProfile.children[childIndex].mealTracking.push(trackingData);
+                        
+                        // Keep only last 30 days of data (90 meals)
+                        if (userProfile.children[childIndex].mealTracking.length > 90) {
+                            userProfile.children[childIndex].mealTracking = 
+                                userProfile.children[childIndex].mealTracking.slice(-90);
+                        }
+                        
+                        // Update in Firestore
+                        await toddlerChefAuth.updateUserProfile({ children: userProfile.children });
+                        console.log('✅ Meal tracking data saved for', currentChild.name);
+                    }
+                }
+            } catch (error) {
+                console.error('Error saving meal tracking data:', error);
+            }
+        }
+
+        // Generate personalized meal for the child
+        function generatePersonalizedMeal() {
+            if (!currentChild) return;
+            
+            // Store child info for recipe generation
+            localStorage.setItem('selectedChildId', currentChild.id);
+            localStorage.setItem('selectedChildName', currentChild.name);
+            
+            // Redirect to recipe preferences with child context
+            window.location.href = 'recipe-preferences.html?child=' + currentChild.id;
+        }
+        
+        // Add meal to week planner
+        async function addMealToPlanner(mealName, mealType) {
+            try {
+                if (!currentChild) return;
+                
+                // Create meal plan data
+                const mealPlanData = {
+                    childId: currentChild.id,
+                    childName: currentChild.name,
+                    mealName: mealName,
+                    mealType: mealType,
+                    date: new Date().toISOString().split('T')[0], // Today's date
+                    addedAt: new Date().toISOString()
+                };
+                
+                // Store in localStorage for meal planning page
+                const existingMeals = JSON.parse(localStorage.getItem('childMealPlans') || '[]');
+                existingMeals.push(mealPlanData);
+                localStorage.setItem('childMealPlans', JSON.stringify(existingMeals));
+                
+                // Show success message
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Added!';
+                button.style.background = '#10b981';
+                button.style.color = 'white';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                    button.style.color = '';
+                }, 2000);
+                
+                console.log('✅ Meal added to planner:', mealPlanData);
+                
+            } catch (error) {
+                console.error('Error adding meal to planner:', error);
+                alert('Failed to add meal to planner. Please try again.');
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeChildInsights();
+            // Initialize meal tracking after content is loaded
+            setTimeout(initializeMealTracking, 1000);
+            // Initialize nutrition dials
+            setTimeout(initializeNutritionDials, 1500);
+        });
+        
+        // Initialize nutrition dials
+        function initializeNutritionDials() {
+            createNutritionDial('protein-dial', 'protein-dial-value', 15, 20, '#10b981');
+            createNutritionDial('carbs-dial', 'carbs-dial-value', 45, 60, '#f59e0b');
+            createNutritionDial('fat-dial', 'fat-dial-value', 12, 15, '#8b5cf6');
+            createNutritionDial('fiber-dial', 'fiber-dial-value', 8, 10, '#06b6d4');
+        }
+        
+        // Create nutrition dial
+        function createNutritionDial(canvasId, valueId, currentValue, targetValue, color) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 45;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+            
+            // Calculate percentage
+            const percentage = Math.min(currentValue / targetValue, 1);
+            const angle = percentage * 2 * Math.PI;
+            
+            // Draw progress arc
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + angle);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+            
+            // Update value display
+            document.getElementById(valueId).textContent = currentValue + 'g';
+        }
+        
+        // Update nutrition dial
+        function updateNutritionDial(canvasId, valueId, currentValue, targetValue, color) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 45;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+            
+            // Calculate percentage
+            const percentage = Math.min(currentValue / targetValue, 1);
+            const angle = percentage * 2 * Math.PI;
+            
+            // Draw progress arc with animation
+            let currentAngle = 0;
+            const animate = () => {
+                if (currentAngle < angle) {
+                    currentAngle += 0.05;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Redraw background
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                    ctx.strokeStyle = '#e2e8f0';
+                    ctx.lineWidth = 8;
+                    ctx.stroke();
+                    
+                    // Draw animated progress
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + currentAngle);
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 8;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+                    
+                    requestAnimationFrame(animate);
+                }
+            };
+            animate();
+            
+            // Update value display
+            document.getElementById(valueId).textContent = currentValue + 'g';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!-- FAQ Component for Recipe Pages -->
+<style>
+.faq-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 3rem 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e5e5;
+}
+
+.faq-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    border-color: #64748b;
+    box-shadow: 0 2px 8px rgba(100, 116, 139, 0.1);
+}
+
+.faq-question {
+    background: #f8fafc;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    color: #64748b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+}
+
+.faq-question:hover {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.faq-question.active {
+    background: #64748b;
+    color: white;
+}
+
+.faq-icon {
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+    margin-left: 1rem;
+}
+
+.faq-question.active .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: white;
+}
+
+.faq-answer.active {
+    max-height: 200px;
+}
+
+.faq-answer-content {
+    padding: 1rem 1.5rem;
+    color: #475569;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.faq-answer-content p {
+    margin: 0 0 0.5rem 0;
+}
+
+.faq-answer-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* SEO-friendly structured data */
+.faq-structured-data {
+    display: none;
+}
+</style>
+
+<script>
+function toggleFAQ(element) {
+    const faqItem = element.closest('.faq-item');
+    const answer = faqItem.querySelector('.faq-answer');
+    const question = faqItem.querySelector('.faq-question');
+    const icon = faqItem.querySelector('.faq-icon');
+    
+    // Close other open FAQs
+    document.querySelectorAll('.faq-answer.active').forEach(openAnswer => {
+        if (openAnswer !== answer) {
+            openAnswer.classList.remove('active');
+            openAnswer.previousElementSibling.classList.remove('active');
+        }
+    });
+    
+    // Toggle current FAQ
+    answer.classList.toggle('active');
+    question.classList.toggle('active');
+    
+    // Update icon
+    if (answer.classList.contains('active')) {
+        icon.textContent = '−';
+    } else {
+        icon.textContent = '+';
+    }
+}
+
+// Initialize FAQ functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click handlers to all FAQ questions
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', function() {
+            toggleFAQ(this);
+        });
+    });
+    
+    // Add keyboard support
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleFAQ(this);
+            }
+        });
+    });
+});
+</script>
+
+<!-- FAQ Section Template -->
+<div class="faq-section">
+    <h2 class="faq-title">Frequently Asked Questions</h2>
+    <div class="faq-container">
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                What ingredients are needed for {Recipe Title} for toddlers?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>{Answer 1}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                How do I safely prepare {Recipe Title} for my toddler at home?
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>{Answer 2}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                {Question 3}
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>{Answer 3}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                {Question 4}
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>{Answer 4}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+                {Question 5}
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <div class="faq-answer-content">
+                    <p>{Answer 5}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SEO Structured Data for FAQs -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What ingredients are needed for {Recipe Title} for toddlers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{Answer 1}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I safely prepare {Recipe Title} for my toddler at home?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{Answer 2}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "{Question 3}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{Answer 3}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "{Question 4}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{Answer 4}"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "{Question 5}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{Answer 5}"
+      }
+    }
+  ]
+}
+</script>

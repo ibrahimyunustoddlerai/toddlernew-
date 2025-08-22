@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Recipe API</title>
+</head>
+<body>
+    <h1>Test Recipe Generator</h1>
+    <button onclick="testAPI()">Test API Call</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing API...';
+            
+            try {
+                console.log('🧪 Testing API call...');
+                
+                const response = await fetch('/api/generate-recipe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        leftovers: 'chicken, rice',
+                        vegetables: 'carrots',
+                        dietary: ['halal'],
+                        agerange: ['12-18 months'],
+                        mealtype: ['lunch']
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const recipe = await response.json();
+                console.log('Recipe received:', recipe);
+                
+                resultDiv.innerHTML = `
+                    <h2>✅ API Working!</h2>
+                    <p><strong>Recipe Name:</strong> ${recipe.name}</p>
+                    <p><strong>One-liner:</strong> ${recipe.oneLiner}</p>
+                    <p><strong>GPT Generated:</strong> ${recipe.gptGenerated || 'Unknown'}</p>
+                    <p><strong>Full Recipe:</strong></p>
+                    <pre>${JSON.stringify(recipe, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                console.error('❌ API test failed:', error);
+                resultDiv.innerHTML = `
+                    <h2>❌ API Failed</h2>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>Check console for details</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

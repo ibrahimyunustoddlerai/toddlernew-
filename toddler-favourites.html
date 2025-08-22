@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toddler Favourites - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            padding: 32px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.125rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navigation {
+            background: white;
+            padding: 20px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .age-section {
+            margin-bottom: 60px;
+        }
+
+        .age-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .age-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .age-subtitle {
+            font-size: 1.1rem;
+        }
+
+        /* Search and Filter Section */
+        .search-filter-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e5e5;
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            box-shadow: 
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid hsl(var(--border));
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: hsl(var(--muted-foreground));
+        }
+
+        .filters-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 2px solid hsl(var(--border));
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: hsl(var(--foreground));
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .filter-reset {
+            background: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border: 2px solid hsl(var(--border));
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: end;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .filter-reset:hover {
+            background: hsl(var(--muted));
+            color: hsl(var(--foreground));
+            transform: translateY(-1px);
+        }
+
+        .results-info {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .recipe-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 28px;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .recipe-meal-type {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 16px;
+            letter-spacing: 0.025em;
+        }
+
+        .recipe-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .recipe-description {
+            color: #64748b;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .recipe-meta-mini {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .meta-item-mini {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .meta-icon {
+            font-size: 1rem;
+        }
+
+        .back-to-generator {
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .back-to-generator a {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.4);
+        }
+
+        .back-to-generator a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(99, 102, 241, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .recipes-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .recipe-card {
+                padding: 20px;
+            }
+            
+            .recipe-meta-mini {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .age-title {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🍼 Toddler Favourites</h1>
+            <p>AI-Powered Recipes for Every Age & Stage</p>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <div class="container">
+            <div class="nav-links">
+                <a href="index.html">🏠 Home</a>
+                <a href="recipe-preferences.html">🎯 Custom Recipe Generator</a>
+                <a href="toddler-favourites.html" class="active">🍼 Toddler Favourites</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Search and Filter Section -->
+        <div class="search-filter-section">
+            <div class="search-container">
+                <input type="text" class="search-input" id="recipe-search" placeholder="🔍 Search recipes (e.g., smoothie, breakfast, vegetarian, quick...)" />
+            </div>
+            
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label class="filter-label">Age Range</label>
+                    <select class="filter-select" id="age-filter">
+                        <option value="">All Ages</option>
+                        <option value="6+ months">6+ Months</option>
+                        <option value="9+ months">9+ Months</option>
+                        <option value="12+ months">12+ Months</option>
+                        <option value="18+ months">18+ Months</option>
+                        <option value="2+ years">2+ Years</option>
+                        <option value="3+ years">3+ Years</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Dietary Type</label>
+                    <select class="filter-select" id="dietary-filter">
+                        <option value="">All Types</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="dairy-free">Dairy-Free</option>
+                        <option value="gluten-free">Gluten-Free</option>
+                        <option value="nut-free">Nut-Free</option>
+                        <option value="egg-free">Egg-Free</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Meal Type</label>
+                    <select class="filter-select" id="meal-filter">
+                        <option value="">All Meals</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                        <option value="drink">Drink/Smoothie</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Time</label>
+                    <select class="filter-select" id="time-filter">
+                        <option value="">Any Time</option>
+                        <option value="quick">Quick (Under 15 mins)</option>
+                        <option value="medium">Medium (15-30 mins)</option>
+                        <option value="long">Long (Over 30 mins)</option>
+                    </select>
+                </div>
+                
+                <button class="filter-reset" onclick="resetFilters()">🔄 Reset Filters</button>
+            </div>
+        </div>
+        
+        <div class="results-info" id="results-info">
+            Showing all 30 recipes
+        </div>
+
+        <!-- 6+ Months Section -->
+        <div class="age-section" data-age="6+ months">
+            <div class="age-header">
+                <h2 class="age-title">🍼 6+ Months</h2>
+                <p class="age-subtitle">Smooth purées and soft first foods perfect for early weaning</p>
+            </div>
+            
+            <div class="recipes-grid">
+                <a href="favourite-recipe.html?recipe=carrot-apple-puree" class="recipe-card">
+                    <div class="recipe-image">🥕</div>
+                    <div class="recipe-content">
+                        <div class="recipe-metrics">
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">⏱️</span>
+                                Prep: 15m
+                            </span>
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">🔥</span>
+                                Easy
+                            </span>
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">💰</span>
+                                £0.45
+                            </span>
+                        </div>
+                        <h3 class="recipe-title">Carrot & Apple Purée</h3>
+                        <p class="recipe-description">Steamed carrot and apple blended into a smooth purée perfect for baby's first tastes.</p>
+                        <div class="recipe-tags">
+                            <span class="badge badge-category">🥕 First Foods</span>
+                            <span class="badge badge-category">Vegetarian</span>
+                            <span class="badge badge-category">6+ months</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=avocado-banana-mash" class="recipe-card">
+                    <div class="recipe-image">🥑</div>
+                    <div class="recipe-content">
+                        <div class="recipe-metrics">
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">⏱️</span>
+                                Prep: 5m
+                            </span>
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">🔥</span>
+                                Super Easy
+                            </span>
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">💰</span>
+                                £0.85
+                            </span>
+                        </div>
+                        <h3 class="recipe-title">Avocado & Banana Mash</h3>
+                        <p class="recipe-description">Naturally soft and creamy — no cooking required. Rich in healthy fats and natural sweetness.</p>
+                        <div class="recipe-tags">
+                            <span class="badge badge-category">🥑 No Cook</span>
+                            <span class="badge badge-category">Vegan</span>
+                            <span class="badge badge-category">6+ months</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=pea-potato-puree" class="recipe-card">
+                    <div class="recipe-meal-type">🌿 Gentle</div>
+                    <h3 class="recipe-title">Pea & Potato Purée</h3>
+                    <p class="recipe-description">Mild flavour, smooth texture, and gentle on digestion. Perfect for introducing green vegetables.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>18 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.40</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=butternut-squash-pear-puree" class="recipe-card">
+                    <div class="recipe-meal-type">🍂 Sweet</div>
+                    <h3 class="recipe-title">Butternut Squash & Pear Purée</h3>
+                    <p class="recipe-description">Slightly sweet and smooth for early weaning. Natural sweetness from pear makes it irresistible.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>25 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.30</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=banana-oat-smoothie" class="recipe-card" data-meal="drink" data-dietary="dairy-free" data-time="quick">
+                    <div class="recipe-image">🥤</div>
+                    <div class="recipe-content">
+                        <div class="recipe-metrics">
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">⏱️</span>
+                                Prep: 8m
+                            </span>
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">🔥</span>
+                                Super Easy
+                            </span>
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">💰</span>
+                                £0.65
+                            </span>
+                        </div>
+                        <h3 class="recipe-title">Banana & Oat Smoothie</h3>
+                        <p class="recipe-description">Creamy banana and oat smoothie with natural sweetness. Perfect for hydration and energy.</p>
+                        <div class="recipe-tags">
+                            <span class="badge badge-category">🥤 Smoothie</span>
+                            <span class="badge badge-category">Dairy-Free</span>
+                            <span class="badge badge-category">Quick</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=apple-cinnamon-puree" class="recipe-card" data-meal="snack" data-dietary="vegan" data-time="quick">
+                    <div class="recipe-meal-type">🍎 Fruit</div>
+                    <h3 class="recipe-title">Apple & Cinnamon Purée</h3>
+                    <p class="recipe-description">Warm apple purée with a hint of cinnamon. Comforting and naturally sweet for little ones.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>12 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.55</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 9+ Months Section -->
+        <div class="age-section" data-age="9+ months">
+            <div class="age-header">
+                <h2 class="age-title">🐚 9+ Months</h2>
+                <p class="age-subtitle">Textured mashes and soft finger foods for exploring new textures</p>
+            </div>
+            
+            <div class="recipes-grid">
+                <a href="favourite-recipe.html?recipe=lentil-carrot-mash" class="recipe-card">
+                    <div class="recipe-meal-type">🌱 Protein Rich</div>
+                    <h3 class="recipe-title">Lentil & Carrot Mash</h3>
+                    <p class="recipe-description">Soft red lentils and boiled carrots mashed with a hint of cumin for protein and iron.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>22 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.27</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=broccoli-cauliflower-cheese" class="recipe-card">
+                    <div class="recipe-meal-type">🧀 Cheesy</div>
+                    <h3 class="recipe-title">Broccoli & Cauliflower Cheese</h3>
+                    <p class="recipe-description">Soft steamed vegetables in a mild cheese sauce that makes eating greens a delight.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>20 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.15</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=sweet-potato-wedges" class="recipe-card">
+                    <div class="recipe-meal-type">✋ Finger Food</div>
+                    <h3 class="recipe-title">Sweet Potato Wedges</h3>
+                    <p class="recipe-description">Oven-baked and soft, ideal for baby-led weaning and developing pincer grip skills.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>35 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.93</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=mini-mashed-veg-omelette" class="recipe-card" data-meal="breakfast" data-dietary="vegetarian" data-time="quick">
+                    <div class="recipe-meal-type">🥚 Breakfast</div>
+                    <h3 class="recipe-title">Mini Mashed Veg Omelette</h3>
+                    <p class="recipe-description">Egg with mashed vegetables, gently pan-cooked for a protein-rich, veggie-packed meal.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>12 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.62</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=berry-yogurt-smoothie" class="recipe-card" data-meal="drink" data-dietary="vegetarian" data-time="quick">
+                    <div class="recipe-meal-type">🥤 Smoothie</div>
+                    <h3 class="recipe-title">Berry & Yogurt Smoothie</h3>
+                    <p class="recipe-description">Creamy yogurt smoothie with mixed berries. Packed with probiotics and antioxidants.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>10 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Super Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.20</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=quinoa-veggie-bowl" class="recipe-card" data-meal="lunch" data-dietary="vegan" data-time="medium">
+                    <div class="recipe-meal-type">🌾 Grain Bowl</div>
+                    <h3 class="recipe-title">Quinoa & Veggie Bowl</h3>
+                    <p class="recipe-description">Soft quinoa with steamed vegetables and mild herbs. Complete protein and fiber.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>25 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.95</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 12+ Months Section -->
+        <div class="age-section" data-age="12+ months">
+            <div class="age-header">
+                <h2 class="age-title">🧸 12+ Months</h2>
+                <p class="age-subtitle">More adventurous textures and flavors for confident eaters</p>
+            </div>
+            
+            <div class="recipes-grid">
+                <a href="favourite-recipe.html?recipe=mini-chicken-veg-patties" class="recipe-card">
+                    <div class="recipe-meal-type">🍖 Protein</div>
+                    <h3 class="recipe-title">Mini Chicken & Veg Patties</h3>
+                    <p class="recipe-description">Shredded cooked chicken with mashed potato and carrot formed into perfect finger-food patties.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>25 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.72</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=cheesy-cauliflower-rice-balls" class="recipe-card">
+                    <div class="recipe-meal-type">🧀 Veggie</div>
+                    <h3 class="recipe-title">Cheesy Cauliflower Rice Balls</h3>
+                    <p class="recipe-description">Soft balls with cooked cauliflower, cheese, and rice - perfect for little hands to explore.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>30 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.82</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=pasta-tomato-veg-sauce" class="recipe-card">
+                    <div class="recipe-meal-type">🍝 Comfort</div>
+                    <h3 class="recipe-title">Pasta with Tomato & Veg Sauce</h3>
+                    <p class="recipe-description">Blended vegetable sauce over small pasta shapes - hidden veggies in every delicious bite.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>20 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.88</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=baked-apple-oat-bites" class="recipe-card" data-meal="snack" data-dietary="vegan" data-time="medium">
+                    <div class="recipe-meal-type">🍯 Sweet Treat</div>
+                    <h3 class="recipe-title">Baked Apple & Oat Bites</h3>
+                    <p class="recipe-description">Naturally sweet, soft toddler snack that's perfect for little hands and growing taste buds.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>28 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.58</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=chocolate-banana-smoothie" class="recipe-card" data-meal="drink" data-dietary="dairy-free" data-time="quick">
+                    <div class="recipe-meal-type">🥤 Smoothie</div>
+                    <h3 class="recipe-title">Chocolate & Banana Smoothie</h3>
+                    <p class="recipe-description">Rich chocolate smoothie with banana and almond milk. A healthy treat that tastes like dessert.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>8 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Super Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.45</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=hidden-veg-pancakes" class="recipe-card" data-meal="breakfast" data-dietary="vegetarian" data-time="medium">
+                    <div class="recipe-meal-type">🥞 Breakfast</div>
+                    <h3 class="recipe-title">Hidden Veg Pancakes</h3>
+                    <p class="recipe-description">Fluffy pancakes with puréed carrots and zucchini hidden inside. Sweet and nutritious breakfast.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>20 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.75</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 18+ Months Section -->
+        <div class="age-section" data-age="18+ months">
+            <div class="age-header">
+                <h2 class="age-title">🚶 18+ Months</h2>
+                <p class="age-subtitle">Toddler confidence with more complex flavors and textures</p>
+            </div>
+            
+            <div class="recipes-grid">
+                <a href="favourite-recipe.html?recipe=mini-turkey-spinach-meatballs" class="recipe-card">
+                    <div class="recipe-meal-type">🦃 Iron Rich</div>
+                    <h3 class="recipe-title">Mini Turkey & Spinach Meatballs</h3>
+                    <p class="recipe-description">Great finger food rich in iron and protein, with hidden spinach for extra nutrition.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>32 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£2.30</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=vegetable-muffins" class="recipe-card">
+                    <div class="recipe-meal-type">🧁 Savory</div>
+                    <h3 class="recipe-title">Vegetable Muffins</h3>
+                    <p class="recipe-description">Savory muffins with zucchini, carrots, and mild cheese - perfect for lunch boxes and snack time.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>35 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.45</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=mini-tuna-cakes" class="recipe-card" data-meal="lunch" data-dietary="nut-free" data-time="medium">
+                    <div class="recipe-meal-type">🐟 Omega-3</div>
+                    <h3 class="recipe-title">Mini Tuna Cakes</h3>
+                    <p class="recipe-description">Tuna, mashed potato, and peas pan-fried into soft patties packed with omega-3 goodness.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>22 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.25</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=green-power-smoothie" class="recipe-card" data-meal="drink" data-dietary="vegan" data-time="quick">
+                    <div class="recipe-meal-type">🥤 Smoothie</div>
+                    <h3 class="recipe-title">Green Power Smoothie</h3>
+                    <p class="recipe-description">Spinach, banana, and apple smoothie. Packed with vitamins and minerals for growing toddlers.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>10 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Super Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.10</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=cheesy-pasta-bake" class="recipe-card" data-meal="dinner" data-dietary="vegetarian" data-time="long">
+                    <div class="recipe-meal-type">🧀 Comfort</div>
+                    <h3 class="recipe-title">Cheesy Pasta Bake</h3>
+                    <p class="recipe-description">Baked pasta with hidden vegetables and melted cheese. A comforting family favorite.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>45 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.85</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 2+ Years Section -->
+        <div class="age-section" data-age="2+ years">
+            <div class="age-header">
+                <h2 class="age-title">🎈 2+ Years</h2>
+                <p class="age-subtitle">Independent eaters ready for more complex meals and flavors</p>
+            </div>
+            
+            <div class="recipes-grid">
+                <a href="favourite-recipe.html?recipe=toddler-friendly-quesadilla" class="recipe-card">
+                    <div class="recipe-meal-type">🌮 International</div>
+                    <h3 class="recipe-title">Toddler-Friendly Quesadilla</h3>
+                    <p class="recipe-description">Soft tortilla with beans and cheese, lightly toasted for a fun introduction to international flavors.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>15 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£0.95</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=creamy-pesto-pasta-hidden-veg" class="recipe-card" data-meal="dinner" data-dietary="vegetarian" data-time="quick">
+                    <div class="recipe-meal-type">🌿 Hidden Veg</div>
+                    <h3 class="recipe-title">Creamy Pesto Pasta with Hidden Veg</h3>
+                    <p class="recipe-description">Blended spinach-pesto sauce over toddler pasta - they'll never know they're eating their greens!</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>18 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.18</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=strawberry-milk-smoothie" class="recipe-card" data-meal="drink" data-dietary="vegetarian" data-time="quick">
+                    <div class="recipe-meal-type">🥤 Smoothie</div>
+                    <h3 class="recipe-title">Strawberry & Milk Smoothie</h3>
+                    <p class="recipe-description">Sweet strawberry smoothie with milk and honey. A classic favorite that's both delicious and nutritious.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>8 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Super Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.35</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=breakfast-burrito" class="recipe-card" data-meal="breakfast" data-dietary="vegetarian" data-time="medium">
+                    <div class="recipe-meal-type">🌯 Breakfast</div>
+                    <h3 class="recipe-title">Breakfast Burrito</h3>
+                    <p class="recipe-description">Scrambled eggs with cheese and vegetables wrapped in a soft tortilla. Perfect for busy mornings.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>15 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.15</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 3+ Years Section -->
+        <div class="age-section" data-age="3+ years">
+            <div class="age-header">
+                <h2 class="age-title">🌞 3+ Years</h2>
+                <p class="age-subtitle">Little adult eaters ready for family-style meals with more adventurous flavors</p>
+            </div>
+            
+            <div class="recipes-grid">
+                <a href="favourite-recipe.html?recipe=toddler-tikka-skewers" class="recipe-card">
+                    <div class="recipe-meal-type">🍛 Spiced</div>
+                    <h3 class="recipe-title">Toddler Tikka Skewers</h3>
+                    <p class="recipe-description">Mildly spiced yogurt-marinated chicken or paneer on sticks - perfect for adventurous little eaters.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>40 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.85</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=mini-veggie-burgers" class="recipe-card">
+                    <div class="recipe-meal-type">🍔 Plant Power</div>
+                    <h3 class="recipe-title">Mini Veggie Burgers</h3>
+                    <p class="recipe-description">Baked burgers with black beans, oats, and vegetables - all the fun of a burger, packed with nutrition.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>35 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.25</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=hidden-veg-mac-cheese" class="recipe-card" data-meal="dinner" data-dietary="vegetarian" data-time="medium">
+                    <div class="recipe-meal-type">🧀 Family Fave</div>
+                    <h3 class="recipe-title">Hidden Veg Mac & Cheese</h3>
+                    <p class="recipe-description">Classic comfort food with puréed carrots and cauliflower in the cheese sauce - sneaky but delicious!</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>25 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.05</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=tropical-fruit-smoothie" class="recipe-card" data-meal="drink" data-dietary="vegan" data-time="quick">
+                    <div class="recipe-meal-type">🥤 Smoothie</div>
+                    <h3 class="recipe-title">Tropical Fruit Smoothie</h3>
+                    <p class="recipe-description">Mango, pineapple, and banana smoothie with coconut milk. A taste of the tropics for little ones.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>10 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Super Easy</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£1.75</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="favourite-recipe.html?recipe=chicken-nuggets-homemade" class="recipe-card" data-meal="dinner" data-dietary="nut-free" data-time="long">
+                    <div class="recipe-meal-type">🍗 Protein</div>
+                    <h3 class="recipe-title">Homemade Chicken Nuggets</h3>
+                    <p class="recipe-description">Baked chicken nuggets with whole grain breadcrumbs. Healthier than store-bought and just as tasty.</p>
+                    <div class="recipe-meta-mini">
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">⏱️</span>
+                            <span>40 mins</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">🔥</span>
+                            <span>Medium</span>
+                        </div>
+                        <div class="meta-item-mini">
+                            <span class="meta-icon">💰</span>
+                            <span>£2.10</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="back-to-generator">
+            <a href="recipe-preferences.html">
+                <span>🎯</span>
+                Create Your Custom Recipe
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Search and Filter Functionality
+        let allRecipes = [];
+        let filteredRecipes = [];
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSearchAndFilter();
+        });
+
+        function initializeSearchAndFilter() {
+            // Collect all recipe cards
+            const recipeCards = document.querySelectorAll('.recipe-card');
+            allRecipes = Array.from(recipeCards);
+            filteredRecipes = [...allRecipes];
+
+            // Add event listeners
+            document.getElementById('recipe-search').addEventListener('input', filterRecipes);
+            document.getElementById('age-filter').addEventListener('change', filterRecipes);
+            document.getElementById('dietary-filter').addEventListener('change', filterRecipes);
+            document.getElementById('meal-filter').addEventListener('change', filterRecipes);
+            document.getElementById('time-filter').addEventListener('change', filterRecipes);
+
+            // Add data attributes to existing recipes that don't have them
+            addMissingDataAttributes();
+        }
+
+        function addMissingDataAttributes() {
+            // Add data attributes to existing recipes based on their content
+            allRecipes.forEach(card => {
+                if (!card.dataset.meal) {
+                    const mealType = card.querySelector('.recipe-meal-type').textContent.toLowerCase();
+                    if (mealType.includes('breakfast')) card.dataset.meal = 'breakfast';
+                    else if (mealType.includes('lunch')) card.dataset.meal = 'lunch';
+                    else if (mealType.includes('dinner')) card.dataset.meal = 'dinner';
+                    else if (mealType.includes('snack')) card.dataset.meal = 'snack';
+                    else if (mealType.includes('smoothie') || mealType.includes('drink')) card.dataset.meal = 'drink';
+                    else card.dataset.meal = 'lunch'; // default
+                }
+
+                if (!card.dataset.time) {
+                    const timeText = card.querySelector('.meta-item-mini:first-child span:last-child').textContent;
+                    const time = parseInt(timeText);
+                    if (time <= 15) card.dataset.time = 'quick';
+                    else if (time <= 30) card.dataset.time = 'medium';
+                    else card.dataset.time = 'long';
+                }
+
+                if (!card.dataset.dietary) {
+                    const title = card.querySelector('.recipe-title').textContent.toLowerCase();
+                    const description = card.querySelector('.recipe-description').textContent.toLowerCase();
+                    
+                    if (title.includes('vegan') || description.includes('vegan')) card.dataset.dietary = 'vegan';
+                    else if (title.includes('vegetarian') || description.includes('vegetarian')) card.dataset.dietary = 'vegetarian';
+                    else if (title.includes('dairy-free') || description.includes('dairy-free')) card.dataset.dietary = 'dairy-free';
+                    else if (title.includes('gluten-free') || description.includes('gluten-free')) card.dataset.dietary = 'gluten-free';
+                    else if (title.includes('nut-free') || description.includes('nut-free')) card.dataset.dietary = 'nut-free';
+                    else if (title.includes('egg-free') || description.includes('egg-free')) card.dataset.dietary = 'egg-free';
+                    else card.dataset.dietary = 'none';
+                }
+            });
+        }
+
+        function filterRecipes() {
+            const searchTerm = document.getElementById('recipe-search').value.toLowerCase();
+            const ageFilter = document.getElementById('age-filter').value;
+            const dietaryFilter = document.getElementById('dietary-filter').value;
+            const mealFilter = document.getElementById('meal-filter').value;
+            const timeFilter = document.getElementById('time-filter').value;
+
+            filteredRecipes = allRecipes.filter(card => {
+                // Search filter
+                const title = card.querySelector('.recipe-title').textContent.toLowerCase();
+                const description = card.querySelector('.recipe-description').textContent.toLowerCase();
+                const mealType = card.querySelector('.recipe-meal-type').textContent.toLowerCase();
+                
+                const matchesSearch = !searchTerm || 
+                    title.includes(searchTerm) || 
+                    description.includes(searchTerm) || 
+                    mealType.includes(searchTerm);
+
+                // Age filter
+                const ageSection = card.closest('.age-section');
+                const matchesAge = !ageFilter || ageSection.dataset.age === ageFilter;
+
+                // Dietary filter
+                const matchesDietary = !dietaryFilter || card.dataset.dietary === dietaryFilter;
+
+                // Meal filter
+                const matchesMeal = !mealFilter || card.dataset.meal === mealFilter;
+
+                // Time filter
+                const matchesTime = !timeFilter || card.dataset.time === timeFilter;
+
+                return matchesSearch && matchesAge && matchesDietary && matchesMeal && matchesTime;
+            });
+
+            updateRecipeDisplay();
+        }
+
+        function updateRecipeDisplay() {
+            // Hide all recipe cards first
+            allRecipes.forEach(card => {
+                card.style.display = 'none';
+            });
+
+            // Show filtered recipes
+            filteredRecipes.forEach(card => {
+                card.style.display = 'block';
+            });
+
+            // Update results info
+            const resultsInfo = document.getElementById('results-info');
+            resultsInfo.textContent = `Showing ${filteredRecipes.length} of ${allRecipes.length} recipes`;
+
+            // Show/hide age sections based on results
+            const ageSections = document.querySelectorAll('.age-section');
+            ageSections.forEach(section => {
+                const visibleRecipes = section.querySelectorAll('.recipe-card[style*="display: block"], .recipe-card:not([style*="display: none"])');
+                if (visibleRecipes.length === 0) {
+                    section.style.display = 'none';
+                } else {
+                    section.style.display = 'block';
+                }
+            });
+
+            // Show no results message if needed
+            const noResultsElement = document.querySelector('.no-results');
+            if (filteredRecipes.length === 0) {
+                if (!noResultsElement) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <div class="no-results-icon">🔍</div>
+                        <h3>No recipes found</h3>
+                        <p>Try adjusting your search terms or filters</p>
+                    `;
+                    document.querySelector('.container').insertBefore(noResults, document.querySelector('.back-to-generator'));
+                }
+            } else if (noResultsElement) {
+                noResultsElement.remove();
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('recipe-search').value = '';
+            document.getElementById('age-filter').value = '';
+            document.getElementById('dietary-filter').value = '';
+            document.getElementById('meal-filter').value = '';
+            document.getElementById('time-filter').value = '';
+            
+            filterRecipes();
+        }
+
+        // Function to convert recipe cards to new badge format
+        function convertRecipeCardsToBadgeFormat() {
+            const recipeCards = document.querySelectorAll('.recipe-card');
+            
+            recipeCards.forEach(card => {
+                // Skip if already converted
+                if (card.querySelector('.recipe-content')) {
+                    return;
+                }
+
+                const mealType = card.querySelector('.recipe-meal-type');
+                const title = card.querySelector('.recipe-title');
+                const description = card.querySelector('.recipe-description');
+                const metaMini = card.querySelector('.recipe-meta-mini');
+
+                if (!mealType || !title || !description || !metaMini) {
+                    return;
+                }
+
+                // Extract data
+                const mealTypeText = mealType.textContent;
+                const titleText = title.textContent;
+                const descriptionText = description.textContent;
+                
+                // Extract metrics from meta-mini
+                const metaItems = metaMini.querySelectorAll('.meta-item-mini');
+                let prepTime = '15m';
+                let difficulty = 'Easy';
+                let price = '£0.50';
+
+                metaItems.forEach(item => {
+                    const icon = item.querySelector('.meta-icon');
+                    const text = item.textContent.replace(icon.textContent, '').trim();
+                    
+                    if (icon.textContent === '⏱️') {
+                        prepTime = text.replace(' mins', 'm');
+                    } else if (icon.textContent === '🔥') {
+                        difficulty = text;
+                    } else if (icon.textContent === '💰') {
+                        price = text;
+                    }
+                });
+
+                // Determine category badges based on meal type and content
+                const categoryBadges = [];
+                
+                // Add meal type badge with specific styling
+                let mealTypeClass = 'badge-category';
+                if (mealTypeText.toLowerCase().includes('breakfast')) {
+                    mealTypeClass = 'badge-breakfast';
+                } else if (mealTypeText.toLowerCase().includes('lunch')) {
+                    mealTypeClass = 'badge-lunch';
+                } else if (mealTypeText.toLowerCase().includes('dinner')) {
+                    mealTypeClass = 'badge-dinner';
+                } else if (mealTypeText.toLowerCase().includes('snack')) {
+                    mealTypeClass = 'badge-snack';
+                } else if (mealTypeText.toLowerCase().includes('smoothie') || mealTypeText.toLowerCase().includes('drink')) {
+                    mealTypeClass = 'badge-drink';
+                }
+                
+                categoryBadges.push({ text: mealTypeText, class: mealTypeClass });
+
+                // Add dietary badges based on content
+                if (titleText.toLowerCase().includes('vegan') || descriptionText.toLowerCase().includes('vegan')) {
+                    categoryBadges.push({ text: 'Vegan', class: 'badge-category' });
+                } else if (titleText.toLowerCase().includes('vegetarian') || descriptionText.toLowerCase().includes('vegetarian')) {
+                    categoryBadges.push({ text: 'Vegetarian', class: 'badge-category' });
+                } else if (titleText.toLowerCase().includes('dairy-free') || descriptionText.toLowerCase().includes('dairy-free')) {
+                    categoryBadges.push({ text: 'Dairy-Free', class: 'badge-category' });
+                } else if (titleText.toLowerCase().includes('nut-free') || descriptionText.toLowerCase().includes('nut-free')) {
+                    categoryBadges.push({ text: 'Nut-Free', class: 'badge-category' });
+                }
+
+                // Add age badges
+                if (mealTypeText.includes('First Foods') || mealTypeText.includes('6+')) {
+                    categoryBadges.push({ text: '6+ months', class: 'badge-category' });
+                } else if (mealTypeText.includes('12+') || titleText.toLowerCase().includes('toddler')) {
+                    categoryBadges.push({ text: '12+ months', class: 'badge-category' });
+                } else {
+                    categoryBadges.push({ text: '6+ months', class: 'badge-category' });
+                }
+
+                // Create new structure
+                const newContent = `
+                    <div class="recipe-image">${mealTypeText.split(' ')[0]}</div>
+                    <div class="recipe-content">
+                        <div class="recipe-metrics">
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">⏱️</span>
+                                Prep: ${prepTime}
+                            </span>
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">🔥</span>
+                                ${difficulty}
+                            </span>
+                            <span class="badge badge-metric">
+                                <span class="badge-icon">💰</span>
+                                ${price}
+                            </span>
+                        </div>
+                        <h3 class="recipe-title">${titleText}</h3>
+                        <p class="recipe-description">${descriptionText}</p>
+                        <div class="recipe-tags">
+                            ${categoryBadges.map(badge => `<span class="badge ${badge.class}">${badge.text}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+
+                // Replace content
+                card.innerHTML = newContent;
+            });
+        }
+
+        // Convert recipe cards when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a bit for the page to fully load
+            setTimeout(convertRecipeCardsToBadgeFormat, 100);
+        });
+    </script>
+</body>
+</html>

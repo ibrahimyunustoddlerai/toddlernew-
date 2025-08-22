@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Recipe... - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.7;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            margin-right: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-btn:hover {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .back-btn {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .back-btn:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 80px auto 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .recipe-header {
+            text-align: center;
+            margin-bottom: 48px;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+            padding-bottom: 36px;
+        }
+
+        .recipe-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+            margin-bottom: 18px;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)), #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .recipe-subtitle {
+            color: #64748b;
+            font-size: 1.25rem;
+            font-style: italic;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .reviews-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .reviews-content {
+            font-size: 0.95rem;
+            color: #64748b;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .recipe-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(226, 232, 240, 0.4));
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .meta-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .meta-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .meta-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #6366f1;
+        }
+
+        .recipe-section {
+            margin-bottom: 40px;
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            border-left: 4px solid #6366f1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: #475569;
+            margin-bottom: 24px;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+            padding-bottom: 12px;
+            letter-spacing: -0.015em;
+        }
+
+        .ingredients-list {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #64748b;
+        }
+
+        .directions-content ol {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .directions-content li {
+            counter-increment: step-counter;
+            margin-bottom: 24px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-radius: 12px;
+            border-left: 4px solid #6366f1;
+            position: relative;
+        }
+
+        .directions-content li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 18px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+        }
+
+        .cost-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(139, 92, 246, 0.05));
+            border-left-color: #8b5cf6;
+        }
+
+        .cost-total {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            color: #6366f1;
+            font-weight: 600;
+            text-align: center;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border: 2px solid #6366f1;
+        }
+
+        .warning-section {
+            background: rgba(239, 68, 68, 0.05);
+            border-left-color: #ef4444;
+            border: 2px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .warning-content {
+            color: #dc2626;
+            font-weight: 500;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, rgba(71, 85, 105, 0.05), rgba(100, 116, 139, 0.05));
+            border-left-color: #64748b;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            margin-bottom: 18px;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            border-left: 4px solid #64748b;
+            position: relative;
+        }
+
+        .tips-list li:before {
+            content: "💡";
+            position: absolute;
+            left: -15px;
+            top: 15px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .picky-eater-section {
+            background: linear-gradient(135deg, rgba(71, 85, 105, 0.05), rgba(100, 116, 139, 0.05));
+            border-left-color: #64748b;
+        }
+
+        .picky-tip {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #64748b;
+        }
+
+        .recipe-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .recipe-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-to-favourites-btn {
+            background: #FFD54F;
+            color: #5D5D5D;
+        }
+
+        .back-to-favourites-btn:hover {
+            background: #FFC107;
+            transform: translateY(-2px);
+        }
+
+        .another-recipe-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .another-recipe-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 100px 15px 0;
+                padding: 25px;
+            }
+            
+            .recipe-title {
+                font-size: 2.2rem;
+            }
+            
+            .recipe-meta {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .recipe-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="index.html" class="menu-btn back-btn">← Back to Home</a>
+        <a href="toddler-favourites.html" class="menu-btn">🍼 Favourites</a>
+        <a href="recipe-preferences.html" class="menu-btn">🍽️ New Recipe</a>
+    </div>
+
+        <div class="container">
+        <div class="recipe-header">
+            <h1 class="recipe-title" id="title">Loading Your Recipe...</h1>
+            <p class="recipe-subtitle" id="subtitle">Generating a delicious meal with your ingredients...</p>
+            
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+                <div class="reviews-content" id="reviews-content">
+                    Preparing your personalized recipe...
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-meta">
+            <div class="recipe-metrics">
+                <span class="badge badge-metric">
+                    <span class="badge-icon">⏱️</span>
+                    Prep: <span id="prep-time">...</span>
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">🔥</span>
+                    <span id="difficulty">Easy</span>
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">💰</span>
+                    £<span id="cost">0.85</span>
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">🍽️</span>
+                    <span id="kcal-value">...</span> kcal
+                </span>
+                <span class="badge badge-metric">
+                    <span class="badge-icon">👶</span>
+                    <span id="servings-value">1 toddler</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Ingredients Section -->
+        <div class="recipe-section">
+            <h3 class="section-title">🥄 Ingredients</h3>
+            <div class="ingredients-content" id="ingredients-content">
+                <div class="ingredients-list">
+                    Loading your ingredients...
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Breakdown Section -->
+        <div class="recipe-section cost-section">
+            <h3 class="section-title">💰 Cost Breakdown</h3>
+            <div class="cost-content" id="cost-content">
+                <div class="cost-items">
+                    Calculating costs...
+                </div>
+                <div class="cost-total">
+                    <strong>Total Cost: ...</strong>
+                </div>
+        </div>
+    </div>
+
+        <!-- Choking Hazard Warning -->
+        <div class="recipe-section warning-section">
+            <h3 class="section-title">⚠️ Choking Hazard Warnings</h3>
+            <div class="warning-content" id="warning-content">
+                <p>Loading safety information...</p>
+            </div>
+        </div>
+
+        <!-- Step by Step Directions -->
+        <div class="recipe-section">
+            <h3 class="section-title">👨‍🍳 Step by Step Method</h3>
+            <div class="directions-content" id="directions-content">
+                <ol>
+                    <li>Loading cooking instructions...</li>
+                </ol>
+        </div>
+    </div>
+
+        <!-- Chef Top Tips -->
+        <div class="recipe-section tips-section">
+            <h3 class="section-title">👨‍🍳 Chef's Top Tips</h3>
+            <div class="tips-content" id="tips-content">
+                <ul class="tips-list">
+                    <li>Loading chef tips...</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Picky Eater Tips Section -->
+        <div class="recipe-section picky-eater-section">
+            <h3 class="section-title">💡 Picky Eater Alternatives</h3>
+            <div class="picky-eater-content" id="picky-eater-content">
+                <div class="picky-tip">
+                    Loading picky eater tips...
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-actions">
+            <button class="recipe-btn back-to-favourites-btn" onclick="window.location.href='toddler-favourites.html'">
+                ← Back to Favourites
+            </button>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <button class="recipe-btn" id="add-to-planner-btn" style="background:#6366f1; color:white;">
+                    ➕ Add to Weekly Planner
+                </button>
+                <button class="recipe-btn" id="download-pdf-btn" style="background:#10b981; color:white;">
+                    📄 Download PDF
+                </button>
+                <button class="recipe-btn another-recipe-btn" onclick="window.location.href='recipe-preferences.html'">
+                    ✨ Create Custom Recipe
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Load html2pdf for PDF export (deferred)
+        (function loadHtml2Pdf(){
+            const s=document.createElement('script');
+            s.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+            s.defer=true; document.head.appendChild(s);
+        })();
+        console.log('🚀 Favourite Recipe Loading...');
+        
+        // Get recipe ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const recipeId = urlParams.get('recipe');
+        
+        console.log('Recipe ID:', recipeId);
+        
+        // Show animated loading screen
+        function showAnimatedLoading() {
+            const container = document.querySelector('.container');
+            
+            // Hide all existing content
+            container.innerHTML = `
+                <div id="loading-screen" style="
+                    min-height: 80vh;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    border-radius: 24px;
+                    padding: 60px 20px;
+                    margin: 40px 0;
+                ">
+                    <!-- Spinning Fruits Circle -->
+                    <div style="
+                        position: relative;
+                        width: 200px;
+                        height: 200px;
+                        margin-bottom: 40px;
+                    ">
+                        <div class="fruit-circle" style="
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            animation: spin 3s linear infinite;
+                        ">
+                            <div class="fruit" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 2.5rem;">🍎</div>
+                            <div class="fruit" style="position: absolute; top: 20%; right: 0; font-size: 2.5rem;">🥕</div>
+                            <div class="fruit" style="position: absolute; bottom: 20%; right: 0; font-size: 2.5rem;">🥦</div>
+                            <div class="fruit" style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 2.5rem;">🍌</div>
+                            <div class="fruit" style="position: absolute; top: 20%; left: 0; font-size: 2.5rem;">🍅</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Motivational Message with inline cursor -->
+                    <div style="
+                        font-family: 'Poppins', sans-serif;
+                        font-size: 1.3rem;
+                        color: #6366f1;
+                        font-weight: 600;
+                        max-width: 500px;
+                        line-height: 1.5;
+                        margin-bottom: 20px;
+                        min-height: 2rem;
+                        text-align: center;
+                    ">
+                        <span id="motivational-message"></span><span id="typing-cursor" style="
+                            font-size: 1.3rem;
+                            color: #6366f1;
+                            animation: blink 1s infinite;
+                        ">|</span>
+                    </div>
+                </div>
+                
+                <style>
+                    @keyframes spin {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                    
+                    @keyframes blink {
+                        0%, 50% { opacity: 1; }
+                        51%, 100% { opacity: 0; }
+                    }
+                </style>
+            `;
+            
+            // Motivational messages for parents (max 80 characters)
+            const messages = [
+                "Keep this up parent! You'll cook up a storm in that kitchen! 👨‍🍳",
+                "Keep at it! They are only little once - Remember you're amazing too! ✨",
+                "You're creating memories one meal at a time. That's pure magic! 🌟",
+                "Every bite is love served on a plate. You're doing incredible! 💖",
+                "Cooking with love makes the best ingredient. You've got this! 🥘",
+                "Small hands, big appetites - you're the hero of mealtime! 🦸‍♀️",
+                "Messy kitchens make the happiest memories. Embrace the chaos! 🎉",
+                "From your heart to their tummy - that's the recipe for love! ❤️",
+                "Building healthy habits one delicious bite at a time! 🌱",
+                "You're not just feeding them, you're nurturing their future! 🌈"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Typewriter effect for the message
+            let messageIndex = 0;
+            const messageElement = document.getElementById('motivational-message');
+            const cursorElement = document.getElementById('typing-cursor');
+            
+            function typeMessage() {
+                if (messageIndex < randomMessage.length) {
+                    messageElement.textContent += randomMessage.charAt(messageIndex);
+                    messageIndex++;
+                    setTimeout(typeMessage, 80); // Typing speed
+                }
+            }
+            
+            // Start typing after a short delay
+            setTimeout(typeMessage, 500);
+        }
+        
+        // Restore page layout and update with recipe
+        function restorePageAndUpdateWithRecipe(recipe) {
+            console.log('🔄 Restoring page layout and updating with recipe...');
+            
+            // First restore the original page structure exactly as it was
+            const container = document.querySelector('.container');
+            container.innerHTML = `
+                <div class="recipe-header">
+                    <h1 class="recipe-title" id="title">Loading Your Recipe...</h1>
+                    <p class="recipe-subtitle" id="subtitle">Generating a delicious meal with your ingredients...</p>
+                    
+                    <!-- Reviews Section -->
+                    <div class="reviews-section">
+                        <div class="reviews-content" id="reviews-content">
+                            Preparing your personalized recipe...
+                        </div>
+                    </div>
+                </div>
+                <div class="recipe-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Prep Time</div>
+                        <div class="meta-value" id="prep-time">...</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Cook Time</div>
+                        <div class="meta-value" id="cook-time">...</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Kcal</div>
+                        <div class="meta-value" id="kcal-value">...</div>
+                        <div class="meta-serving-info" id="serving-info">per 1 toddler serving</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Servings</div>
+                        <div class="meta-value" id="servings-value">1 toddler</div>
+                    </div>
+                </div>
+                <!-- Ingredients Section -->
+                <div class="recipe-section">
+                    <h3 class="section-title">🥄 Ingredients</h3>
+                    <div class="ingredients-content" id="ingredients-content">
+                        <div class="ingredients-list">
+                            Loading your ingredients...
+                        </div>
+                    </div>
+                </div>
+                <!-- Cost Breakdown Section -->
+                <div class="recipe-section cost-section">
+                    <h3 class="section-title">💰 Cost Breakdown</h3>
+                    <div class="cost-content" id="cost-content">
+                        <div class="cost-items">
+                            Calculating costs...
+                        </div>
+                        <div class="cost-total">
+                            <strong>Total Cost: ...</strong>
+                        </div>
+                    </div>
+                </div>
+                <!-- Choking Hazard Warning -->
+                <div class="recipe-section warning-section">
+                    <h3 class="section-title">⚠️ Choking Hazard Warnings</h3>
+                    <div class="warning-content" id="warning-content">
+                        <p>Loading safety information...</p>
+                    </div>
+                </div>
+                <!-- Step by Step Directions -->
+                <div class="recipe-section">
+                    <h3 class="section-title">👨‍🍳 Step by Step Method</h3>
+                    <div class="directions-content" id="directions-content">
+                        <ol>
+                            <li>Loading cooking instructions...</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- Chef Top Tips -->
+                <div class="recipe-section tips-section">
+                    <h3 class="section-title">👨‍🍳 Chef's Top Tips</h3>
+                    <div class="tips-content" id="tips-content">
+                        <ul class="tips-list">
+                            <li>Loading chef tips...</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Picky Eater Tips Section -->
+                <div class="recipe-section picky-eater-section">
+                    <h3 class="section-title">💡 Picky Eater Alternatives</h3>
+                    <div class="picky-eater-content" id="picky-eater-content">
+                        <div class="picky-tip">
+                            Loading picky eater tips...
+                        </div>
+                    </div>
+                </div>
+                <div class="recipe-actions">
+                    <button class="recipe-btn back-to-favourites-btn" onclick="window.location.href='toddler-favourites.html'">
+                        ← Back to Favourites
+                    </button>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <button class="recipe-btn" id="add-to-planner-btn" style="background:#6366f1; color:white;">
+                            ➕ Add to Weekly Planner
+                        </button>
+                        <button class="recipe-btn" id="download-pdf-btn" style="background:#10b981; color:white;">
+                            📄 Download PDF
+                        </button>
+                        <button class="recipe-btn another-recipe-btn" onclick="window.location.href='recipe-preferences.html'">
+                            ✨ Create Custom Recipe
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Small delay to ensure DOM is ready, then update with recipe data
+            setTimeout(() => {
+                updatePageWithRecipe(recipe);
+                // Re-bind buttons after DOM replacement
+                try { bindPdfButton(); bindPlannerButton(); } catch {}
+            }, 100);
+        }
+        
+        // Load favourite recipe
+        async function loadFavouriteRecipe() {
+            console.log('🤖 Loading favourite recipe...');
+            
+            try {
+                if (!recipeId) {
+                    throw new Error('No recipe ID provided');
+                }
+                
+                // Show animated loading screen
+                showAnimatedLoading();
+                
+                // Call the favourite recipe API
+                const response = await fetch('/api/generate-favourite-recipe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ recipeId: recipeId })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const recipe = await response.json();
+                console.log('✅ Favourite recipe received:', recipe.name);
+                
+                // Restore page layout and update with recipe
+                restorePageAndUpdateWithRecipe(recipe);
+
+            } catch (error) {
+                console.error('🚨 Favourite recipe loading failed:', error);
+                
+                // Show error message to user
+                const container = document.querySelector('.container');
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">😔</div>
+                        <h1 style="color: #dc2626; margin-bottom: 16px;">Recipe Loading Error</h1>
+                        <p style="color: #64748b; margin-bottom: 32px;">${error.message}</p>
+                        <button onclick="window.location.href='toddler-favourites.html'" style="
+                            background: #6366f1; color: white; padding: 12px 24px; 
+                            border-radius: 8px; border: none; font-weight: 600; cursor: pointer;
+                            margin-right: 12px;
+                        ">← Back to Favourites</button>
+                        <button onclick="location.reload()" style="
+                            background: #10b981; color: white; padding: 12px 24px; 
+                            border-radius: 8px; border: none; font-weight: 600; cursor: pointer;
+                        ">🔄 Try Again</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Update page with recipe data (same as recipe-template.html)
+        function updatePageWithRecipe(recipe) {
+            console.log('📄 Updating page with recipe:', recipe.name);
+            
+            // Update main content
+            document.getElementById('title').textContent = recipe.name;
+            document.getElementById('subtitle').textContent = recipe.oneLiner;
+            document.getElementById('reviews-content').textContent = 'Parent-Approved Review: ' + recipe.review;
+            // Update prep time and difficulty
+            document.getElementById('prep-time').textContent = recipe.prepTime;
+            
+            // Set difficulty based on recipe complexity
+            let difficulty = 'Easy';
+            if (recipe.name && (recipe.name.toLowerCase().includes('complex') || recipe.name.toLowerCase().includes('advanced'))) {
+                difficulty = 'Hard';
+            } else if (recipe.prepTime && recipe.prepTime.includes('15') || recipe.prepTime.includes('20')) {
+                difficulty = 'Medium';
+            }
+            document.getElementById('difficulty').textContent = difficulty;
+            
+            // Extract calories number
+            const caloriesText = recipe.calories;
+            const caloriesNumber = caloriesText.match(/\d+/)?.[0] || '95';
+            document.getElementById('kcal-value').textContent = caloriesNumber;
+            
+            // Extract cost from cost breakdown
+            const costMatch = recipe.costBreakdown?.total?.match(/£(\d+\.?\d*)/);
+            const cost = costMatch ? costMatch[1] : '0.85';
+            document.getElementById('cost').textContent = cost;
+            
+            // Update servings
+            document.getElementById('servings-value').textContent = '1 toddler serving';
+            
+            // Update ingredients
+            const ingredientsContainer = document.querySelector('#ingredients-content .ingredients-list');
+            if (ingredientsContainer) {
+                ingredientsContainer.innerHTML = recipe.ingredients;
+            }
+            
+            // Update directions
+            const directionsList = document.querySelector('#directions-content ol');
+            if (directionsList) {
+                directionsList.innerHTML = recipe.directions.map(dir => `<li>${dir}</li>`).join('');
+            }
+            
+            // Update cost breakdown
+            const costItems = document.querySelector('.cost-items');
+            const costTotal = document.querySelector('.cost-total');
+            if (costItems) costItems.innerHTML = recipe.costBreakdown.items;
+            if (costTotal) costTotal.innerHTML = `<strong>Total Cost: ${recipe.costBreakdown.total}</strong>`;
+            
+            // Update warnings
+            document.getElementById('warning-content').innerHTML = `<p>${recipe.chokingWarnings}</p>`;
+            
+            // Update picky eater tips
+            const pickyContent = document.getElementById('picky-eater-content');
+            if (pickyContent) {
+                pickyContent.innerHTML = recipe.pickyEaterTips.map(tip => 
+                    `<div class="picky-tip"><strong>${tip.condition}</strong> ${tip.solution}</div>`
+                ).join('');
+            }
+            
+            // Update chef tips
+            const tipsContent = document.querySelector('#tips-content .tips-list');
+            if (tipsContent) {
+                tipsContent.innerHTML = recipe.chefTips.map(tip => `<li>${tip}</li>`).join('');
+            }
+            
+            console.log('✅ Recipe page updated successfully!');
+        }
+        
+        // Handle PDF download, gated by Premium
+        function bindPdfButton() {
+            const btn = document.getElementById('download-pdf-btn');
+            if (!btn) return;
+            btn.addEventListener('click', async () => {
+                try {
+                    // Wait for auth to be ready
+                    await new Promise(resolve => { (function check(){ if (window.toddlerChefAuth) resolve(); else setTimeout(check, 100); })(); });
+                    const profile = window.toddlerChefAuth.getUserProfile();
+                    const isPremium = profile && (profile.subscriptionStatus === 'premium' || profile.premiumUser === true);
+                    if (!isPremium) {
+                        window.location.href = 'premium.html?reason=pdf-limit';
+                        return;
+                    }
+                    // Build PDF from container
+                    const el = document.querySelector('.container');
+                    if (!el || !window.html2pdf) { alert('PDF engine not ready. Please try again.'); return; }
+                    const opt = { margin: 10, filename: (document.getElementById('title')?.textContent || 'toddlerchef-recipe') + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+                    window.html2pdf().from(el).set(opt).save();
+                } catch (e) {
+                    console.error('PDF error', e);
+                    alert('Could not generate PDF.');
+                }
+            });
+        }
+
+        // Add to Weekly Planner binds
+        function bindPlannerButton() {
+            const btn = document.getElementById('add-to-planner-btn');
+            if (!btn) return;
+            btn.addEventListener('click', () => {
+                // Minimal plan: remember this recipe context, then open planner
+                try {
+                    const name = document.getElementById('title')?.textContent || 'Recipe';
+                    localStorage.setItem('plannerQuickAddName', name);
+                } catch {}
+                window.location.href = 'meal-planning.html';
+            });
+        }
+
+        // Load recipe when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 DOM ready - starting favourite recipe loading');
+            setTimeout(loadFavouriteRecipe, 200); // Small delay to ensure DOM is fully ready
+            bindPdfButton();
+            bindPlannerButton();
+        });
+    </script>
+</body>
+</html>

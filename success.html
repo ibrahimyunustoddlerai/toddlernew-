@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Premium! - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 48px;
+            text-align: center;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 24px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .success-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .success-subtitle {
+            color: #64748b;
+            font-size: 1.2rem;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .premium-features {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .premium-features h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            color: #065f46;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .features-list li {
+            padding: 8px 0;
+            color: #047857;
+            font-weight: 500;
+        }
+
+        .features-list li::before {
+            content: "✅ ";
+            margin-right: 8px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 8px;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.25);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px -3px rgba(16, 185, 129, 0.35);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+            box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.25);
+        }
+
+        .action-btn.secondary:hover {
+            box-shadow: 0 8px 15px -3px rgba(249, 115, 22, 0.35);
+        }
+
+        @media (max-width: 768px) {
+            .success-container {
+                padding: 32px 24px;
+                margin: 20px;
+            }
+
+            .success-title {
+                font-size: 2rem;
+            }
+
+            .success-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .action-btn {
+                display: block;
+                margin: 8px 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">🎉</div>
+        <h1 class="success-title">Welcome to Premium!</h1>
+        <p class="success-subtitle">
+            Thank you for upgrading! Your premium subscription is now active and you have access to all premium features.
+        </p>
+
+        <div class="premium-features">
+            <h3>🌟 What's Now Available</h3>
+            <ul class="features-list">
+                <li>Unlimited AI recipe generation</li>
+                <li>Access to 20+ curated toddler favourites</li>
+                <li>Advanced meal planning tools</li>
+                <li>Detailed nutritional analytics</li>
+                <li>Priority customer support</li>
+                <li>Early access to new features</li>
+            </ul>
+        </div>
+
+        <div>
+            <a href="dashboard.html" class="action-btn">
+                🏠 Go to Dashboard
+            </a>
+            <a href="recipe-preferences.html" class="action-btn secondary">
+                ✨ Create Recipe Now
+            </a>
+        </div>
+
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem;">
+            <p>Need help? Email us at <strong>support@toddlerchef.ai</strong></p>
+        </div>
+    </div>
+
+    <!-- Loading animation -->
+    <div id="loading" style="display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 16px; animation: spin 2s linear infinite;">⏳</div>
+            <div style="font-size: 1.2rem; color: hsl(var(--primary));">Activating your premium subscription...</div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+    <!-- Auth (loads Firebase compat internally) -->
+    <script src="auth.js"></script>
+    
+    <script>
+
+        // Get session ID from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+
+        async function handleSuccessPage() {
+            try {
+                // Verify the session server-side (no-webhook path)
+                if (sessionId) {
+                    // Wait for auth to be ready
+                    await new Promise(resolve => { (function check(){ if (window.toddlerChefAuth) resolve(); else setTimeout(check, 100); })(); });
+                    const token = await window.toddlerChefAuth.getIdToken?.();
+                    if (token) {
+                        try {
+                            const resp = await fetch('/api/confirm-checkout', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                body: JSON.stringify({ sessionId })
+                            });
+                            if (!resp.ok) console.warn('confirm-checkout failed');
+                        } catch (e) { console.warn('confirm-checkout error', e); }
+                    }
+                }
+
+                // Check if user is authenticated
+                window.auth.onAuthStateChanged(async (user) => {
+                    if (!user) {
+                        window.location.href = 'signin.html';
+                        return;
+                    }
+
+                    // Wait for subscription status to update
+                    let attempts = 0;
+                    const maxAttempts = 10;
+                    
+                    const checkSubscription = async () => {
+                        const profile = window.toddlerChefAuth.getUserProfile?.() || null;
+                        
+                        if (profile && profile.subscriptionStatus === 'premium') {
+                            // Success! Hide loading and show success page
+                            document.getElementById('loading').style.display = 'none';
+                            return;
+                        }
+                        
+                        attempts++;
+                        if (attempts < maxAttempts) {
+                            // Try again in 2 seconds
+                            setTimeout(checkSubscription, 2000);
+                        } else {
+                            // Timeout - still show success page but with a note
+                            document.getElementById('loading').style.display = 'none';
+                            document.querySelector('.success-subtitle').innerHTML += 
+                                '<br><br><small style="color: #f59e0b;">⚠️ If you don\'t see premium features immediately, please refresh the page in a few minutes.</small>';
+                        }
+                    };
+
+                    await checkSubscription();
+                });
+
+            } catch (error) {
+                console.error('Error handling success page:', error);
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Start the process
+        handleSuccessPage();
+    </script>
+</body>
+</html>

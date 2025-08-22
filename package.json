@@ -1,14 +1,23 @@
 {
-  "name": "toddlerchefai",
+  "name": "toddlerchef-ai",
   "version": "1.0.0",
-  "description": "ToddlerChef AI - Premium meal planning platform for toddlers",
+  "description": "AI-powered toddler recipe generator",
   "main": "index.html",
   "scripts": {
-    "dev": "python -m http.server 8080",
-    "build": "echo 'Static HTML build complete'",
-    "start": "python -m http.server 8080"
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "vercel --prod"
   },
-  "keywords": ["toddler", "meals", "ai", "nutrition", "planning"],
+  "dependencies": {
+    "openai": "^3.3.0",
+    "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0",
+    "stripe": "^14.15.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "keywords": ["toddler", "recipes", "ai", "openai", "baby-food"],
   "author": "ToddlerChef AI",
   "license": "MIT"
 }

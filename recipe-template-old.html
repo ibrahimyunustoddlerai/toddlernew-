@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Template - ToddlerChef AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, rgba(255, 213, 79, 0.1), rgba(129, 199, 132, 0.1));
+            min-height: 100vh;
+            color: #5D5D5D;
+            padding: 20px;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #81C784;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .menu-btn:hover {
+            background: #66BB6A;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 60px auto 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 138, 128, 0.2);
+        }
+
+        .recipe-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .recipe-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .previous-btn {
+            background: #FFD54F;
+            color: #5D5D5D;
+            opacity: 0.7;
+        }
+
+        .previous-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .previous-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .another-recipe-btn {
+            background: linear-gradient(45deg, #FF8A80, #81C784);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 138, 128, 0.4);
+        }
+
+        .another-recipe-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 138, 128, 0.6);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #5D5D5D;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .loading-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 2rem;
+        }
+
+        .loading-icon {
+            animation: spin 2s linear infinite;
+            opacity: 0.7;
+        }
+
+        .loading-icon:nth-child(2) { animation-delay: 0.2s; }
+        .loading-icon:nth-child(3) { animation-delay: 0.4s; }
+        .loading-icon:nth-child(4) { animation-delay: 0.6s; }
+        .loading-icon:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .recipe-actions {
+                flex-direction: column;
+            }
+        }
+
+        .recipe-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .recipe-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FF8A80;
+            margin-bottom: 10px;
+        }
+
+        .recipe-subtitle {
+            color: #5D5D5D;
+            font-size: 1.1rem;
+        }
+
+        .recipe-meta {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .meta-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 138, 128, 0.2);
+            min-width: 120px;
+        }
+
+        .meta-label {
+            font-size: 0.9rem;
+            color: #5D5D5D;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #FF8A80;
+        }
+
+        .mess-level {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .mess-circle {
+            width: 12px;
+            height: 12px;
+            border: 2px solid #FFD54F;
+            border-radius: 50%;
+            background: transparent !important;
+            margin: 0 3px;
+        }
+
+        .mess-circle.filled {
+            background: #FFD54F !important;
+        }
+
+
+        .w-tabs {
+            margin-top: 40px;
+        }
+
+        .w-tab-menu {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            justify-content: flex-start;
+        }
+
+        .w-tab-link {
+            width: 110px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 16px;
+            margin: 0 4px;
+            border: 2px solid rgba(255, 138, 128, 0.3);
+            background: rgba(129, 199, 132, 0.1);
+            color: #5D5D5D;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .w-tab-link.w--current {
+            background: #e7f128;
+            border: 2px solid #e7f128;
+            font-weight: 600;
+        }
+
+        .w-tab-content {
+            border: none;
+        }
+
+        .w-tab-pane {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .w-tab-pane.w--tab-active {
+            display: block;
+        }
+
+        .recipe-tab-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #5D5D5D;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #FF8A80;
+        }
+
+        .faq-item h4 {
+            color: #FF8A80;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .faq-item p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .faq-section {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 138, 128, 0.2);
+        }
+
+        .faq-title {
+            color: #FF8A80;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .picky-eater-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(129, 199, 132, 0.15);
+            border-radius: 15px;
+            border: 2px solid rgba(129, 199, 132, 0.3);
+        }
+
+        .picky-eater-title {
+            color: #81C784;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .picky-eater-tip p {
+            color: #5D5D5D;
+            line-height: 1.6;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 80px 10px 0;
+                padding: 20px;
+            }
+            
+            .recipe-title {
+                font-size: 2rem;
+            }
+            
+            .recipe-meta {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="index.html" class="menu-btn">🏠 Home</a>
+        <a href="recipe-preferences.html" class="menu-btn">🍽️ New Recipe</a>
+        <a href="signin.html" class="menu-btn" style="background: #FFD54F; color: #5D5D5D;">Sign In</a>
+    </div>
+
+    <div class="container">
+        <div class="recipe-header">
+            <h1 class="recipe-title" id="title">Toddler-Friendly Banana Pancakes</h1>
+            <p class="recipe-subtitle">A delicious and nutritious breakfast perfect for little hands</p>
+        </div>
+
+        <div class="recipe-meta">
+            <div class="meta-item">
+                <div class="meta-label">Prep Time</div>
+                <div class="meta-value">10 mins</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Cook Time</div>
+                <div class="meta-value">15 mins</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Kcal</div>
+                <div class="meta-value" id="kcal-value">285</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Mess Level</div>
+                <div class="mess-level">
+                    <div class="mess-circle" id="mess1"></div>
+                    <div class="mess-circle" id="mess2"></div>
+                    <div class="mess-circle" id="mess3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-tabs">
+            <div class="w-tab-menu">
+                <a href="#" class="w-tab-link w--current" data-tab="ingredients">Ingredients</a>
+                <a href="#" class="w-tab-link" data-tab="directions">Directions</a>
+            </div>
+
+            <div class="w-tab-content">
+                <div class="w-tab-pane w--tab-active" data-tab="ingredients">
+                    <div class="recipe-tab-text">
+                        <p>• 2 ripe bananas, mashed<br>
+                        • 2 large eggs<br>
+                        • 1/4 cup whole wheat flour<br>
+                        • 1 tablespoon milk<br>
+                        • 1/2 teaspoon cinnamon<br>
+                        • 1 tablespoon coconut oil for cooking</p>
+                    </div>
+                </div>
+
+                <div class="w-tab-pane" data-tab="directions">
+                    <div class="recipe-tab-text" id="directions-content">
+                        <ol>
+                            <li>In a bowl, mash the bananas until smooth.</li>
+                            <li>Beat in the eggs and milk until well combined.</li>
+                            <li>Add flour and cinnamon, stir until just mixed.</li>
+                            <li>Heat coconut oil in a non-stick pan over medium heat.</li>
+                            <li>Pour small portions of batter to make toddler-sized pancakes.</li>
+                            <li>Cook for 2-3 minutes until bubbles form, then flip.</li>
+                            <li>Cook for another 1-2 minutes until golden brown.</li>
+                            <li>Let cool slightly before serving to your toddler.</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Picky Eater Tips Section -->
+        <div class="picky-eater-section">
+            <h3 class="picky-eater-title">💡 Picky Eater Tips</h3>
+            <div class="picky-eater-tip" id="picky-eater-content">
+                <p>If your little one isn't keen on this combination, try serving each ingredient separately on their plate so they can explore at their own pace.</p>
+            </div>
+        </div>
+
+        <!-- FAQ Section at bottom -->
+        <div class="faq-section">
+            <h3 class="faq-title">Frequently Asked Questions</h3>
+            <div id="faq-content">
+                <div class="faq-item">
+                    <h4 id="faq1-question">What ingredients are needed for this recipe for toddlers?</h4>
+                    <p id="faq1-answer">You'll need your specified ingredients prepared safely for toddlers. All ingredients should be fresh, age-appropriate, and checked for any allergies before serving.</p>
+                </div>
+                <div class="faq-item">
+                    <h4 id="faq2-question">How do I safely prepare this recipe for my toddler at home?</h4>
+                    <p id="faq2-answer">To safely prepare this recipe for your toddler, ensure all ingredients are thoroughly cooked, test temperature before serving, cut into appropriate sizes, and always supervise feeding.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What age can babies start eating finger foods like this?</h4>
+                    <p>Babies can begin finger foods from 8-9 months when they can sit independently and grasp objects. Start with very soft textures and gradually introduce firmer foods as chewing develops.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How long do leftover toddler meals keep in the fridge?</h4>
+                    <p>Store leftover toddler meals in the fridge for up to 2-3 days in airtight containers. Freeze portions for up to 1 month. Always reheat thoroughly and test temperature before serving.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>What nutritional benefits does this provide for growing toddlers?</h4>
+                    <p>This recipe provides essential nutrients for toddler development including vitamins, minerals, protein for growth, and energy for active play. Perfect for supporting healthy development.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="recipe-actions">
+            <button class="recipe-btn previous-btn" id="previousBtn" disabled>
+                ← Previous Recipe
+            </button>
+            <button class="recipe-btn another-recipe-btn" id="anotherRecipeBtn">
+                ✨ Another Recipe
+            </button>
+        </div>
+
+        <div class="loading" id="loadingMessage">
+            <div class="loading-icons">
+                <span class="loading-icon">🍎</span>
+                <span class="loading-icon">🥕</span>
+                <span class="loading-icon">🥦</span>
+                <span class="loading-icon">🍌</span>
+                <span class="loading-icon">🥒</span>
+            </div>
+            <p>🍳 Cooking up another amazing recipe just for you...</p>
+        </div>
+    </div>
+
+    <script>
+        // Simple tab functionality
+        document.querySelectorAll('.w-tab-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active classes
+                document.querySelectorAll('.w-tab-link').forEach(l => l.classList.remove('w--current'));
+                document.querySelectorAll('.w-tab-pane').forEach(p => p.classList.remove('w--tab-active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('w--current');
+                
+                // Show corresponding pane
+                const tabId = this.getAttribute('data-tab');
+                document.querySelector(`[data-tab="${tabId}"].w-tab-pane`).classList.add('w--tab-active');
+            });
+        });
+
+        // Recipe history management
+        let recipeHistory = JSON.parse(localStorage.getItem('recipeHistory') || '[]');
+        let currentRecipeIndex = recipeHistory.length - 1;
+
+        // Load recipe from preferences or show default
+        function loadRecipeFromPreferences() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const preferences = JSON.parse(localStorage.getItem('recipePreferences') || '{}');
+            
+            if (urlParams.get('preferences') === 'true' && Object.keys(preferences).length > 0) {
+                generateRecipeFromPreferences(preferences);
+            }
+        }
+
+        // Generate recipe based on user preferences
+        function generateRecipeFromPreferences(preferences) {
+            document.getElementById('loadingMessage').classList.add('active');
+            
+            // Debug: Log what ingredients we're working with
+            console.log('Generating recipe with preferences:', preferences);
+            console.log('Available leftovers:', preferences.leftovers);
+            console.log('Available vegetables:', preferences.vegetables);
+            
+            // Simulate recipe generation (in real app, this would call an AI service)
+            setTimeout(() => {
+                const recipe = createCustomRecipe(preferences);
+                console.log('Generated recipe:', recipe);
+                displayRecipe(recipe);
+                saveToHistory(recipe);
+                document.getElementById('loadingMessage').classList.remove('active');
+                updateNavigationButtons();
+            }, 2000);
+        }
+
+        // Recipe variation counter to ensure different recipes
+        let lastRecipeIndex = 0;
+        
+        // Create a custom recipe based on preferences
+        function createCustomRecipe(prefs) {
+            const availableIngredients = [];
+            const availableVegetables = [];
+            
+            // Parse user ingredients - handle both string and empty cases
+            if (prefs.leftovers && prefs.leftovers.trim()) {
+                const leftoverItems = prefs.leftovers.split(',').map(item => item.trim().toLowerCase()).filter(item => item);
+                availableIngredients.push(...leftoverItems);
+                console.log('Added leftovers:', leftoverItems);
+            }
+            if (prefs.vegetables && prefs.vegetables.trim()) {
+                const vegetableItems = prefs.vegetables.split(',').map(item => item.trim().toLowerCase()).filter(item => item);
+                availableVegetables.push(...vegetableItems);
+                console.log('Added vegetables:', vegetableItems);
+            }
+            
+            console.log('Final parsed ingredients:', availableIngredients);
+            console.log('Final parsed vegetables:', availableVegetables);
+            
+            const ageRange = prefs.agerange?.[0] || '12-18 months';
+            const mealType = prefs.mealtype?.[0] || 'lunch';
+            
+            // Create different recipe variations using ONLY the user's ingredients
+            const recipeVariations = generateRecipeVariations(availableIngredients, availableVegetables, ageRange, mealType, prefs.dietary);
+            
+            // Get next recipe variation - ensure we have at least one variation
+            if (recipeVariations.length === 0) {
+                return {
+                    title: 'Please Add Ingredients',
+                    subtitle: 'Add your available ingredients in the preferences form',
+                    ingredients: '• Please add ingredients in the preferences form',
+                    directions: ['1. Go back to preferences and add your available ingredients'],
+                    prepTime: '0 mins',
+                    cookTime: '0 mins',
+                    kcal: 0,
+                    messLevel: 1
+                };
+            }
+            
+            const currentRecipe = recipeVariations[lastRecipeIndex % recipeVariations.length];
+            lastRecipeIndex++;
+            
+            // Apply dietary restrictions to subtitle
+            let subtitle = currentRecipe.subtitle;
+            if (prefs.dietary?.includes('halal')) {
+                subtitle += ' (Halal-friendly)';
+            }
+            if (prefs.dietary?.includes('dairy-free')) {
+                subtitle += ' (Dairy-free)';
+            }
+            if (prefs.dietary?.includes('gluten-free')) {
+                subtitle += ' (Gluten-free)';
+            }
+            
+            return {
+                ...currentRecipe,
+                subtitle: subtitle
+            };
+        }
+        
+        // Generate different recipe variations using ONLY user ingredients
+        function generateRecipeVariations(ingredients, vegetables, ageRange, mealType, dietary) {
+            const allIngredients = [...ingredients, ...vegetables];
+            console.log('Generating variations with user ingredients:', allIngredients);
+            
+            if (allIngredients.length === 0) {
+                return [{
+                    title: 'Please Add Ingredients',
+                    subtitle: 'Add your available ingredients in the preferences form',
+                    ingredients: '• Please add ingredients in the preferences form',
+                    directions: ['Go back to preferences and add your available ingredients'],
+                    prepTime: '0 mins',
+                    cookTime: '0 mins',
+                    kcal: 0,
+                    messLevel: 1
+                }];
+            }
+            
+            const variations = [];
+            const mainIngredient = allIngredients[0];
+            
+            // Variation 1: Simple preparation using ALL user ingredients
+            variations.push({
+                title: createMealTitle(allIngredients, mealType, 'simple'),
+                subtitle: createMouthwateringDescription(allIngredients, mealType, ageRange),
+                ingredients: createMeasuredIngredients(allIngredients, ageRange, 'simple'),
+                directions: createDirections(allIngredients, ageRange, 'simple'),
+                prepTime: getRandomTime(5, 10),
+                cookTime: getRandomTime(10, 20),
+                kcal: calculateToddlerCalories(allIngredients, ageRange),
+                messLevel: 1
+            });
+            
+            // Variation 2: Combined preparation using ALL user ingredients
+            if (allIngredients.length > 1) {
+                variations.push({
+                    title: createMealTitle(allIngredients, mealType, 'mixed'),
+                    subtitle: createMouthwateringDescription(allIngredients, mealType, ageRange),
+                    ingredients: createMeasuredIngredients(allIngredients, ageRange, 'mixed'),
+                    directions: createDirections(allIngredients, ageRange, 'mixed'),
+                    prepTime: getRandomTime(8, 15),
+                    cookTime: getRandomTime(15, 25),
+                    kcal: calculateToddlerCalories(allIngredients, ageRange),
+                    messLevel: 2
+                });
+            }
+            
+            // Variation 3: Finger food preparation (if age appropriate)
+            if (!ageRange.includes('6-9') && allIngredients.length > 0) {
+                variations.push({
+                    title: createMealTitle(allIngredients, mealType, 'finger'),
+                    subtitle: createMouthwateringDescription(allIngredients, mealType, ageRange),
+                    ingredients: createMeasuredIngredients(allIngredients, ageRange, 'finger'),
+                    directions: createDirections(allIngredients, ageRange, 'finger'),
+                    prepTime: getRandomTime(10, 15),
+                    cookTime: getRandomTime(12, 18),
+                    kcal: calculateToddlerCalories(allIngredients, ageRange),
+                    messLevel: 3
+                });
+            }
+            
+            console.log('Generated variations:', variations.length);
+            return variations.length > 0 ? variations : [variations[0]];
+        }
+        
+        // Create measured ingredients with parent-friendly language using ONLY user ingredients
+        function createMeasuredIngredients(ingredients, ageRange, style) {
+            console.log('Creating ingredients for:', ingredients);
+            
+            if (ingredients.length === 0) {
+                return '• Please add your available ingredients in the preferences form';
+            }
+            
+            const measurements = {
+                // Home cook style measurements for toddler portions - USER SPECIFIED INGREDIENTS
+                'chicken': '60g boneless chicken breast',
+                'cucumber': '50g cucumber',
+                'lettuce': '30g fresh lettuce leaves',
+                'bread': '1 slice wholemeal bread',
+                'rice': '40g uncooked basmati rice',
+                'egg': '1 large free-range egg',
+                'broccoli': '50g broccoli florets',
+                // Other common ingredients in home cook format
+                'banana': '1 small ripe banana',
+                'apple': '100g apple',
+                'carrot': '80g carrot',
+                'sweet potato': '100g sweet potato',
+                'cheese': '30g mild cheddar cheese',
+                'pasta': '40g small pasta shapes',
+                'avocado': '50g ripe avocado',
+                'yogurt': '60ml plain Greek yogurt',
+                'milk': '30ml whole milk',
+                'butter': '10g unsalted butter',
+                'olive oil': '1 tsp extra virgin olive oil',
+                'oil': '1 tsp vegetable oil',
+                'salt': '1/4 tsp fine sea salt',
+                'pepper': '1/8 tsp freshly ground black pepper',
+                'onion': '50g brown onion',
+                'garlic': '1 small garlic clove',
+                'tomato': '100g ripe tomato',
+                'potato': '100g waxy potato',
+                'peas': '40g fresh or frozen peas',
+                'corn': '40g sweet corn kernels',
+                'spinach': '30g fresh baby spinach',
+                'zucchini': '80g zucchini'
+            };
+            
+            const result = [];
+            
+            // ONLY use ingredients provided by user - absolutely no random additions
+            ingredients.forEach(ingredient => {
+                const cleanIngredient = ingredient.toLowerCase().trim();
+                console.log('Processing ingredient:', cleanIngredient);
+                
+                let measurement = measurements[cleanIngredient];
+                if (!measurement) {
+                    measurement = `50g ${cleanIngredient}`;
+                }
+                
+                // Adjust portions for age (younger children need smaller amounts)
+                if (ageRange.includes('6-9')) {
+                    measurement = adjustPortionSize(measurement, 0.6);
+                } else if (ageRange.includes('9-12')) {
+                    measurement = adjustPortionSize(measurement, 0.8);
+                } else if (ageRange.includes('18+')) {
+                    measurement = adjustPortionSize(measurement, 1.2);
+                }
+                
+                console.log('Final measurement:', measurement);
+                result.push(measurement);
+            });
+            
+            // Format as proper bullet list with line breaks
+            const formattedIngredients = result.map(ingredient => `• ${ingredient}`).join('<br>');
+            console.log('Final ingredients output:', formattedIngredients);
+            
+            return formattedIngredients;
+        }
+        
+        // Adjust portion sizes based on age
+        function adjustPortionSize(measurement, multiplier) {
+            // Extract numbers and adjust them
+            return measurement.replace(/(\d+(?:\.\d+)?)(g|ml|tsp|tbsp)/g, (match, amount, unit) => {
+                const newAmount = Math.round(parseFloat(amount) * multiplier);
+                return `${newAmount}${unit}`;
+            }).replace(/(\d+)\/(\d+)/g, (match, numerator, denominator) => {
+                // Handle fractions like 1/2, 1/4
+                const decimal = (parseInt(numerator) / parseInt(denominator)) * multiplier;
+                if (decimal >= 1) {
+                    return Math.round(decimal).toString();
+                } else if (decimal >= 0.5) {
+                    return '1/2';
+                } else if (decimal >= 0.25) {
+                    return '1/4';
+                } else {
+                    return '1/8';
+                }
+            });
+        }
+        
+        // Create detailed age-appropriate directions using ONLY user ingredients
+        function createDirections(ingredients, ageRange, style) {
+            if (ingredients.length === 0) {
+                return ['1. Please add your available ingredients in the preferences form to generate cooking directions'];
+            }
+            
+            const directions = [];
+            
+            // Analyze what ingredients we have from user's exact input
+            const userIngredients = ingredients.map(ing => ing.toLowerCase().trim());
+            const hasVeggies = userIngredients.some(ing => 
+                ['carrot', 'broccoli', 'peas', 'corn', 'spinach', 'zucchini', 'sweet potato', 'cucumber', 'lettuce'].includes(ing)
+            );
+            const hasProtein = userIngredients.some(ing => 
+                ['chicken', 'egg', 'cheese', 'yogurt'].includes(ing)
+            );
+            const hasGrains = userIngredients.some(ing => 
+                ['rice', 'pasta', 'bread'].includes(ing)
+            );
+            const hasFruit = userIngredients.some(ing => 
+                ['banana', 'apple', 'avocado'].includes(ing)
+            );
+            
+            directions.push('1. Wash your hands thoroughly. Clean and prepare all your ingredients on a clean cutting board.');
+            
+            if (ageRange.includes('6-9')) {
+                directions.push('2. SAFETY FIRST: Keep baby away from hot surfaces and sharp objects.');
+                if (hasVeggies) directions.push('3. Steam vegetables until very soft and mashable (15-20 minutes). Test with a fork - should mush easily.');
+                if (hasProtein && userIngredients.includes('chicken')) directions.push('4. Cook chicken thoroughly until tender, then shred very finely with a fork.');
+                if (hasGrains) directions.push('5. Cook grains until very soft and easy to mash completely.');
+                directions.push('6. Mash ALL ingredients together until completely smooth - absolutely no lumps should remain.');
+                directions.push('7. Let cool completely and test temperature on your wrist before serving (should feel lukewarm).');
+                directions.push('8. Offer small spoonfuls and supervise closely during feeding. Start with tiny amounts.');
+            } else if (ageRange.includes('9-12')) {
+                directions.push('2. SAFETY TIP: Keep toddler at safe distance from hot cooking surfaces.');
+                if (hasVeggies) directions.push('3. Steam or boil vegetables until very tender but not mushy (10-15 minutes).');
+                if (hasProtein && userIngredients.includes('chicken')) directions.push('4. Cook chicken thoroughly and cut into tiny, soft pieces smaller than a pea.');
+                if (hasGrains) directions.push('5. Cook grains until tender and easy to chew with developing teeth.');
+                directions.push('6. Mash ingredients roughly, leaving some small, soft lumps for texture development.');
+                directions.push('7. Cut any larger pieces into very small, manageable sizes (smaller than a grape).');
+                directions.push('8. Let cool to room temperature and test temperature before serving.');
+                directions.push('9. Encourage self-feeding with close supervision. Expect some mess!');
+            } else {
+                directions.push('2. PARENT TIP: Let your toddler help with safe tasks like washing vegetables.');
+                if (style === 'finger') {
+                    if (hasVeggies) directions.push('3. Cook vegetables until tender but still holding their shape for easy grasping.');
+                    if (hasProtein && userIngredients.includes('chicken')) directions.push('4. Cook chicken thoroughly and cut into finger-sized strips for self-feeding.');
+                    directions.push('5. Cut all ingredients into finger-sized pieces or small cubes perfect for little hands.');
+                    directions.push('6. Arrange food on plate in sections for easy self-feeding and exploration.');
+                } else {
+                    directions.push('3. Prepare your ingredients by washing, peeling, and cutting as needed.');
+                    if (hasVeggies) directions.push('4. Cook vegetables until tender (carrots: 15 mins, broccoli: 8 mins, cucumber/lettuce: no cooking needed).');
+                    if (hasGrains) directions.push('5. Cook grains according to package directions until tender.');
+                    if (hasProtein && userIngredients.includes('chicken')) directions.push('6. Cook protein thoroughly and cut into toddler-appropriate bite sizes.');
+                    directions.push('7. Combine your prepared ingredients and season very lightly if desired.');
+                }
+                directions.push('8. Let cool to safe eating temperature (test with your finger - should not be hot).');
+                directions.push('9. Serve with toddler-appropriate utensils and enjoy mealtime together! Celebrate messy eating.');
+            }
+            
+            return directions;
+        }
+        
+        // Calculate realistic toddler calories
+        function calculateToddlerCalories(ingredients, ageRange) {
+            const calorieValues = {
+                'banana': 60, 'apple': 40, 'carrot': 20, 'sweet potato': 50,
+                'broccoli': 15, 'rice': 60, 'chicken': 80, 'cheese': 70,
+                'pasta': 65, 'avocado': 80, 'egg': 70, 'bread': 60,
+                'yogurt': 35, 'milk': 10, 'butter': 25, 'oil': 30,
+                'cucumber': 8, 'lettuce': 5, 'peas': 25, 'corn': 30,
+                'spinach': 10, 'zucchini': 12, 'tomato': 15, 'potato': 45,
+                'onion': 20, 'garlic': 5
+            };
+            
+            let totalCals = 0;
+            ingredients.forEach(ingredient => {
+                const cleanIngredient = ingredient.toLowerCase().trim();
+                totalCals += calorieValues[cleanIngredient] || 25; // default 25 cals for unknown ingredients
+            });
+            
+            // Ensure minimum calorie count for proper nutrition
+            if (totalCals < 50) totalCals = 50;
+            
+            // Adjust for age (younger = smaller portions)
+            if (ageRange.includes('6-9')) totalCals *= 0.6;
+            else if (ageRange.includes('9-12')) totalCals *= 0.8;
+            else if (ageRange.includes('12-18')) totalCals *= 0.9;
+            
+            return Math.round(totalCals);
+        }
+        
+        // Helper function for random time ranges
+        function getRandomTime(min, max) {
+            const time = Math.floor(Math.random() * (max - min + 1)) + min;
+            return `${time} mins`;
+        }
+        
+        // Create meal titles based on actual ingredients
+        function createMealTitle(ingredients, mealType, style) {
+            const mainIngredient = ingredients[0]?.charAt(0).toUpperCase() + ingredients[0]?.slice(1) || 'Toddler';
+            
+            if (style === 'finger') {
+                return `${mainIngredient} Finger Foods`;
+            } else if (style === 'mixed' && ingredients.length > 1) {
+                const secondary = ingredients[1]?.charAt(0).toUpperCase() + ingredients[1]?.slice(1);
+                return `${mainIngredient} & ${secondary} ${mealType.charAt(0).toUpperCase() + mealType.slice(1)}`;
+            } else {
+                // Simple style or single ingredient
+                const mealNames = {
+                    'breakfast': ['Scramble', 'Bowl', 'Mash', 'Bites'],
+                    'lunch': ['Medley', 'Mix', 'Bowl', 'Bites'],
+                    'dinner': ['Feast', 'Plate', 'Meal', 'Bowl'],
+                    'snack': ['Bites', 'Pieces', 'Treats', 'Nibbles']
+                };
+                const variations = mealNames[mealType] || mealNames['lunch'];
+                const variation = variations[Math.floor(Math.random() * variations.length)];
+                return `${mainIngredient} ${variation}`;
+            }
+        }
+        
+        // Create mouth-watering descriptions
+        function createMouthwateringDescription(ingredients, mealType, ageRange) {
+            const textureWords = {
+                '6-9': ['silky smooth', 'creamy', 'perfectly pureed'],
+                '9-12': ['soft and chunky', 'tender', 'gently mashed'],
+                '12-18': ['bite-sized', 'soft and chewy', 'perfectly textured'],
+                '18+': ['finger-friendly', 'satisfying', 'perfectly sized']
+            };
+            
+            const flavorWords = {
+                'chicken': ['savory', 'mild and tender', 'protein-rich'],
+                'cucumber': ['refreshing', 'crisp', 'cool and mild'],
+                'lettuce': ['fresh', 'crisp', 'garden-fresh'],
+                'bread': ['comforting', 'soft', 'wholesome'],
+                'banana': ['naturally sweet', 'creamy', 'potassium-packed'],
+                'carrot': ['naturally sweet', 'vibrant', 'beta-carotene rich'],
+                'apple': ['sweet and juicy', 'crisp', 'vitamin-rich']
+            };
+            
+            const mainIngredient = ingredients[0]?.toLowerCase() || 'ingredients';
+            const texture = textureWords[ageRange] ? textureWords[ageRange][0] : 'perfectly textured';
+            const flavor = flavorWords[mainIngredient] ? flavorWords[mainIngredient][0] : 'delicious';
+            
+            const descriptions = [
+                `${flavor.charAt(0).toUpperCase() + flavor.slice(1)} ${mainIngredient} combines with fresh ingredients in ${texture} bites that little ones absolutely adore.`,
+                `${texture.charAt(0).toUpperCase() + texture.slice(1)} ${mainIngredient} creates the perfect ${mealType} with ${flavor} flavors that make every bite a joy.`,
+                `Wholesome ${mainIngredient} transforms into ${texture} perfection with gentle flavors that encourage confident self-feeding.`,
+                `${flavor.charAt(0).toUpperCase() + flavor.slice(1)} ${mainIngredient} meets ${texture} goodness in this toddler-approved ${mealType} that parents love too.`
+            ];
+            
+            return descriptions[Math.floor(Math.random() * descriptions.length)];
+        }
+
+        // Display recipe in the template
+        function displayRecipe(recipe) {
+            document.getElementById('title').textContent = recipe.title;
+            document.querySelector('.recipe-subtitle').textContent = recipe.subtitle;
+            document.querySelector('[data-tab="ingredients"] .recipe-tab-text p').innerHTML = recipe.ingredients;
+            
+            // Update directions content properly
+            const directionsContent = document.getElementById('directions-content');
+            if (directionsContent && recipe.directions) {
+                // Always create fresh ordered list
+                directionsContent.innerHTML = `<ol>${recipe.directions.map(dir => {
+                    // Remove any existing numbering
+                    const cleanDir = dir.replace(/^\d+\.\s*/, '');
+                    return `<li>${cleanDir}</li>`;
+                }).join('')}</ol>`;
+            }
+            
+            document.querySelector('.meta-item:nth-child(1) .meta-value').textContent = recipe.prepTime;
+            document.querySelector('.meta-item:nth-child(2) .meta-value').textContent = recipe.cookTime;
+            document.getElementById('kcal-value').textContent = recipe.kcal;
+            
+            // Update mess level circles - clear ALL circles first, then fill appropriate ones
+            const circles = document.querySelectorAll('.mess-circle');
+            circles.forEach((circle, index) => {
+                circle.classList.remove('filled');
+                // Only shade circles up to the mess level (0-based indexing)
+                if (index < recipe.messLevel) {
+                    circle.classList.add('filled');
+                }
+            });
+            
+            // Generate personalized FAQ
+            generatePersonalizedFAQ(recipe);
+            
+            // Generate picky eater tips
+            generatePickyEaterTips(recipe);
+        }
+        
+        // Generate personalized FAQ based on recipe using SEO-optimized British English
+        function generatePersonalizedFAQ(recipe) {
+            const faqContainer = document.getElementById('faq-content');
+            const preferences = JSON.parse(localStorage.getItem('recipePreferences') || '{}');
+            
+            // Extract main ingredients for FAQ1
+            const ingredientsList = recipe.ingredients.replace(/•/g, '').split('<br>').filter(item => item.trim()).slice(0, 3).join(', ');
+            
+            // FAQ 1: Required format
+            document.getElementById('faq1-question').textContent = `What ingredients are needed for ${recipe.title} for toddlers?`;
+            document.getElementById('faq1-answer').textContent = `You'll need ${ingredientsList}. All ingredients are prepared in toddler-safe portions. Check for allergies before serving.`.substring(0, 280);
+            
+            // FAQ 2: Required format  
+            document.getElementById('faq2-question').textContent = `How do I safely prepare ${recipe.title} for my toddler at home?`;
+            document.getElementById('faq2-answer').textContent = `To safely prepare ${recipe.title} for your toddler, wash hands thoroughly, cook ingredients until tender, test temperature before serving, and supervise eating.`.substring(0, 360);
+            
+            // Update other FAQs with recipe-specific content
+            const faqItems = faqContainer.querySelectorAll('.faq-item');
+            
+            // FAQ 3: Age appropriateness
+            if (faqItems[2]) {
+                const ageRange = preferences.agerange?.[0] || '12+ months';
+                faqItems[2].querySelector('h4').textContent = `What age can babies start eating this recipe?`;
+                faqItems[2].querySelector('p').textContent = `This recipe is suitable for ${ageRange} babies and toddlers. Ensure appropriate texture modifications for younger children and always supervise feeding.`.substring(0, 280);
+            }
+            
+            // FAQ 4: Storage/meal prep
+            if (faqItems[3]) {
+                faqItems[3].querySelector('h4').textContent = `How long does ${recipe.title.toLowerCase()} keep in the fridge?`;
+                faqItems[3].querySelector('p').textContent = `Store ${recipe.title.toLowerCase()} in the fridge for up to 2-3 days in airtight containers. Freeze portions for up to 1 month for meal prep convenience.`.substring(0, 280);
+            }
+            
+            // FAQ 5: Nutrition benefits
+            if (faqItems[4]) {
+                const nutritionBenefits = recipe.kcal < 150 ? 'light snacking and energy' : 'balanced nutrition and sustained energy';
+                faqItems[4].querySelector('h4').textContent = `What nutritional benefits does ${recipe.title.toLowerCase()} provide for toddlers?`;
+                faqItems[4].querySelector('p').textContent = `This recipe provides essential nutrients for growing toddlers including vitamins, minerals, and ${nutritionBenefits} to support healthy development and active play.`.substring(0, 280);
+            }
+        }
+        
+        // Generate picky eater tips with encouraging language
+        function generatePickyEaterTips(recipe) {
+            const pickyEaterContent = document.getElementById('picky-eater-content');
+            const preferences = JSON.parse(localStorage.getItem('recipePreferences') || '{}');
+            const ingredients = recipe.ingredients.replace(/•/g, '').split('<br>').filter(item => item.trim());
+            const mainIngredients = ingredients.slice(0, 2).map(ing => ing.split(',')[0].toLowerCase().trim());
+            
+            const tips = [
+                `If your little one isn't keen on mixing these ingredients, try serving them separately on different sections of their plate - many toddlers prefer to explore each flavor individually.`,
+                `For fussy eaters, start with just one ingredient they already enjoy and gradually introduce the others alongside their favourite. Patience is key!`,
+                `If your toddler turns their nose up at this combination, try making it into finger foods or letting them help with simple preparation - involvement often increases willingness to try.`,
+                `For picky eaters, consider offering a familiar dip or sauce alongside, or mixing with something they already love like mild cheese or mashed avocado.`,
+                `If your little one isn't ready for this mix, serve each ingredient separately and let them naturally discover which ones they prefer - no pressure needed.`
+            ];
+            
+            // Add ingredient-specific tips
+            if (mainIngredients.includes('chicken')) {
+                tips.push(`If your toddler isn't keen on chicken, try shredding it very finely and mixing with a favourite sauce, or offer it alongside foods they already love.`);
+            }
+            if (mainIngredients.includes('vegetables') || mainIngredients.some(ing => ['carrot', 'broccoli', 'peas', 'cucumber', 'lettuce'].includes(ing))) {
+                tips.push(`For vegetable-resistant little ones, try offering the veggies with a favourite dip like hummus or mild cheese sauce - sometimes it's all about the presentation!`);
+            }
+            
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            pickyEaterContent.innerHTML = `<p>${randomTip}</p>`;
+        }
+
+        // Save recipe to history
+        function saveToHistory(recipe) {
+            recipeHistory.push(recipe);
+            if (recipeHistory.length > 10) recipeHistory.shift(); // Keep last 10 recipes
+            localStorage.setItem('recipeHistory', JSON.stringify(recipeHistory));
+            currentRecipeIndex = recipeHistory.length - 1;
+        }
+
+        // Update navigation buttons
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('previousBtn');
+            prevBtn.disabled = currentRecipeIndex <= 0;
+            prevBtn.style.opacity = prevBtn.disabled ? '0.3' : '0.7';
+        }
+
+        // Event listeners
+        document.getElementById('anotherRecipeBtn').addEventListener('click', function() {
+            const preferences = JSON.parse(localStorage.getItem('recipePreferences') || '{}');
+            if (Object.keys(preferences).length > 0) {
+                generateRecipeFromPreferences(preferences);
+            } else {
+                window.location.href = 'recipe-preferences.html';
+            }
+        });
+
+        document.getElementById('previousBtn').addEventListener('click', function() {
+            if (currentRecipeIndex > 0) {
+                currentRecipeIndex--;
+                displayRecipe(recipeHistory[currentRecipeIndex]);
+                updateNavigationButtons();
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            loadRecipeFromPreferences();
+            updateNavigationButtons();
+        });
+
+        // Check if user is logged in
+        const session = localStorage.getItem('toddlerchef_session');
+        if (!session) {
+            // Redirect to signin if not logged in
+            // window.location.href = 'signin.html';  // Uncomment to enforce login
+        }
+    </script>
+
+    <!-- Include the recipe formatter script -->
+    <script src="recipe-tab-formatter.js"></script>
+</body>
+</html>
