@@ -16,6 +16,8 @@
 # next.js
 /.next/
 /out/
+meal-planner-widget/.next/
+meal-planner-widget/node_modules/
 
 # production
 /build
