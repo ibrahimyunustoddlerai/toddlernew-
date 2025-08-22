@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToddlerLunch Ideas - Premium Toddler Recipe Generator</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.7;
+        }
+
+        .header {
+            background: white;
+            padding: 32px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.125rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .hero-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 24px;
+            letter-spacing: -0.025em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.375rem;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 48px;
+            line-height: 1.7;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+        }
+
+        .create-recipe-btn {
+            background: #bae6fd;
+            color: #1e293b;
+            border: none;
+            padding: 18px 40px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(186, 230, 253, 0.3);
+            letter-spacing: 0.025em;
+        }
+
+        .create-recipe-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(186, 230, 253, 0.4);
+            background: #7dd3fc;
+        }
+
+        .favourites-section {
+            padding: 80px 0;
+            background: white;
+            margin: 60px 0;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .favourites-content {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .favourites-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .favourites-subtitle {
+            color: #64748b;
+            font-size: 1.125rem;
+            line-height: 1.7;
+            margin-bottom: 36px;
+            font-weight: 500;
+        }
+
+        .favourites-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #dc2626 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 20px -3px rgba(245, 158, 11, 0.3), 0 6px 8px -4px rgba(245, 158, 11, 0.1);
+            letter-spacing: 0.025em;
+        }
+
+        .favourites-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px -3px rgba(245, 158, 11, 0.4), 0 8px 12px -4px rgba(245, 158, 11, 0.15);
+        }
+
+        .features-section {
+            padding: 60px 0 80px 0;
+            margin-top: 20px;
+        }
+
+        .features-title {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.75rem;
+            color: #1e293b;
+            margin-bottom: 60px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 36px;
+            text-align: center;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: #475569;
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+        }
+
+        .feature-description {
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-btn:hover {
+            background: hsl(var(--primary));
+            color: white;
+            border-color: hsl(var(--primary));
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .example-recipes-section {
+            padding: 96px 0;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.8) 0%, rgba(226, 232, 240, 0.4) 100%);
+        }
+
+        .example-recipes-title {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.75rem;
+            color: #1e293b;
+            margin-bottom: 60px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .example-recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .example-recipe-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 28px;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+            backdrop-filter: blur(8px);
+        }
+
+        .example-recipe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .recipe-meal-type {
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 18px;
+            letter-spacing: 0.025em;
+        }
+
+        .example-recipe-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: #475569;
+            margin-bottom: 12px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+        }
+
+        .example-recipe-description {
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+
+        .recipe-meta-mini {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(129, 199, 132, 0.1);
+            border-radius: 10px;
+        }
+
+        .meta-mini-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .meta-mini-label {
+            font-size: 0.8rem;
+            color: #5D5D5D;
+            margin-bottom: 4px;
+        }
+
+        .meta-mini-value {
+            font-weight: 600;
+            color: hsl(var(--primary));
+        }
+
+        .difficulty-meter {
+            display: flex;
+            gap: 3px;
+            margin-top: 4px;
+        }
+
+        .difficulty-circle {
+            width: 12px;
+            height: 12px;
+            border: 2px solid #FFD54F;
+            border-radius: 50%;
+            background: transparent;
+        }
+
+        .difficulty-circle.filled {
+            background: #FFD54F;
+        }
+
+
+        .footer {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            padding: 48px 0;
+            margin-top: 80px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .favourites-section {
+                margin: 40px 0;
+                padding: 60px 0;
+            }
+            
+            .favourites-title {
+                font-size: 2rem;
+            }
+            
+            .favourites-subtitle {
+                font-size: 1rem;
+                margin-bottom: 28px;
+            }
+            
+            .favourites-btn {
+                padding: 16px 32px;
+                font-size: 1rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .example-recipes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .example-recipe-card {
+                padding: 20px;
+            }
+            
+            .recipe-meta-mini {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .meta-mini-item {
+                flex-direction: row;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="toddler-favourites.html" class="menu-btn">🍼 Toddler Favourites</a>
+        <a href="signin.html" class="menu-btn" id="auth-btn" style="background: #FFD54F; color: #5D5D5D; margin-left: 10px;">Sign In</a>
+    </div>
+
+    <div class="header">
+        <div class="container">
+            <h1>🍽️ ToddlerLunch Ideas</h1>
+            <p>Nurturing little taste buds, one recipe at a time</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="hero-title">The World's Best Toddler Recipe Generator</h1>
+            <p class="hero-subtitle">
+                Create delicious, nutritious, and toddler-approved meals with our AI-powered recipe platform.<br>
+                Designed by parents, for parents who want to make mealtime magical.
+            </p>
+            <a href="recipe-preferences.html" id="generate-recipe-btn" class="create-recipe-btn">
+                ✨ Generate Recipe
+            </a>
+        </div>
+
+        <!-- Toddler Favourites Section -->
+        <div class="favourites-section">
+            <div class="favourites-content">
+                <h2 class="favourites-title">Explore Our Toddler Favourites</h2>
+                <p class="favourites-subtitle">
+                    Discover 20 expertly-crafted recipes organized by age, from first foods to family meals.<br>
+                    Each recipe is professionally developed with realistic timings and UK pricing.
+                </p>
+                <a href="toddler-favourites.html" id="favourites-btn" class="favourites-btn">
+                    🍼 Browse 30 Recipe Collection
+                </a>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2 class="features-title">Why Parents Love ToddlerLunch Ideas</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Toddler-Approved Recipes</h3>
+                    <p class="feature-description">
+                        Every recipe is designed with toddler taste preferences in mind. No more meal battles - just happy little eaters!
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🏠</div>
+                    <h3 class="feature-title">Parent-Friendly Instructions</h3>
+                    <p class="feature-description">
+                        Clear, simple steps with safety tips and mess level indicators. Perfect for busy parents juggling toddlers and cooking.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🥗</div>
+                    <h3 class="feature-title">Nutritionally Balanced</h3>
+                    <p class="feature-description">
+                        All recipes are crafted to meet toddler nutritional needs with whole foods, appropriate portions, and balanced macros.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3 class="feature-title">Quick & Easy</h3>
+                    <p class="feature-description">
+                        Most recipes take 30 minutes or less. Perfect for busy families who want healthy meals without the hassle.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🧼</div>
+                    <h3 class="feature-title">Mess Level Indicators</h3>
+                    <p class="feature-description">
+                        Know what you're getting into! Our mess level system helps you choose the right recipe for your energy level.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👶</div>
+                    <h3 class="feature-title">Allergy-Friendly Options</h3>
+                    <p class="feature-description">
+                        Easy ingredient substitutions for common allergies. Safe, delicious meals for every little one.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Example Recipes Section -->
+            <div class="example-recipes-section">
+                <h2 class="example-recipes-title">Try These Popular Toddler Recipes</h2>
+                <div class="example-recipes-grid">
+                    
+                    <!-- Breakfast Recipe -->
+                    <a href="banana-oat-scramble.html" class="example-recipe-card">
+                        <div class="recipe-image">🌅</div>
+                        <div class="recipe-content">
+                            <div class="recipe-metrics">
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">⏱️</span>
+                                    Prep: 5m
+                                </span>
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">🔥</span>
+                                    Easy
+                                </span>
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">💰</span>
+                                    £0.85
+                                </span>
+                            </div>
+                            <h3 class="example-recipe-title">Banana Oat Scramble</h3>
+                            <p class="example-recipe-description">Creamy mashed banana meets soft oats in perfectly textured bites that make morning meals a breeze.</p>
+                            <div class="recipe-tags">
+                                <span class="badge badge-breakfast">🌅 Breakfast</span>
+                                <span class="badge badge-category">Vegetarian</span>
+                                <span class="badge badge-category">6+ months</span>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <!-- Lunch Recipe -->
+                    <a href="chicken-veggie-medley.html" class="example-recipe-card">
+                        <div class="recipe-image">☀️</div>
+                        <div class="recipe-content">
+                            <div class="recipe-metrics">
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">⏱️</span>
+                                    Prep: 10m
+                                </span>
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">🔥</span>
+                                    Medium
+                                </span>
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">💰</span>
+                                    £1.20
+                                </span>
+                            </div>
+                            <h3 class="example-recipe-title">Chicken & Veggie Medley</h3>
+                            <p class="example-recipe-description">Tender chicken combines with colorful vegetables in bite-sized pieces that encourage confident self-feeding.</p>
+                            <div class="recipe-tags">
+                                <span class="badge badge-lunch">☀️ Lunch</span>
+                                <span class="badge badge-category">Nut-Free</span>
+                                <span class="badge badge-category">12+ months</span>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <!-- Dinner Recipe -->
+                    <a href="sweet-potato-rice-bowl.html" class="example-recipe-card">
+                        <div class="recipe-image">🌙</div>
+                        <div class="recipe-content">
+                            <div class="recipe-metrics">
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">⏱️</span>
+                                    Prep: 8m
+                                </span>
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">🔥</span>
+                                    Easy
+                                </span>
+                                <span class="badge badge-metric">
+                                    <span class="badge-icon">💰</span>
+                                    £0.95
+                                </span>
+                            </div>
+                            <h3 class="example-recipe-title">Sweet Potato & Rice Bowl</h3>
+                            <p class="example-recipe-description">Naturally sweet potato meets fluffy rice in satisfying spoonfuls that create the perfect end-of-day comfort meal.</p>
+                            <div class="recipe-tags">
+                                <span class="badge badge-dinner">🌙 Dinner</span>
+                                <span class="badge badge-category">Vegan</span>
+                                <span class="badge badge-category">6+ months</span>
+                            </div>
+                        </div>
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2024 ToddlerLunch Ideas. Making mealtime magical for families worldwide.</p>
+        </div>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 24px; padding: 40px; max-width: 500px; margin: 20px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+            <div style="font-size: 3rem; margin-bottom: 20px;">🔒</div>
+            <h2 style="font-family: 'Poppins', sans-serif; font-size: 1.8rem; color: #1e293b; margin-bottom: 16px; font-weight: 700;">Sign In Required</h2>
+            <p style="color: #64748b; font-size: 1.1rem; margin-bottom: 32px; line-height: 1.6;">
+                To access our delicious toddler recipes and AI-powered meal generator, please create your free account or sign in.
+            </p>
+            
+            <div style="margin-bottom: 24px;">
+                <a href="signin.html" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%); color: white; border: none; padding: 16px 32px; font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 600; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; text-decoration: none; display: inline-block; margin: 8px; box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.25);">
+                    🚀 Get Started Free
+                </a>
+            </div>
+            
+            <div style="display: flex; align-items: center; margin: 20px 0; color: #999; font-size: 0.9rem;">
+                <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+                <span style="padding: 0 15px;">What you'll get</span>
+                <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+            </div>
+            
+            <div style="text-align: left; color: #64748b; font-size: 0.95rem;">
+                <div style="margin: 8px 0;">✅ 3 free AI-generated recipes to try</div>
+                <div style="margin: 8px 0;">✅ Access to 3 sample toddler recipes</div>
+                <div style="margin: 8px 0;">✅ Safe & secure account</div>
+                <div style="margin: 8px 0;">💎 Upgrade anytime for unlimited recipes</div>
+            </div>
+            
+            <button onclick="closeAuthModal()" style="margin-top: 20px; background: transparent; border: 1px solid #e2e8f0; color: #64748b; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+                Maybe Later
+            </button>
+        </div>
+    </div>
+
+    <!-- Authentication (lazy loads Firebase inside) -->
+    <script src="auth.js"></script>
+    <script>
+        (function initIndexAuth() {
+            let currentUser = null;
+
+            function updateAuthUI(user) {
+                currentUser = user;
+                const authBtn = document.getElementById('auth-btn');
+                if (!authBtn) return;
+                if (user) {
+                    authBtn.textContent = 'Dashboard';
+                    authBtn.href = 'dashboard.html';
+                    authBtn.style.background = '#10b981';
+                    authBtn.style.color = 'white';
+                } else {
+                    authBtn.textContent = 'Sign In';
+                    authBtn.href = 'signin.html';
+                    authBtn.style.background = '#FFD54F';
+                    authBtn.style.color = '#5D5D5D';
+                }
+            }
+
+            function waitForFirebaseAndBind() {
+                if (window.auth && window.firebase) {
+                    // Bind listeners now that Firebase is ready
+                    window.auth.onAuthStateChanged(updateAuthUI);
+                    updateAuthUI(window.auth.currentUser || null);
+
+                    // Auth modal helpers
+                    window.closeAuthModal = function() {
+                        const el = document.getElementById('auth-modal');
+                        if (el) el.style.display = 'none';
+                    };
+                    const authModal = document.getElementById('auth-modal');
+                    if (authModal) {
+                        authModal.addEventListener('click', function(e) {
+                            if (e.target === this) window.closeAuthModal();
+                        });
+                    }
+
+                    // Allow direct access to generator (free tier checks are in generator page)
+                    const genBtn = document.getElementById('generate-recipe-btn');
+                    if (genBtn) {
+                        genBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            window.location.href = 'recipe-preferences.html';
+                        });
+                    }
+
+                    // Gate example recipe cards behind sign-in modal if not logged in
+                    document.querySelectorAll('.example-recipe-card').forEach(card => {
+                        card.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (!window.auth.currentUser) {
+                                const modal = document.getElementById('auth-modal');
+                                if (modal) modal.style.display = 'flex';
+                            } else {
+                                window.location.href = this.href;
+                            }
+                        });
+                    });
+                } else {
+                    setTimeout(waitForFirebaseAndBind, 100);
+                }
+            }
+
+            // Start after DOM loaded
+            document.addEventListener('DOMContentLoaded', waitForFirebaseAndBind);
+        })();
+    </script>
+</body>
+</html>

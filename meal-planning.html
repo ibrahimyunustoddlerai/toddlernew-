@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planning - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 32px;
+        }
+
+
+
+        .instructions-banner {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .instructions-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            color: #1e40af;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .instructions-text {
+            color: #1e40af;
+            font-size: 0.95rem;
+        }
+
+        .planning-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .calendar-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e5e5;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .week-navigation {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-arrow {
+            background: #f1f5f9;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-arrow:hover {
+            background: #6366f1;
+            color: white;
+        }
+
+        .current-week {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .today-btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .today-btn:hover {
+            background: #5855eb;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .day-header {
+            text-align: center;
+            padding: 12px;
+            font-weight: 600;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .day-cell {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 120px;
+            transition: all 0.2s ease;
+        }
+
+        .day-cell:hover {
+            border-color: #6366f1;
+            background: #f0f9ff;
+        }
+
+        .day-cell.today {
+            border-color: #6366f1;
+            background: #eff6ff;
+        }
+
+        .day-cell.selected {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .day-number {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .meal-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .meal-slot {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 0.8rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .meal-slot:hover {
+            border-color: #6366f1;
+            background: #f0f9ff;
+        }
+
+        .meal-slot.selected {
+            border-color: #10b981;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .meal-slot.has-recipe {
+            background: #eff6ff;
+            border-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .meal-slot.has-recipe:hover {
+            background: #dbeafe;
+        }
+
+        .meal-slot.selected::after {
+            content: "✓";
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .add-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+        }
+
+        .add-btn:hover { background: #e2e8f0; }
+
+        /* Add Meal Dialog */
+        .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:1000; }
+        .dialog { background:white; border-radius:16px; max-width:800px; width:92%; margin:5% auto; box-shadow:0 20px 40px rgba(0,0,0,0.15); overflow:hidden; }
+        .dialog-header { padding:16px 20px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; }
+        .dialog-body { padding:16px 20px; max-height:70vh; overflow:auto; }
+        .close-btn { background:#f1f5f9; border:1px solid #e5e7eb; border-radius:6px; padding:6px 10px; cursor:pointer; }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e5e5;
+        }
+
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .recipe-search {
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .recipe-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .recipe-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .recipe-item:hover {
+            background: #f0f9ff;
+            border-color: #6366f1;
+        }
+
+        .recipe-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .recipe-meta {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .shopping-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .shopping-header {
+            display: grid;
+            grid-template-columns: 30px 1fr 80px 80px 80px;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 2px solid #e2e8f0;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .shopping-item {
+            display: grid;
+            grid-template-columns: 30px 1fr 80px 80px 80px;
+            gap: 12px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .shopping-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-checkbox {
+            margin: 0;
+        }
+
+        .item-name {
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .item-quantity {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quantity-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .quantity-display {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quantity-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .quantity-display {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .actions-section {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .action-btn.secondary:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 1024px) {
+            .planning-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 4px;
+            }
+            
+            .day-cell {
+                padding: 12px 8px;
+                min-height: 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 2px;
+            }
+            
+            .day-cell {
+                padding: 8px 4px;
+                min-height: 80px;
+            }
+            
+            .meal-slot {
+                font-size: 0.7rem;
+                padding: 4px 6px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .shopping-header,
+            .shopping-item {
+                grid-template-columns: 25px 1fr 50px 50px 50px;
+                gap: 6px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav-container">
+            <a href="dashboard.html" class="logo">👶🍳✨ ToddlerChef AI</a>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-btn">← Back to Dashboard</a>
+                <a href="recipe-preferences.html" class="nav-btn">🤖 Generate Recipe</a>
+                <a href="toddler-favourites.html" class="nav-btn">🍼 Favourites</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            Loading your meal planner...
+        </div>
+
+        <div id="planning-content" style="display: none;">
+            <div class="page-header">
+                <h1 class="page-title">📅 Weekly Meal Planner</h1>
+                <p class="page-subtitle">Plan your toddler's meals for the week and generate shopping lists automatically</p>
+            </div>
+
+            <div class="instructions-banner">
+                <div class="instructions-title">🎯 How to Use This Planner</div>
+                <div class="instructions-text">
+                    <strong>Step 1:</strong> Click on any meal slot (Breakfast, Lunch, or Dinner) in the calendar below<br>
+                    <strong>Step 2:</strong> Search and select a recipe from the right sidebar<br>
+                    <strong>Step 3:</strong> Your shopping list will automatically update with ingredients
+                </div>
+            </div>
+
+            <div class="planning-grid">
+                <!-- Calendar Section -->
+                <div class="calendar-section">
+                    <div class="calendar-header">
+                        <div class="week-navigation">
+                            <button class="nav-arrow" onclick="previousWeek()">‹</button>
+                            <span class="current-week" id="current-week">Loading...</span>
+                            <button class="nav-arrow" onclick="nextWeek()">›</button>
+                        </div>
+                        <button class="today-btn" onclick="goToToday()">Today</button>
+                    </div>
+
+                    <div class="calendar-grid">
+                        <div class="day-header">Sun</div>
+                        <div class="day-header">Mon</div>
+                        <div class="day-header">Tue</div>
+                        <div class="day-header">Wed</div>
+                        <div class="day-header">Thu</div>
+                        <div class="day-header">Fri</div>
+                        <div class="day-header">Sat</div>
+                        
+                        <div id="calendar-days"></div>
+                    </div>
+
+                    <div class="actions-section">
+                        <button class="action-btn" onclick="saveMealPlan()">💾 Save Plan</button>
+                        <button class="action-btn secondary" onclick="clearPlan()">🗑️ Clear All</button>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Recipe Search -->
+                    <div class="sidebar-card">
+                        <h3 class="card-title">🔍 Add Recipes</h3>
+                        <div class="recipe-search">
+                            <input type="text" class="search-input" id="recipe-search" placeholder="Search recipes...">
+                        </div>
+                        <div class="recipe-list" id="recipe-list">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🍽️</div>
+                                <p>Search for recipes to add to your meal plan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shopping List -->
+                    <div class="sidebar-card">
+                        <h3 class="card-title">🛒 Shopping List</h3>
+                        <div class="shopping-list" id="shopping-list">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📝</div>
+                                <p>Add recipes to generate your shopping list</p>
+                            </div>
+                        </div>
+                        <div class="actions-section" style="margin-top: 16px;">
+                            <button class="action-btn" onclick="generateShoppingList()">📋 Generate List</button>
+                            <button class="action-btn secondary" onclick="clearShoppingList()">🗑️ Clear</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        let currentWeek = new Date();
+        let selectedDay = null;
+        let selectedMealSlot = null;
+        let mealPlan = {};
+        let recipes = [];
+        let shoppingList = [];
+        let dialogDateKey = '';
+        let dialogMealType = '';
+
+        function getWeekStartKey(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day;
+            const ws = new Date(d.setDate(diff));
+            ws.setHours(0,0,0,0);
+            return ws.toISOString();
+        }
+
+        // UK Supermarket Pricing Data (ASDA/Tesco/Sainsbury's average)
+        const UK_PRICES = {
+            'chicken': 1.45, 'chicken breast': 1.45, 'turkey': 1.65, 'tuna': 0.85,
+            'egg': 0.25, 'eggs': 0.25, 'lentils': 0.15, 'red lentils': 0.15,
+            'cheese': 0.45, 'cheddar': 0.45, 'milk': 0.18, 'yogurt': 0.35,
+            'butter': 0.08, 'carrot': 0.12, 'carrots': 0.12, 'broccoli': 0.35,
+            'cauliflower': 0.25, 'spinach': 0.65, 'peas': 0.25, 'onion': 0.08,
+            'tomato': 0.25, 'tomatoes': 0.25, 'potato': 0.15, 'potatoes': 0.15,
+            'sweet potato': 0.85, 'apple': 0.25, 'banana': 0.18, 'pear': 0.35,
+            'avocado': 0.65, 'rice': 0.12, 'pasta': 0.18, 'bread': 0.15,
+            'oats': 0.08, 'oil': 0.08, 'olive oil': 0.08, 'flour': 0.05,
+            'butternut squash': 0.95, 'paneer': 1.25, 'black beans': 0.45,
+            'tortilla': 0.25, 'courgette': 0.35, 'zucchini': 0.35, 'quinoa': 0.30,
+            'berries': 0.85, 'strawberries': 0.85, 'blueberries': 0.85,
+            'mango': 0.75, 'pineapple': 0.65, 'coconut milk': 0.45,
+            'almond milk': 0.35, 'cocoa': 0.15, 'honey': 0.20, 'cinnamon': 0.05
+        };
+
+        // Sample recipes for demonstration
+        const sampleRecipes = [
+            {
+                id: 1,
+                name: "Banana Oat Scramble",
+                type: "breakfast",
+                prepTime: "10 min",
+                cookTime: "15 min",
+                difficulty: "Easy",
+                ingredients: ["banana", "oats", "milk", "honey", "cinnamon"]
+            },
+            {
+                id: 2,
+                name: "Chicken Veggie Medley",
+                type: "lunch",
+                prepTime: "15 min",
+                cookTime: "20 min",
+                difficulty: "Medium",
+                ingredients: ["chicken breast", "carrots", "peas", "rice", "olive oil"]
+            },
+            {
+                id: 3,
+                name: "Sweet Potato Rice Bowl",
+                type: "dinner",
+                prepTime: "20 min",
+                cookTime: "25 min",
+                difficulty: "Easy",
+                ingredients: ["sweet potato", "rice", "black beans", "avocado", "lime"]
+            },
+            {
+                id: 4,
+                name: "Apple Cinnamon Pancakes",
+                type: "breakfast",
+                prepTime: "10 min",
+                cookTime: "15 min",
+                difficulty: "Easy",
+                ingredients: ["flour", "eggs", "milk", "apple", "cinnamon", "honey"]
+            },
+            {
+                id: 5,
+                name: "Turkey & Cheese Roll-ups",
+                type: "lunch",
+                prepTime: "5 min",
+                cookTime: "0 min",
+                difficulty: "Easy",
+                ingredients: ["turkey slices", "cheese", "tortilla", "lettuce"]
+            }
+        ];
+
+        // Initialize meal planner
+        async function initializeMealPlanner() {
+            try {
+                // Wait for Firebase to be ready
+                await new Promise(resolve => {
+                    const checkFirebase = () => {
+                        if (window.auth && window.db) {
+                            resolve();
+                        } else {
+                            setTimeout(checkFirebase, 100);
+                        }
+                    };
+                    checkFirebase();
+                });
+
+                // Check authentication
+                const authState = await window.toddlerChefAuth.checkAuthState();
+                if (!authState.isAuthenticated) {
+                    window.location.href = 'signin.html';
+                    return;
+                }
+
+                // Restore last opened week
+                try {
+                    const ws = localStorage.getItem('plannerWeek');
+                    if (ws) currentWeek = new Date(ws);
+                } catch {}
+
+                // Load user's meal plans and saved recipes
+                await loadMealPlans();
+                await loadSavedRecipes();
+                
+                // Initialize UI
+                renderCalendar();
+                renderRecipeList();
+                showPlanningContent();
+                
+            } catch (error) {
+                console.error('Meal planner initialization error:', error);
+                document.getElementById('loading').innerHTML = 'Error loading meal planner. Please refresh the page.';
+            }
+        }
+
+        // Show planning content
+        function showPlanningContent() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('planning-content').style.display = 'block';
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            const calendarDays = document.getElementById('calendar-days');
+            const currentWeekElement = document.getElementById('current-week');
+            
+            // Update week display
+            const weekStart = getWeekStart(currentWeek);
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+            
+            currentWeekElement.textContent = `${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+            
+            // Clear calendar
+            calendarDays.innerHTML = '';
+            
+            // Remember current week key
+            try { localStorage.setItem('plannerWeek', getWeekStartKey(currentWeek)); } catch {}
+
+            // Generate day cells
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(weekStart);
+                date.setDate(date.getDate() + i);
+                
+                const dayCell = document.createElement('div');
+                dayCell.className = 'day-cell';
+                
+                // Check if today
+                const today = new Date();
+                if (date.toDateString() === today.toDateString()) {
+                    dayCell.classList.add('today');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = date.getDate();
+                
+                const mealSlots = document.createElement('div');
+                mealSlots.className = 'meal-slots';
+                
+                // Create meal slots
+                const mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
+                mealTypes.forEach(mealType => {
+                    const mealSlot = document.createElement('div');
+                    mealSlot.className = 'meal-slot';
+                    const label = mealType.charAt(0).toUpperCase() + mealType.slice(1);
+                    mealSlot.innerHTML = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                        <span>${label}</span>
+                        <button class="add-btn" title="Add" onclick="openAddMealDialog('${date.toISOString().split('T')[0]}','${mealType}'); event.stopPropagation();">+</button>
+                    </div>`;
+                    mealSlot.onclick = () => selectMealSlot(date, mealType);
+                    
+                    // Check if meal is planned
+                    const dateKey = date.toISOString().split('T')[0];
+                    if (mealPlan[dateKey] && mealPlan[dateKey][mealType]) {
+                        mealSlot.classList.add('has-recipe');
+                        const name = mealPlan[dateKey][mealType].name || 'Saved recipe';
+                        mealSlot.innerHTML = `<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                            <span>${name}</span>
+                            <button class="add-btn" title="Remove" onclick="removePlannedMeal('${dateKey}','${mealType}'); event.stopPropagation();">×</button>
+                        </div>`;
+                    }
+                    
+                    // Check if this slot is currently selected
+                    if (selectedDay && selectedMealSlot && 
+                        date.toDateString() === selectedDay.toDateString() && 
+                        mealType === selectedMealSlot) {
+                        mealSlot.classList.add('selected');
+                    }
+                    
+                    mealSlots.appendChild(mealSlot);
+                });
+                
+                dayCell.appendChild(dayNumber);
+                dayCell.appendChild(mealSlots);
+                calendarDays.appendChild(dayCell);
+            }
+        }
+
+        function removePlannedMeal(dateKey, mealType) {
+            if (!mealPlan[dateKey]) return;
+            delete mealPlan[dateKey][mealType];
+            if (Object.keys(mealPlan[dateKey]).length === 0) delete mealPlan[dateKey];
+            renderCalendar();
+            generateShoppingList();
+        }
+
+        // Get week start (Sunday)
+        function getWeekStart(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day;
+            return new Date(d.setDate(diff));
+        }
+
+        // Select meal slot
+        function selectMealSlot(date, mealType) {
+            selectedDay = date;
+            selectedMealSlot = mealType;
+            
+            // Update calendar to show selection
+            renderCalendar();
+            
+            // Show recipe search
+            document.getElementById('recipe-search').focus();
+            
+            // Show visual feedback
+            const instructions = document.querySelector('.instructions-text');
+            instructions.innerHTML = `
+                <strong>Step 1:</strong> ✅ Clicked on ${mealType} for ${date.toLocaleDateString()}<br>
+                <strong>Step 2:</strong> Now search and select a recipe from the right sidebar<br>
+                <strong>Step 3:</strong> Your shopping list will automatically update
+            `;
+        }
+
+        // Add Meal Dialog
+        function ensureDialog() {
+            if (document.getElementById('add-dialog-overlay')) return;
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            overlay.id = 'add-dialog-overlay';
+            overlay.innerHTML = `
+                <div class="dialog">
+                    <div class="dialog-header">
+                        <div id="dialog-title">Add meal</div>
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                            <input id="dialog-search" class="form-input" placeholder="Search recipes…" style="width:220px;" />
+                            <select id="dialog-filter-time" class="form-select">
+                                <option value="any">Any time</option>
+                                <option value="under-15">Under 15 min</option>
+                                <option value="15-30">15–30 min</option>
+                                <option value="over-30">Over 30 min</option>
+                            </select>
+                            <select id="dialog-filter-tag" class="form-select">
+                                <option value="all">All tags</option>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="snack">Snack</option>
+                            </select>
+                            <button class="close-btn" onclick="closeAddMealDialog()">✕</button>
+                        </div>
+                    </div>
+                    <div class="dialog-body">
+                        <div id="dialog-grid" class="recipe-grid"></div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) closeAddMealDialog(); });
+        }
+
+        function openAddMealDialog(dateKey, mealType) {
+            ensureDialog();
+            dialogDateKey = dateKey; dialogMealType = mealType;
+            const t = document.getElementById('dialog-title');
+            if (t) t.textContent = `Add ${mealType} for ${new Date(dateKey).toLocaleDateString()}`;
+            renderDialogCards();
+            document.getElementById('add-dialog-overlay').style.display = 'block';
+            const s = document.getElementById('dialog-search');
+            const ft = document.getElementById('dialog-filter-time');
+            const tg = document.getElementById('dialog-filter-tag');
+            if (s && !s._bound) { s.addEventListener('input', renderDialogCards); s._bound = true; }
+            if (ft && !ft._bound) { ft.addEventListener('change', renderDialogCards); ft._bound = true; }
+            if (tg && !tg._bound) { tg.addEventListener('change', renderDialogCards); tg._bound = true; }
+        }
+
+        function closeAddMealDialog() {
+            const o = document.getElementById('add-dialog-overlay');
+            if (o) o.style.display = 'none';
+        }
+
+        function addRecipeFromDialog(id) {
+            const recipe = recipes.find(r => String(r.id) === String(id));
+            if (!recipe) return;
+            if (!mealPlan[dialogDateKey]) mealPlan[dialogDateKey] = {};
+            mealPlan[dialogDateKey][dialogMealType] = recipe;
+            renderCalendar();
+            generateShoppingList();
+            closeAddMealDialog();
+        }
+
+        function renderDialogCards() {
+            const grid = document.getElementById('dialog-grid');
+            if (!grid) return;
+            const q = (document.getElementById('dialog-search')?.value || '').toLowerCase();
+            const time = document.getElementById('dialog-filter-time')?.value || 'any';
+            const tag = document.getElementById('dialog-filter-tag')?.value || 'all';
+            const filtered = recipes.filter(r => {
+                const name = (r.name || '').toLowerCase();
+                const type = (r.type || '').toLowerCase();
+                const matchesQ = !q || name.includes(q) || type.includes(q);
+                const minutes = parseInt(String(r.prepTime || '0').replace(/[^0-9]/g,'')) || 0;
+                let matchesTime = true;
+                if (time === 'under-15') matchesTime = minutes <= 15;
+                if (time === '15-30') matchesTime = minutes > 15 && minutes <= 30;
+                if (time === 'over-30') matchesTime = minutes > 30;
+                const matchesTag = tag === 'all' || type === tag;
+                return matchesQ && matchesTime && matchesTag;
+            });
+            if (!filtered.length) {
+                grid.innerHTML = '<div class="empty-state">No recipes found for your search.</div>';
+                return;
+            }
+            grid.innerHTML = filtered.map(r => {
+                const tags = [];
+                if (r.type) tags.push(r.type);
+                if (r.difficulty) tags.push(r.difficulty);
+                if (r.isSaved) tags.push('saved');
+                const tagHtml = tags.map(t => `<span class="badge badge-secondary" style="font-size:0.7rem; padding:4px 8px;">${t}</span>`).join(' ');
+                return `
+                <div class="recipe-card" onclick="addRecipeFromDialog('${r.id}')">
+                    <div class="recipe-content">
+                        <div class="recipe-title" style="font-size:1rem; margin:0 0 6px 0;">${r.name}</div>
+                        <div class="recipe-description" style="margin-bottom:6px;">${r.prepTime || '15 min'} ${r.cookTime ? '• ' + r.cookTime : ''}</div>
+                        <div class="recipe-tags">${tagHtml}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Render recipe list
+        function renderRecipeList() {
+            const recipeList = document.getElementById('recipe-list');
+            const searchTerm = document.getElementById('recipe-search').value.toLowerCase();
+            
+            // If a quick-add name exists, pre-seed into list
+            const quickAddName = (localStorage.getItem('plannerQuickAddName') || '').toLowerCase();
+            if (quickAddName && !searchTerm) {
+                document.getElementById('recipe-search').value = quickAddName;
+            }
+
+            const filteredRecipes = recipes.filter(recipe => 
+                recipe.name.toLowerCase().includes(searchTerm) ||
+                recipe.type.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredRecipes.length === 0) {
+                recipeList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <p>No recipes found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            recipeList.innerHTML = filteredRecipes.map(recipe => `
+                <div class="recipe-item" onclick="addRecipeToMealPlan('${recipe.id}')">
+                    <div class="recipe-name">
+                        ${recipe.name}
+                        ${recipe.isSaved ? '<span style="color: #10b981; font-size: 0.8rem;">💾 Saved</span>' : ''}
+                    </div>
+                    <div class="recipe-meta">${recipe.type} • ${recipe.prepTime} prep • ${recipe.difficulty}</div>
+                </div>
+            `).join('');
+
+            if (quickAddName) {
+                // Clear quick add to avoid sticky state
+                localStorage.removeItem('plannerQuickAddName');
+            }
+        }
+
+        // Add recipe to meal plan
+        function addRecipeToMealPlan(recipeId) {
+            if (!selectedDay || !selectedMealSlot) {
+                alert('Please select a meal slot first');
+                return;
+            }
+            
+            const recipe = recipes.find(r => r.id == recipeId);
+            if (!recipe) return;
+            
+            const dateKey = selectedDay.toISOString().split('T')[0];
+            if (!mealPlan[dateKey]) {
+                mealPlan[dateKey] = {};
+            }
+            
+            mealPlan[dateKey][selectedMealSlot] = recipe;
+            
+            // Update calendar
+            renderCalendar();
+            
+            // Generate shopping list
+            generateShoppingList();
+            
+            // Update instructions
+            const instructions = document.querySelector('.instructions-text');
+            instructions.innerHTML = `
+                <strong>Step 1:</strong> ✅ Clicked on ${selectedMealSlot} for ${selectedDay.toLocaleDateString()}<br>
+                <strong>Step 2:</strong> ✅ Added "${recipe.name}"<br>
+                <strong>Step 3:</strong> ✅ Shopping list updated! Continue adding more meals...
+            `;
+            
+            // Clear selection
+            selectedDay = null;
+            selectedMealSlot = null;
+            
+            // Reset instructions after 3 seconds
+            setTimeout(() => {
+                instructions.innerHTML = `
+                    <strong>Step 1:</strong> Click on any meal slot (Breakfast, Lunch, or Dinner) in the calendar below<br>
+                    <strong>Step 2:</strong> Search and select a recipe from the right sidebar<br>
+                    <strong>Step 3:</strong> Your shopping list will automatically update with ingredients
+                `;
+            }, 3000);
+        }
+
+        // Generate shopping list
+        function generateShoppingList() {
+            const ingredients = new Map();
+            
+            Object.values(mealPlan).forEach(dayMeals => {
+                Object.values(dayMeals).forEach(recipe => {
+                    recipe.ingredients.forEach(ingredient => {
+                        if (ingredients.has(ingredient)) {
+                            ingredients.set(ingredient, ingredients.get(ingredient) + 1);
+                        } else {
+                            ingredients.set(ingredient, 1);
+                        }
+                    });
+                });
+            });
+            
+            shoppingList = Array.from(ingredients.entries()).map(([ingredient, count]) => {
+                const price = UK_PRICES[ingredient.toLowerCase()] || 0.35; // Default price
+                return {
+                    name: ingredient,
+                    quantity: count,
+                    price: price,
+                    checked: false
+                };
+            });
+            
+            renderShoppingList();
+        }
+
+        // Render shopping list
+        function renderShoppingList() {
+            const shoppingListElement = document.getElementById('shopping-list');
+            
+            if (shoppingList.length === 0) {
+                shoppingListElement.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <p>Add recipes to generate your shopping list</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            shoppingListElement.innerHTML = `
+                <div class="shopping-header">
+                    <div>✓</div>
+                    <div>Item</div>
+                    <div>Servings</div>
+                    <div>Quantity</div>
+                    <div>Price</div>
+                </div>
+                ${shoppingList.map((item, index) => `
+                    <div class="shopping-item">
+                        <input type="checkbox" class="item-checkbox" 
+                               ${item.checked ? 'checked' : ''} 
+                               onchange="toggleShoppingItem(${index})">
+                        <div class="item-name">${item.name}</div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">-</button>
+                            <span class="quantity-display">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                        </div>
+                        <div class="item-quantity">${item.quantity > 1 ? `${item.quantity} servings` : '1 serving'}</div>
+                        <div class="item-price">£${item.price.toFixed(2)}</div>
+                    </div>
+                `).join('')}
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border: 1px solid #0ea5e9;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 600;">
+                        <span>Total Shopping Cost:</span>
+                        <span style="color: #0ea5e9; font-size: 1.1rem;">£${shoppingList.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle shopping item
+        function toggleShoppingItem(index) {
+            shoppingList[index].checked = !shoppingList[index].checked;
+        }
+
+        // Change quantity
+        function changeQuantity(index, change) {
+            const newQuantity = Math.max(1, shoppingList[index].quantity + change);
+            shoppingList[index].quantity = newQuantity;
+            renderShoppingList();
+        }
+
+        // Change quantity
+        function changeQuantity(index, change) {
+            const newQuantity = Math.max(1, shoppingList[index].quantity + change);
+            shoppingList[index].quantity = newQuantity;
+            renderShoppingList();
+        }
+
+        // Navigation functions
+        function previousWeek() {
+            currentWeek.setDate(currentWeek.getDate() - 7);
+            try { localStorage.setItem('plannerWeek', getWeekStartKey(currentWeek)); } catch {}
+            renderCalendar();
+        }
+
+        function nextWeek() {
+            currentWeek.setDate(currentWeek.getDate() + 7);
+            try { localStorage.setItem('plannerWeek', getWeekStartKey(currentWeek)); } catch {}
+            renderCalendar();
+        }
+
+        function goToToday() {
+            currentWeek = new Date();
+            try { localStorage.setItem('plannerWeek', getWeekStartKey(currentWeek)); } catch {}
+            renderCalendar();
+        }
+
+        // Save meal plan
+        async function saveMealPlan() {
+            try {
+                const weekStart = getWeekStart(currentWeek);
+                const mealPlanData = {
+                    weekStart: weekStart,
+                    meals: mealPlan,
+                    shoppingList: shoppingList,
+                    createdAt: new Date()
+                };
+                
+                const result = await toddlerChefAuth.saveMealPlan(mealPlanData);
+                if (result.success) {
+                    alert('Meal plan saved successfully!');
+                } else {
+                    alert('Error saving meal plan: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Save meal plan error:', error);
+                alert('Error saving meal plan');
+            }
+        }
+
+        // Load meal plans
+        async function loadMealPlans() {
+            try {
+                const result = await window.toddlerChefAuth.getMealPlans();
+                if (result.success && result.mealPlans.length > 0) {
+                    // Load the most recent meal plan
+                    const latestPlan = result.mealPlans[0];
+                    mealPlan = latestPlan.meals || {};
+                    shoppingList = latestPlan.shoppingList || [];
+                }
+            } catch (error) {
+                console.error('Load meal plans error:', error);
+            }
+        }
+
+        // Load saved recipes
+        async function loadSavedRecipes() {
+            try {
+                const result = await window.toddlerChefAuth.getFavoriteRecipes();
+                if (result.success && result.favorites && result.favorites.length > 0) {
+                    // Add saved recipes to the recipes array
+                    const savedRecipes = result.favorites.map((fav, index) => ({
+                        id: `saved-${index}`,
+                        name: (fav.recipe && fav.recipe.name) || 'Saved Recipe',
+                        type: (fav.recipe && fav.recipe.mealType) || 'lunch',
+                        prepTime: (fav.recipe && fav.recipe.prepTime) || '15 min',
+                        cookTime: (fav.recipe && fav.recipe.cookTime) || '20 min',
+                        difficulty: 'Easy',
+                        ingredients: extractIngredientsFromHTML((fav.recipe && fav.recipe.ingredients) || ''),
+                        isSaved: true
+                    }));
+                    
+                    recipes = [...sampleRecipes, ...savedRecipes];
+                } else {
+                    recipes = [...sampleRecipes];
+                }
+            } catch (error) {
+                console.error('Load saved recipes error:', error);
+                recipes = [...sampleRecipes];
+            }
+        }
+
+        // Extract ingredients from HTML
+        function extractIngredientsFromHTML(ingredientsHTML) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = ingredientsHTML;
+            const ingredients = [];
+            
+            // Extract text content and split by common separators
+            const text = tempDiv.textContent || tempDiv.innerText || '';
+            const lines = text.split(/[•\n\r]/).filter(line => line.trim().length > 0);
+            
+            lines.forEach(line => {
+                // Extract ingredient name (remove measurements)
+                const cleanLine = line.trim().replace(/^\d+[gml]?\s*/, '').replace(/^\d+\/\d+\s*/, '');
+                if (cleanLine.length > 0) {
+                    ingredients.push(cleanLine.toLowerCase());
+                }
+            });
+            
+            return ingredients;
+        }
+
+        // Clear plan
+        function clearPlan() {
+            if (confirm('Are you sure you want to clear the entire meal plan?')) {
+                mealPlan = {};
+                shoppingList = [];
+                renderCalendar();
+                renderShoppingList();
+            }
+        }
+
+        // Clear shopping list
+        function clearShoppingList() {
+            shoppingList = [];
+            renderShoppingList();
+        }
+
+        // Search recipes
+        document.getElementById('recipe-search').addEventListener('input', renderRecipeList);
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeMealPlanner);
+    </script>
+</body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f97316 0%, #a855f7 50%, #fbbf24 100%);
+            padding: 32px 0;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.25), 0 8px 10px -6px rgba(168, 85, 247, 0.1);
+        }
+
+        .header h1 {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.75rem;
+            font-weight: 700;
+            text-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 12px;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 60px 0;
+            align-items: start;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .auth-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            color: hsl(var(--primary));
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.25), 0 8px 10px -6px rgba(99, 102, 241, 0.1);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.35), 0 10px 15px -6px rgba(99, 102, 241, 0.15);
+        }
+
+        .google-btn {
+            background: #ffffff;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .google-btn:hover {
+            background: #f9fafb;
+            border-color: #6366f1;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+        }
+
+        .divider span {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 16px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .toggle-link {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #fef2f2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .features-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .features-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 24px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.25rem;
+            color: #475569;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .feature-description {
+            color: #64748b;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            margin-left: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-btn:hover {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .auth-card {
+                padding: 30px 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="index.html" class="menu-btn">← Back to Home</a>
+    </div>
+
+    <div class="header">
+        <div class="container">
+            <h1>👶🍳✨ Welcome to ToddlerChef AI</h1>
+            <p>Join thousands of parents creating magical mealtimes</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="auth-container">
+            <!-- Sign In Form -->
+            <div class="auth-card" id="signin-card">
+                <h2 class="auth-title">Sign In</h2>
+                
+                <div class="error-message" id="signin-error"></div>
+                <div class="success-message" id="signin-success"></div>
+                
+                <form id="signin-form">
+                    <div class="form-group">
+                        <label class="form-label" for="signin-email">Email Address</label>
+                        <input type="email" class="form-input" id="signin-email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="signin-password">Password</label>
+                        <input type="password" class="form-input" id="signin-password" required>
+                    </div>
+
+                    <div class="form-group" style="text-align: right; margin-top: -8px;">
+                        <a class="toggle-link" id="forgot-password-link">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        Sign In
+                    </button>
+                </form>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                
+                <button class="auth-btn google-btn" id="google-signin">
+                    Continue with Google
+                </button>
+                
+                <div class="toggle-form">
+                    <span>Don't have an account? </span>
+                    <a class="toggle-link" onclick="toggleForm('register')">Sign up here</a>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-card" id="register-card" style="display: none;">
+                <h2 class="auth-title">Create Account</h2>
+                
+                <div class="error-message" id="register-error"></div>
+                <div class="success-message" id="register-success"></div>
+                
+                <form id="register-form">
+                    <div class="form-group">
+                        <label class="form-label" for="register-name">Full Name</label>
+                        <input type="text" class="form-input" id="register-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="register-email">Email Address</label>
+                        <input type="email" class="form-input" id="register-email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="register-password">Password</label>
+                        <input type="password" class="form-input" id="register-password" required minlength="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="register-confirm-password">Confirm Password</label>
+                        <input type="password" class="form-input" id="register-confirm-password" required>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        Create Account
+                    </button>
+                </form>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                
+                <button class="auth-btn google-btn" id="google-register">
+                    Continue with Google
+                </button>
+                
+                <div class="toggle-form">
+                    <span>Already have an account? </span>
+                    <a class="toggle-link" onclick="toggleForm('signin')">Sign in here</a>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-section">
+                <h3 class="features-title">Why Join ToddlerChef AI?</h3>
+                
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">📅</div>
+                        <h4 class="feature-title">Meal Planning</h4>
+                        <p class="feature-description">Plan weekly meals and generate shopping lists automatically</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">💾</div>
+                        <h4 class="feature-title">Save Favorites</h4>
+                        <p class="feature-description">Save your favorite recipes and access them anytime</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">👶</div>
+                        <h4 class="feature-title">Child Profiles</h4>
+                        <p class="feature-description">Create profiles for each child with their preferences and allergies</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <h4 class="feature-title">Nutrition Tracking</h4>
+                        <p class="feature-description">Track your toddler's nutrition and growth milestones</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">🤖</div>
+                        <h4 class="feature-title">AI Recipes</h4>
+                        <p class="feature-description">Generate unlimited custom recipes with our AI chef</p>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">📱</div>
+                        <h4 class="feature-title">Sync Across Devices</h4>
+                        <p class="feature-description">Access your meal plans and recipes on any device</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Form toggle functionality
+        function toggleForm(type) {
+            const signinCard = document.getElementById('signin-card');
+            const registerCard = document.getElementById('register-card');
+            
+            if (type === 'register') {
+                signinCard.style.display = 'none';
+                registerCard.style.display = 'block';
+            } else {
+                signinCard.style.display = 'block';
+                registerCard.style.display = 'none';
+            }
+            
+            // Clear error messages
+            document.querySelectorAll('.error-message, .success-message').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+
+        // Show/hide loading states
+        function setLoading(formId, isLoading) {
+            const btn = document.querySelector(`#${formId}-form button[type="submit"], #${formId}`);
+            if (btn) {
+                btn.disabled = isLoading;
+                btn.style.opacity = isLoading ? '0.7' : '1';
+            }
+        }
+
+        // Show error message
+        function showError(formId, message) {
+            const errorEl = document.getElementById(`${formId}-error`);
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        // Show success message
+        function showSuccess(formId, message) {
+            const successEl = document.getElementById(`${formId}-success`);
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+        }
+
+        // Handle sign in form submission
+        document.getElementById('signin-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            
+            setLoading('signin', true);
+            showError('signin', '');
+            
+            try {
+                const result = await toddlerChefAuth.loginUser(email, password);
+                
+                if (result.success) {
+                    showSuccess('signin', 'Sign in successful! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showError('signin', result.error);
+                }
+            } catch (error) {
+                showError('signin', 'An unexpected error occurred. Please try again.');
+            } finally {
+                setLoading('signin', false);
+            }
+        });
+
+        // Forgot password
+        document.getElementById('forgot-password-link').addEventListener('click', async () => {
+            try {
+                const email = document.getElementById('signin-email').value.trim();
+                if (!email) {
+                    showError('signin', 'Please enter your email above first.');
+                    return;
+                }
+                // Wait for Firebase
+                const waitForAuth = () => new Promise(resolve => {
+                    (function check(){ if (window.firebase && window.auth) resolve(); else setTimeout(check, 100); })();
+                });
+                await waitForAuth();
+                await window.auth.sendPasswordResetEmail(email);
+                showSuccess('signin', 'Password reset email sent. Please check your inbox.');
+            } catch (err) {
+                showError('signin', err.message || 'Could not send reset email.');
+            }
+        });
+
+        // Handle register form submission
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                showError('register', 'Passwords do not match');
+                return;
+            }
+            
+            setLoading('register', true);
+            showError('register', '');
+            
+            try {
+                const result = await toddlerChefAuth.registerUser(email, password, {
+                    displayName: name,
+                    email: email
+                });
+                
+                if (result.success) {
+                    // Extract first name for welcome message
+                    const firstName = name.split(' ')[0];
+                    showSuccess('register', `Welcome ${firstName}! Account created successfully! Redirecting to setup...`);
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html?setup=true';
+                    }, 2000);
+                } else {
+                    showError('register', result.error);
+                }
+            } catch (error) {
+                showError('register', 'An unexpected error occurred. Please try again.');
+            } finally {
+                setLoading('register', false);
+            }
+        });
+
+        // Handle Google sign in
+        document.getElementById('google-signin').addEventListener('click', async () => {
+            setLoading('google', true);
+            showError('signin', '');
+            
+            try {
+                const result = await toddlerChefAuth.signInWithGoogle();
+                
+                if (result.success) {
+                    showSuccess('signin', 'Sign in successful! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showError('signin', result.error);
+                }
+            } catch (error) {
+                showError('signin', 'An unexpected error occurred. Please try again.');
+            } finally {
+                setLoading('google', false);
+            }
+        });
+
+        // Handle Google register
+        document.getElementById('google-register').addEventListener('click', async () => {
+            setLoading('google-register', true);
+            showError('register', '');
+            
+            try {
+                const result = await toddlerChefAuth.signInWithGoogle();
+                
+                if (result.success) {
+                    showSuccess('register', 'Account created successfully! Redirecting to setup...');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html?setup=true';
+                    }, 1500);
+                } else {
+                    showError('register', result.error);
+                }
+            } catch (error) {
+                showError('register', 'An unexpected error occurred. Please try again.');
+            } finally {
+                setLoading('google-register', false);
+            }
+        });
+    </script>
+</body>
+</html>

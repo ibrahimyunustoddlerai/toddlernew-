@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Preferences - ToddlerChef AI</title>
+    <link rel="stylesheet" href="shadcn-components.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fef7ed 0%, #fef3c7 50%, #f0f9ff 100%);
+            min-height: 100vh;
+            color: hsl(var(--foreground));
+            line-height: 1.7;
+        }
+
+        .header {
+            background: white;
+            padding: 32px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.125rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .menu-btn {
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+            margin-left: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-btn:hover {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .back-btn {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+        }
+
+        .back-btn:hover {
+            background: #4f46e5;
+            border-color: #4f46e5;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 16px;
+            padding: 48px;
+            margin: 48px 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e5e5;
+        }
+
+        .form-title {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 40px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4rem;
+            color: #475569;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+            padding-bottom: 12px;
+            letter-spacing: -0.015em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkbox-item:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: #6366f1;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: #6366f1;
+        }
+
+        .checkbox-item label {
+            flex: 1;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .generate-btn {
+            background: #bae6fd;
+            color: #1e293b;
+            border: none;
+            padding: 18px 40px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 48px auto 0;
+            box-shadow: 0 4px 12px rgba(186, 230, 253, 0.3);
+            letter-spacing: 0.025em;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.35), 0 10px 15px -6px rgba(99, 102, 241, 0.15);
+        }
+
+        .tag-input-container {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+            min-height: 68px;
+            cursor: text;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tag-input-container:hover,
+        .tag-input-container:focus-within {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tags-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .ingredient-tag {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+            transition: all 0.2s ease;
+            position: relative;
+            white-space: nowrap;
+            width: fit-content;
+            min-width: auto;
+        }
+
+        .ingredient-tag:hover {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .tag-delete {
+            margin-left: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            line-height: 1;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        .ingredient-tag:hover .tag-delete {
+            opacity: 1;
+        }
+
+        .tag-delete:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .tag-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 1rem;
+            width: 100%;
+            padding: 6px 0;
+            color: #334155;
+        }
+
+        .tag-input::placeholder {
+            color: #94a3b8;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 25px;
+                margin: 20px 0;
+            }
+            
+            .form-title {
+                font-size: 1.8rem;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .ingredient-tag {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
+            
+            .tags-display {
+                gap: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="index.html" class="menu-btn back-btn">← Back to Home</a>
+    </div>
+
+    <div class="header">
+        <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div>
+                <h1>🧒👨‍🍳 Recipe Preferences</h1>
+                <p>Tell us what you have and what you need!</p>
+            </div>
+            <div id="header-child-selector" style="display:none; min-width:260px;">
+                <label class="form-label" for="headerChildSelect" style="margin-bottom:6px;">For child</label>
+                <select class="form-input" id="headerChildSelect"></select>
+                <div style="font-size:12px; color:#64748b; margin-top:6px;">Premium feature</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="form-container">
+            <h2 class="form-title">Let's Create Your Perfect Recipe</h2>
+            
+            <form id="preferencesForm">
+                <!-- Child Profile Section - Premium Feature -->
+                <div class="form-section" id="child-profile-section" style="display: none;">
+                    <h3 class="section-title">👶 Select Child Profile <span style="background: linear-gradient(135deg, #f59e0b, #dc2626); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600;">PREMIUM</span></h3>
+                    <div class="form-group">
+                        <label class="form-label" for="selectedChild">Choose which child this recipe is for:</label>
+                        <select class="form-input" id="selectedChild" name="selectedChild">
+                            <option value="">Loading children...</option>
+                        </select>
+                        <p style="color: #64748b; font-size: 0.9rem; margin-top: 8px;">
+                            This will ensure the recipe follows their specific allergies and dietary needs. 
+                            <a href="dashboard.html" style="color: #6366f1;">Add a child profile</a> if none are listed.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">🥘 What's in Your Kitchen?</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="leftovers">Leftovers or ingredients you have:</label>
+                        <div class="tag-input-container" id="leftovers-container">
+                            <div class="tags-display" id="leftovers-tags"></div>
+                            <input type="text" class="tag-input" id="leftovers-input" placeholder="Type ingredient and press Enter (e.g., chicken, rice, cheese...)">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-section">
+                    <h3 class="section-title">🚫 Dietary Requirements</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="dairy-free" name="dietary" value="dairy-free">
+                            <label for="dairy-free">🥛 Dairy Free</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="gluten-free" name="dietary" value="gluten-free">
+                            <label for="gluten-free">🌾 Gluten Free</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="nut-free" name="dietary" value="nut-free">
+                            <label for="nut-free">🥜 Nut Free</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="egg-free" name="dietary" value="egg-free">
+                            <label for="egg-free">🥚 Egg Free</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vegetarian" name="dietary" value="vegetarian">
+                            <label for="vegetarian">🌱 Vegetarian</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="vegan" name="dietary" value="vegan">
+                            <label for="vegan">🌿 Vegan</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="halal" name="dietary" value="halal">
+                            <label for="halal">☪️ Halal</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kosher" name="dietary" value="kosher">
+                            <label for="kosher">✡️ Kosher</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">👶 Child's Age</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="age-6m" name="agerange" value="6+ months">
+                            <label for="age-6m">👶 6+ months</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="age-9m" name="agerange" value="9+ months">
+                            <label for="age-9m">🍼 9+ months</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="age-12m" name="agerange" value="12+ months">
+                            <label for="age-12m">🧸 12+ months</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="age-18m" name="agerange" value="18+ months">
+                            <label for="age-18m">🚶 18+ months</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="age-2y" name="agerange" value="2+ years">
+                            <label for="age-2y">🎈 2+ years</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="age-3y" name="agerange" value="3+ years">
+                            <label for="age-3y">🌟 3+ years</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">⏰ Meal Type & Time</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="breakfast" name="mealtype" value="breakfast">
+                            <label for="breakfast">🌅 Breakfast</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="lunch" name="mealtype" value="lunch">
+                            <label for="lunch">☀️ Lunch</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="dinner" name="mealtype" value="dinner">
+                            <label for="dinner">🌙 Dinner</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="snack" name="mealtype" value="snack">
+                            <label for="snack">🍎 Snack</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">🏷️ Recipe Categories</h3>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="freezer-friendly" name="categories" value="freezer-friendly">
+                            <label for="freezer-friendly">❄️ Freezer Friendly</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sweet" name="categories" value="sweet">
+                            <label for="sweet">🍯 Sweet</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="savoury" name="categories" value="savoury">
+                            <label for="savoury">🧄 Savoury</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="batch-cook" name="categories" value="batch-cook">
+                            <label for="batch-cook">👨‍🍳 Batch Cook</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="family-dinner" name="categories" value="family-dinner">
+                            <label for="family-dinner">👨‍👩‍👧‍👦 Family Dinner</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="finger-foods" name="categories" value="finger-foods">
+                            <label for="finger-foods">✋ Finger Foods</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="no-cook" name="categories" value="no-cook">
+                            <label for="no-cook">🚫🔥 No Cook</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="quick-meals" name="categories" value="quick-meals">
+                            <label for="quick-meals">⚡ Quick (Under 15 mins)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">📝 Additional Notes</h3>
+                    <div class="form-group">
+                        <label class="form-label" for="notes">Any other preferences or notes:</label>
+                        <textarea class="form-input form-textarea" id="notes" name="notes" placeholder="e.g., my toddler loves pasta, avoid spicy foods, prefers soft textures..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="generate-btn">
+                    ✨ Generate My Perfect Recipe
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Tag management system
+        const tagSystems = {};
+        
+        // Initialize tag input system for a container
+        function initTagInput(containerId, inputId, tagsId) {
+            const container = document.getElementById(containerId);
+            const input = document.getElementById(inputId);
+            const tagsDisplay = document.getElementById(tagsId);
+            
+            tagSystems[containerId] = {
+                tags: [],
+                input: input,
+                tagsDisplay: tagsDisplay
+            };
+            
+            // Handle Enter key to add tags
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag(containerId, input.value.trim());
+                    input.value = '';
+                }
+            });
+            
+            // Focus input when clicking container
+            container.addEventListener('click', function() {
+                input.focus();
+            });
+        }
+        
+        // Add a tag to the system
+        function addTag(containerId, tagText) {
+            if (!tagText || tagText.length === 0) return;
+            
+            const system = tagSystems[containerId];
+            
+            // Check if tag already exists
+            if (system.tags.includes(tagText)) {
+                return;
+            }
+            
+            system.tags.push(tagText);
+            renderTags(containerId);
+        }
+        
+        // Remove a tag from the system
+        function removeTag(containerId, tagText) {
+            const system = tagSystems[containerId];
+            const index = system.tags.indexOf(tagText);
+            
+            if (index > -1) {
+                system.tags.splice(index, 1);
+                renderTags(containerId);
+            }
+        }
+        
+        // Render all tags in the display
+        function renderTags(containerId) {
+            const system = tagSystems[containerId];
+            
+            system.tagsDisplay.innerHTML = system.tags.map(tag => `
+                <span class="ingredient-tag">
+                    ${tag}
+                    <span class="tag-delete" onclick="removeTag('${containerId}', '${tag}')">
+                        ×
+                    </span>
+                </span>
+            `).join('');
+        }
+        
+        // Load children profiles for premium users only
+        async function loadChildrenProfiles() {
+            try {
+                // Wait for auth to be ready
+                await new Promise(resolve => {
+                    const checkAuth = () => {
+                        if (window.toddlerChefAuth) {
+                            resolve();
+                        } else {
+                            setTimeout(checkAuth, 100);
+                        }
+                    };
+                    checkAuth();
+                });
+
+                const userProfile = toddlerChefAuth.getUserProfile();
+                const subscriptionStatus = userProfile?.subscriptionStatus || 'free';
+                
+                // Only show child profiles for premium users
+                if (subscriptionStatus === 'premium' || subscriptionStatus === 'pro') {
+                    document.getElementById('child-profile-section').style.display = 'block';
+                    document.getElementById('header-child-selector').style.display = 'block';
+                    
+                    const childSelect = document.getElementById('selectedChild');
+                    const headerChildSelect = document.getElementById('headerChildSelect');
+                    
+                    if (userProfile && userProfile.children && userProfile.children.length > 0) {
+                        childSelect.innerHTML = '<option value="">Select a child...</option>';
+                        headerChildSelect.innerHTML = '<option value="">Select a child...</option>';
+                        userProfile.children.forEach(child => {
+                            const option = document.createElement('option');
+                            option.value = child.id;
+                            option.textContent = `${child.name} (${child.age})`;
+                            option.dataset.childData = JSON.stringify(child);
+                            childSelect.appendChild(option);
+                            const headerOption = option.cloneNode(true);
+                            headerChildSelect.appendChild(headerOption);
+                        });
+
+                        // Keep selections in sync
+                        headerChildSelect.addEventListener('change', () => {
+                            childSelect.value = headerChildSelect.value;
+                        });
+                        childSelect.addEventListener('change', () => {
+                            headerChildSelect.value = childSelect.value;
+                        });
+                    } else {
+                        childSelect.innerHTML = '<option value="">No children found - Add a child profile first</option>';
+                        headerChildSelect.innerHTML = '<option value="">No children found</option>';
+                    }
+                } else {
+                    // Hide for free users
+                    document.getElementById('child-profile-section').style.display = 'none';
+                    document.getElementById('header-child-selector').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading children:', error);
+                document.getElementById('child-profile-section').style.display = 'none';
+                document.getElementById('header-child-selector').style.display = 'none';
+            }
+        }
+
+        // Initialize tag systems when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initTagInput('leftovers-container', 'leftovers-input', 'leftovers-tags');
+            loadChildrenProfiles();
+        });
+        
+        // Function to show prompt preview
+        async function showPromptPreview(preferences) {
+            try {
+                console.log('🔍 Fetching prompt preview...');
+                
+                const response = await fetch('/api/debug-prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(preferences)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Create modal overlay
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.8); z-index: 10000; display: flex;
+                        align-items: center; justify-content: center; padding: 20px;
+                    `;
+                    
+                    // Create modal content
+                    const content = document.createElement('div');
+                    content.style.cssText = `
+                        background: white; padding: 30px; border-radius: 15px;
+                        max-width: 900px; max-height: 80vh; overflow-y: auto;
+                        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+                    `;
+                    
+                    content.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2 style="color: #6366f1; font-family: 'Poppins', sans-serif;">🔍 GPT Prompt Preview</h2>
+                            <button onclick="this.closest('.modal').remove()" style="
+                                background: #ef4444; color: white; border: none; padding: 8px 16px;
+                                border-radius: 8px; cursor: pointer; font-weight: 600;
+                            ">Close</button>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px; padding: 15px; background: #f1f5f9; border-radius: 10px;">
+                            <h3 style="color: #334155; margin-bottom: 10px;">📊 Debug Info</h3>
+                            <p><strong>Model:</strong> ${data.debug.model}</p>
+                            <p><strong>Temperature:</strong> ${data.debug.temperature}</p>
+                            <p><strong>Max Tokens:</strong> ${data.debug.maxTokens}</p>
+                            <p><strong>Estimated Tokens:</strong> ${data.debug.estimatedTokens}</p>
+                            <p><strong>Ingredients:</strong> ${data.debug.ingredients.join(', ')}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #334155; margin-bottom: 10px;">🤖 System Prompt</h3>
+                            <pre style="
+                                background: #1f2937; color: #e5e7eb; padding: 15px; border-radius: 8px;
+                                font-size: 12px; overflow-x: auto; white-space: pre-wrap;
+                            ">${data.debug.systemPrompt}</pre>
+                        </div>
+                        
+                        <div>
+                            <h3 style="color: #334155; margin-bottom: 10px;">📝 Full User Prompt</h3>
+                            <pre style="
+                                background: #1f2937; color: #e5e7eb; padding: 15px; border-radius: 8px;
+                                font-size: 12px; max-height: 400px; overflow-y: auto; white-space: pre-wrap;
+                            ">${data.debug.userPrompt}</pre>
+                        </div>
+                        
+                        <div style="margin-top: 20px; text-align: center;">
+                            <button onclick="
+                                this.closest('.modal').remove();
+                                window.location.href = 'recipe-template.html?preferences=true';
+                            " style="
+                                background: #6366f1; color: white; border: none; padding: 12px 24px;
+                                border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px;
+                            ">Continue to Generate Recipe →</button>
+                        </div>
+                    `;
+                    
+                    modal.appendChild(content);
+                    modal.className = 'modal';
+                    document.body.appendChild(modal);
+                    
+                } else {
+                    alert('Failed to fetch prompt preview');
+                }
+                
+            } catch (error) {
+                console.error('Error fetching prompt preview:', error);
+                alert('Error fetching prompt preview');
+            }
+        }
+
+        // Check usage limits before form submission
+        async function checkUsageBeforeSubmit(e) {
+            e.preventDefault();
+            console.log('🍽️ FORM SUBMITTED - Processing preferences');
+            
+            // Check usage limits first
+            try {
+                if (window.toddlerChefAuth) {
+                    const usageCheck = await toddlerChefAuth.checkUsageLimit();
+                    if (!usageCheck.canGenerate) {
+                        if (usageCheck.reason === 'limit_reached') {
+                            // Show usage limit message
+                            const container = document.querySelector('.container');
+                            container.innerHTML = `
+                                <div class="form-container" style="text-align: center; padding: 60px 20px;">
+                                    <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+                                    <h1 style="color: #1e293b; margin-bottom: 20px; font-size: 2.5rem;">
+                                        You've Used Your 3 Free Recipes!
+                                    </h1>
+                                    <p style="color: #64748b; font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                                        Great job exploring our recipe generator! You've tried ${usageCheck.usageCount} free recipes. 
+                                        Ready to unlock unlimited recipes and save your favorites?
+                                    </p>
+                                    
+                                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                                        <button onclick="window.location.href='signin.html?reason=limit-reached'" 
+                                                style="background: #bae6fd; color: #1e293b; border: none; padding: 16px 32px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(186, 230, 253, 0.3);">
+                                            🚀 Sign Up for Free
+                                        </button>
+                                        <button onclick="window.location.href='premium.html?reason=limit-reached'" 
+                                                style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+                                            ⭐ Go Premium
+                                        </button>
+                                    </div>
+                                    
+                                    <div style="margin-top: 40px; padding: 20px; background: #f8fafc; border-radius: 12px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                                        <h3 style="color: #1e293b; margin-bottom: 15px;">✨ What You Get:</h3>
+                                        <ul style="text-align: left; color: #64748b; line-height: 1.8;">
+                                            <li>✅ Unlimited AI recipe generation</li>
+                                            <li>✅ Save and organize your favorite recipes</li>
+                                            <li>✅ Personalized meal planning</li>
+                                            <li>✅ Child nutrition tracking</li>
+                                            <li>✅ Priority support</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div style="margin-top: 30px;">
+                                        <a href="index.html" style="color: #64748b; text-decoration: none; font-size: 0.9rem;">
+                                            ← Back to Home
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                            return;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking usage limits:', error);
+                // Continue with form submission if there's an error checking usage
+            }
+            
+            // Continue with normal form submission
+            processFormSubmission();
+        }
+        
+        // Process form submission
+        function processFormSubmission() {
+            // Collect form data
+            const formData = document.getElementById('preferencesForm');
+            const formDataObj = new FormData(formData);
+            
+            // Get selected child data
+            const selectedChildId = formDataObj.get('selectedChild');
+            let selectedChild = null;
+            if (selectedChildId) {
+                const selectedOption = document.querySelector(`#selectedChild option[value="${selectedChildId}"]`);
+                if (selectedOption && selectedOption.dataset.childData) {
+                    selectedChild = JSON.parse(selectedOption.dataset.childData);
+                }
+            }
+
+            // Get tags from tag systems instead of form inputs
+            const preferences = {
+                selectedChild: selectedChild,
+                leftovers: tagSystems['leftovers-container']?.tags || [],
+                dietary: formDataObj.getAll('dietary'),
+                agerange: formDataObj.getAll('agerange'),
+                mealtype: formDataObj.getAll('mealtype'),
+                categories: formDataObj.getAll('categories'),
+                notes: formDataObj.get('notes')
+            };
+            
+            console.log('🔍 FORM DATA COLLECTED:', preferences);
+            console.log('- Leftovers:', preferences.leftovers);
+            console.log('- Dietary:', preferences.dietary);
+            console.log('- Age range:', preferences.agerange);
+            console.log('- Meal type:', preferences.mealtype);
+            console.log('- Categories:', preferences.categories);
+            
+            // Store preferences in localStorage
+            localStorage.setItem('recipePreferences', JSON.stringify(preferences));
+            console.log('✅ PREFERENCES SAVED TO LOCALSTORAGE');
+            console.log('📦 Saved data:', localStorage.getItem('recipePreferences'));
+            
+            // Show prompt preview if debug mode is enabled
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('debug') === 'true') {
+                showPromptPreview(preferences);
+                return;
+            }
+            
+            // Redirect to recipe template with preferences
+            console.log('🚀 REDIRECTING TO RECIPE TEMPLATE');
+            window.location.href = 'recipe-template.html?preferences=true';
+        }
+        
+        // Add event listener for form submission
+        document.getElementById('preferencesForm').addEventListener('submit', checkUsageBeforeSubmit);
+    </script>
+</body>
+</html>

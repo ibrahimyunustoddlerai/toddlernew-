@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp:*)",
+      "Bash(rm:*)",
+      "Bash(git add:*)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\Ibrahim\\Desktop\\Toddlerlunch.AI\\Webflow and Cursor Collab\\toddlerchefai"
+    ]
+  }
+}
