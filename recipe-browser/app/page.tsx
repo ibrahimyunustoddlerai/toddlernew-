@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Recipe, RecipeFilters, AgeGroup, MealType, DietaryTag, Difficulty, Allergen } from '../lib/types';
+import { Recipe, RecipeFilters } from '../lib/types';
 import { SAMPLE_RECIPES, filterRecipes, getAvailableFilters } from '../data/recipes';
 
 export default function RecipeBrowser() {
@@ -25,7 +25,7 @@ export default function RecipeBrowser() {
     return getAvailableFilters(SAMPLE_RECIPES);
   }, []);
 
-  const updateFilter = (key: keyof RecipeFilters, value: any) => {
+  const updateFilter = (key: keyof RecipeFilters, value: string | { min: number; max: number }) => {
     setFilters(prev => ({
       ...prev,
       [key]: value
