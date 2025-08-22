@@ -1,6 +1,21 @@
 {
-  "buildCommand": "echo 'No build needed for static site'",
-  "outputDirectory": ".",
+  "builds": [
+    {
+      "src": "recipe-browser/package.json",
+      "use": "@vercel/next",
+      "config": { "distDir": ".next" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/recipe-browser/(.*)",
+      "dest": "/recipe-browser/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
   "functions": {
     "api/generate-recipe.js": {
       "maxDuration": 30
